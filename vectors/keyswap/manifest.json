@@ -1,0 +1,13 @@
+{
+  "schema": "uibc-core/0.3.3-proposal",
+  "agent_id": "vec-agent-001",
+  "agent_version": "0.1.0",
+  "created_at": "2026-11-23T15:36:57Z",
+  "evidence_count": 2,
+  "evidence_root": "3747e1bfae2a1b79be50eab72096f08592e97ac66afbfe922cce3d7d70679d67",
+  "status": "SUBMITTED",
+  "evidence_index_digest": "sha256:1ec5b3dcfbbea31bd7b0f9e5fc95818771ca9e6cd18c26ff99722abd17ede1a4",
+  "lifecycle_head": "sha256:6257b0866c3d82f4806860f1d3f9d598214ea948e2e5611d378997e89a7889d9",
+  "checkpoint_head": "sha256:2a660e56d14c24652066f1e038f75ef3975d97c933df0dbcdd0ed5170571fabe",
+  "min_verifier_version": "0.5.0"
+}

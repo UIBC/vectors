@@ -1,0 +1,22 @@
+{
+  "entries": [
+    {
+      "evidence_id": "414285e3-46ef-4570-8d80-578fd59ef613",
+      "type": "ACTION",
+      "path": "files/report.txt",
+      "content_hash": "3adf2054c11fdc45d9b53717e6de8f7ee7b48695d71de5cc8577a9001f4fcd14",
+      "created_at": "2026-11-23T15:36:57Z",
+      "media_type": "text/plain",
+      "note": "tool call log"
+    },
+    {
+      "evidence_id": "75075930-5c15-4e1b-a8f7-0133350d6643",
+      "type": "OUTPUT",
+      "path": "files/run.txt",
+      "content_hash": "cc07ddd0ce79cb15b590007ddc909bc6d14d7584e52b6fea186cfe43ab30029f",
+      "created_at": "2026-11-23T15:36:57Z",
+      "media_type": "text/plain",
+      "note": "run summary"
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+action log: three tool calls, one refusal, one retry
+tampered: one line appended after sealing
