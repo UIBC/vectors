@@ -29,3 +29,7 @@ Rebuilding rewrites the packages, so committed hashes and a fresh rebuild will n
 
 - No third-party implementation has been run against these vectors. The only verifier exercised here is the reference one.
 - No reordering or rollback vector yet; rollback needs an external monotonic anchor (`--expect-head`) and cannot be shown inside one package.
+- **Upstream defect (Windows)**: `uibc-core` 0.5.0 prints Chinese `basis.note` strings and crashes with
+  `UnicodeEncodeError: 'charmap' codec` on a cp1252 console. Run 1 of this repo's CI went
+  **red on both Windows jobs** for exactly this reason. Our workflow sets `PYTHONIOENCODING=utf-8`,
+  which is a runner-side workaround, not a fix to the package. Reported upstream: pending.
