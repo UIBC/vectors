@@ -1,0 +1,75 @@
+{
+  "schema": "uibc-receipt/1",
+  "generated_at": "2026-11-23T16:02:39Z",
+  "runner": {
+    "handle": "author-local",
+    "blind": "no",
+    "code": "author"
+  },
+  "environment": {
+    "platform": "Windows-11-10.0.22631-SP0",
+    "python": "3.13.14",
+    "uibc_core": "0.5.0"
+  },
+  "vectors": {
+    "clean": {
+      "files": 8,
+      "case_digest": "b526b823e396951237f0e8a522d331c3127c8730d45640e92b3869db1f3f654d"
+    },
+    "tampered": {
+      "files": 8,
+      "case_digest": "0b4e38c13fd1774366940e5b4565be894171b02e2b83779a4bd607ee2d64cde9"
+    },
+    "deleted": {
+      "files": 7,
+      "case_digest": "b056220f7c4e8e85c75a526755124b7ce75be447bff49436faeb92697fde9e9b"
+    },
+    "keyswap": {
+      "files": 8,
+      "case_digest": "94359663cd0583dd4f1b030418d0afd394c44d0a4965a3d8b8bceb51d605b1c5"
+    }
+  },
+  "observed": [
+    {
+      "case": "clean",
+      "mode": "open",
+      "rc": 0,
+      "result": "PASS"
+    },
+    {
+      "case": "clean",
+      "mode": "pinned",
+      "rc": 0,
+      "result": "PASS"
+    },
+    {
+      "case": "tampered",
+      "mode": "open",
+      "rc": 1,
+      "result": "FAIL"
+    },
+    {
+      "case": "deleted",
+      "mode": "open",
+      "rc": 1,
+      "result": "FAIL"
+    },
+    {
+      "case": "keyswap",
+      "mode": "open",
+      "rc": 0,
+      "result": "PASS"
+    },
+    {
+      "case": "keyswap",
+      "mode": "pinned",
+      "rc": 1,
+      "result": "FAIL"
+    }
+  ],
+  "matches_repo_expectation": true,
+  "limits": [
+    "Self-reported identity: this file proves a run happened, not who ran it.",
+    "The expectation table was visible in EXPECTED.md unless --blind yes was honestly answered."
+  ]
+}
