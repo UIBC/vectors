@@ -1,0 +1,49 @@
+name: Independent run receipt
+description: Send back the result of running the six-row gate on your own machine.
+title: "[run] <date> · <your handle> · <matched|divergent>"
+labels: ["independent-run"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Run this first, on your machine, from a clone of this repository:
+
+        ```bash
+        pip install uibc-core==0.5.0
+        python tools/make_receipt.py --runner "<your handle>" --blind yes|no --code independent|author
+        python tools/check_receipt.py receipts/<the file it wrote>
+        ```
+
+        Then paste the receipt file contents below. `blind` is your honest answer to
+        "had you read EXPECTED.md before running?" - `no` is fine and is recorded as such.
+  - type: textarea
+    id: receipt
+    attributes:
+      label: Receipt JSON
+      description: Paste the whole file, unedited. Do not summarise it.
+      render: json
+    validations:
+      required: true
+  - type: input
+    id: checker
+    attributes:
+      label: Checker output
+      description: The last line printed by tools/check_receipt.py (ACCEPTABLE or REJECTED with reasons).
+    validations:
+      required: true
+  - type: dropdown
+    id: code
+    attributes:
+      label: Who wrote the code you ran
+      options:
+        - independent (I wrote my own verifier/runner)
+        - author (I ran the code from this repository unchanged)
+    validations:
+      required: true
+  - type: textarea
+    id: divergence
+    attributes:
+      label: If any row disagreed with EXPECTED.md
+      description: Which row, what you observed, and what you think it means. Divergences are kept, not closed.
+    validations:
+      required: false

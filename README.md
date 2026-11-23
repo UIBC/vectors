@@ -28,7 +28,20 @@ The fifth row is not a defect report, it is the boundary: **unpinned verificatio
 - `keys/` — TEST-ONLY Ed25519 seeds and their public keys. The seeds are public on purpose so `keyswap` can be rebuilt by anyone. Never reuse them.
 - `tools/make_vectors.py` — regenerates all four cases through the public CLI
 - `tools/run_vectors.py` — the gate; six rows, exit 1 on any deviation
+- `tools/make_receipt.py` — runs the six rows and writes a receipt with per-case byte digests
+- `tools/check_receipt.py` — re-derives those digests from this repo and rejects a receipt whose bytes moved
 - `EXPECTED.md` — the same table with the verifier version and the check that fired
+- `RUNS.md` — the ledger; currently one author row, zero external runs
+
+## Send back a receipt
+
+```bash
+pip install uibc-core==0.5.0
+python tools/make_receipt.py --runner "<your handle>" --blind yes|no --code independent|author
+python tools/check_receipt.py receipts/<file>.json     # must print ACCEPTABLE
+```
+
+Then open an *Independent run receipt* issue with the file. A receipt is a record that a run happened on bytes that still hash to what you recorded — it is **not** a claim that the runner exists, and it does not by itself make this project externally verified. It is how a first external row gets written down instead of asserted.
 
 ## Scope
 
