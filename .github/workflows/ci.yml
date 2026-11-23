@@ -10,6 +10,11 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         py: ["3.11", "3.12"]
     runs-on: ${{ matrix.os }}
+    env:
+      # uibc-core 0.5.0 prints Chinese "basis.note" strings; on Windows runners the
+      # default cp1252 console raises UnicodeEncodeError. This is a workaround for an
+      # upstream defect, recorded in EXPECTED.md, not a fix.
+      PYTHONIOENCODING: utf-8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
