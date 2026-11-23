@@ -32,7 +32,14 @@ ROWS = [
 def verify(case, extra):
     path = os.path.join(VECTORS, case)
     cmd = [sys.executable, "-m", "uibc_core.cli", "verify", path, *extra]
-    p = subprocess.run(cmd, capture_output=True, text=True)
+    env = dict(os.environ)
+    # The verifier emits Chinese notes in its report. On Windows the default
+    # console code page is cp1252, which fails to *encode* (child) and to
+    # *decode* (this parent) that text. Pin UTF-8 on both sides; this is a
+    # runner-side workaround for an upstream defect, documented in EXPECTED.md.
+    env["PYTHONIOENCODING"] = "utf-8"
+    p = subprocess.run(cmd, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", env=env)
     result = None
     try:
         result = json.loads(p.stdout).get("result")
