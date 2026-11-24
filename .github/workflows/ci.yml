@@ -16,7 +16,7 @@ jobs:
       # upstream defect, recorded in EXPECTED.md, not a fix.
       PYTHONIOENCODING: utf-8
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.py }}
@@ -32,7 +32,7 @@ jobs:
     # question is platform-dependent, and neither needs uibc-core installed.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -66,7 +66,7 @@ jobs:
     env:
       PYTHONIOENCODING: utf-8
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
