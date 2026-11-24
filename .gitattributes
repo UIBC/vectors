@@ -1,0 +1,25 @@
+# Bytes are identity in this repository: `tools/check_receipt.py` re-derives a
+# SHA-256 over the files on disk and rejects a receipt when they moved.
+#
+# The committed fixtures under `vectors/` carry CRLF, because they were written
+# on Windows and committed without normalisation. That is harmless while
+# nobody re-encodes them, and fatal the moment somebody does:
+# `git add --renormalize`, or a commit from an editor that rewrites line
+# endings, moves every case digest and invalidates `receipts/*.json`.
+#
+# So the content-addressed parts are declared non-text: no EOL conversion at
+# commit, at checkout, or on any platform. A clone hashes to the same bytes
+# whatever the reader's Git defaults are.
+
+* text=auto eol=lf
+
+# Content-addressed: never normalise, never re-encode.
+# `-text` alone is not enough: the `eol=lf` inherited from `*` above still
+# triggers a checkout conversion. `-eol` unsets it, so the bytes on disk are
+# the bytes in the blob, on every platform.
+vectors/** -text -eol
+receipts/** -text -eol
+keys/** -text -eol
+
+# The evidence lock is a one-byte binary marker.
+*.lock binary

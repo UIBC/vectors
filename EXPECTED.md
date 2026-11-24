@@ -25,6 +25,8 @@ python tools/run_vectors.py                   # confirm the six rows still hold
 
 Rebuilding rewrites the packages, so committed hashes and a fresh rebuild will not match byte for byte — timestamps are real. The gate compares verdicts, not bytes.
 
+Committed bytes, however, must be stable, because receipts hash them. The fixture files carry CRLF, so a renormalisation would move every digest. `.gitattributes` declares `vectors/`, `receipts/` and `keys/` non-text: no platform re-encodes them, and `git add --renormalize` cannot silently rewrite the fixtures the receipts describe.
+
 ## Known gaps
 
 - No third-party implementation has been run against these vectors. The only verifier exercised here is the reference one.
