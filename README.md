@@ -76,7 +76,7 @@ python tools/stranger.py           # every gate, timed, with a machine-readable 
 
 ## Everything a stranger can run, and what each one proves
 
-`python tools/stranger.py` runs all of it and writes `stranger-run.json`: each gate's argv, exit code, duration and the line that carries its promise. Measured 2026-11-25 on one machine: 13 gates, 27.3 s.
+`python tools/stranger.py` runs all of it and writes `stranger-run.json`: each gate's argv, exit code, duration and the line that carries its promise. Measured 2026-11-25 on one machine: 14 gates, 27.8 s.
 
 | command | expected line |
 |---|---|
@@ -92,6 +92,9 @@ python tools/stranger.py           # every gate, timed, with a machine-readable 
 | `python tools/check_key_hygiene.py` | `KEY HYGIENE OK - … no seed outside keys/` |
 | `python tools/make_submission.py --id uibc-self-20261124 --reproduce` | `SUBMISSION REPRODUCED` |
 | `python tools/coverage_map.py --check` | `COVERAGE OK - 19/19 matrix, 19/19 any case, 16/19 deciding, 0 unreached.` |
+| `python tools/basis_map.py --check` | `BASIS OK - 5 direct, 9 related, 5 ours; every citation resolves.` |
+| `python tools/check_quotes.py --check` | `QUOTES OK - 14 quoted sentence(s) for 5 direct + 9 related check(s), verbatim in the cached copy.` |
+| `python tools/check_none.py` | `NONE OK - 5 none check(s), each with a recorded search; 1 with an external basis found, 2 with a proposal drafted.` |
 | `python tools/run_crossversion.py --also <python-with-0.4.1>` | `CROSSVERSION OK - 2 verifier(s) x 10 rows` |
 
 The last line needs a **second** interpreter: with only one, the floor cannot be exercised and the tool exits 3 with `CROSSVERSION DEGENERATE`, rather than printing a green that certifies nothing. That refusal is deliberate — the same reason `run_adversarial.py` prints `[DEFECT]` instead of hiding D-002.
@@ -105,6 +108,20 @@ Three rows of machinery are **not on this branch**: the third verifier (`second-
 `registry/external-runs.json` is the ledger, and `python tools/check_external_runs.py` makes its headline a **derived** number: it must equal the number of records that are complete, name a log whose SHA-256 matches, carry this repository's corpus digest, and are not byte-identical to our own `submissions/*/run.log` (a re-run on another machine does not reproduce our bytes). A failing run stays in the ledger as a failure and does not raise the count. `--selftest` proves all of it on seven doctored ledgers, including one that types a headline with no record behind it.
 
 **The number today is 0.** That is not a placeholder; it is the gate refusing to let us say anything else.
+
+## Where the nineteen checks come from
+
+`BASIS.md` publishes the split, per check, from the verifier's own `basis` fields: **5 direct, 9 related, 5 ours.** *Direct* means an external document states the requirement; *related* means the mechanism is borrowed and the requirement is ours; *ours* means there is no external text behind it at all.
+
+This is the first question a corpus that grades itself has to answer, and "19 checks" alone invites the assumption that all nineteen were mandated. Each citation resolves through `basis/sources.json`, where every entry carries the URL and the date it was fetched; a citation that is not there, a `direct` claim with no citation, or a `none` claim that cites something, all fail the gate. **Six of the eleven sources are individual Internet-Drafts, not consensus standards, and eight of the nineteen checks rest on them** — `BASIS.md` says so in the same table, because citing a proposal and citing a rule are different claims.
+
+`QUOTES.md` goes one step further for all fourteen checks that claim an external basis (5 `direct`, 9 `related`). It prints the sentence each one rests on, and `tools/check_quotes.py` matches that sentence character for character against a cached copy of the document, whose digest is recorded too. A paraphrase cannot pass as a quotation, and the check runs offline — no network, no trust in us. For a `direct` check the sentence is the requirement; for a `related` one it is only the mechanism we borrowed, and `QUOTES.md` separates the two classes rather than letting one table imply the other. The gate already earned its keep: it found that the S18 citation names §4.2.4 of a draft that has no §4.2.4 (the rule is §4.2.2). The correction is recorded in `basis/quotes.json` and printed in `QUOTES.md`; the verifier's citation string is an upstream fix.
+
+## The five we invented — and whether we looked
+
+`BASIS.md` answers *who required this*. It does not answer *did you look*, and a `none` row that nobody examined is indistinguishable from a `none` row that was searched for.
+
+`NONE.md` records, per `none` check, the queries run and the nearest document found, with why it does not cover the rule. Three outcomes are distinguished: `no-external-text-found`, `proposal-drafted`, `external-basis-found`. Two of the five now carry a draft issue in `basis/proposals/` (a digest over index metadata; how a verifier resolves an anchor event), and one turned out to have a basis we had missed — `S12` is grounded in `draft-chang-delta1-settlement-00` §7.1-§7.2 and the `seq`/`issued_at` field rules of `draft-bailey-scitt-agent-session-receipt`. Reclassifying it needs an verifier change upstream; until then it stays `none` here, which is the honest state of the code even though the search says otherwise.
 
 ## Scope
 

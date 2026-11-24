@@ -1,0 +1,1668 @@
+﻿
+<!DOCTYPE html>
+
+
+
+
+
+
+
+<html data-bs-theme="auto" lang="en">
+    <head>
+        
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>
+            
+                draft-maintainer-1f916-agent-record-01
+            
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://static.ietf.org/fonts/inter/import.css" rel="stylesheet">
+        <link href="https://static.ietf.org/fonts/noto-sans-mono/import.css" rel="stylesheet">
+        
+            <link rel="stylesheet" href="https://static.ietf.org/dt/12.83.2/ietf/css/document_html_referenced.css">
+            
+                <link rel="stylesheet" href="https://static.ietf.org/dt/12.83.2/ietf/css/document_html_txt.css">
+            
+            <script type="module" crossorigin="" src="https://static.ietf.org/dt/12.83.2/assets/embedded-72dc5a5f.js"></script>
+<link href="https://static.ietf.org/dt/12.83.2/assets/create-pinia-singleton-4fceef90.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+<link href="https://static.ietf.org/dt/12.83.2/assets/Scrollbar-0888439d.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+            <script src="https://static.ietf.org/dt/12.83.2/ietf/js/document_html.js"></script>
+            <script src="https://static.ietf.org/dt/12.83.2/ietf/js/theme.js"></script>
+        
+        <link rel="alternate" type="application/atom+xml" title="Document changes" href="/feed/document-changes/draft-maintainer-1f916-agent-record/">
+        <meta name="description"
+            
+                content="The Agent Record: Transparent, Witness-Countersigned Event Logs for AI Agent Identity, History, and Memory (Internet-Draft, 2026)"
+            >
+        
+
+<link rel="apple-touch-icon"
+      sizes="180x180"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-180.png">
+<link rel="icon"
+      sizes="32x32"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-32.png">
+<link rel="icon"
+      sizes="16x16"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-mask.svg"
+      color="#ffffff">
+<meta name="msapplication-TileColor"
+      content="#ffffff">
+<meta name="theme-color"
+      content="#ffffff">
+        
+
+
+
+
+<meta property="og:title" content="The Agent Record: Transparent, Witness-Countersigned Event Logs for AI Agent Identity, History, and Memory">
+<meta property="og:url" content="https://datatracker.ietf.org/doc/html/draft-maintainer-1f916-agent-record-01">
+
+
+<link rel="canonical" href="https://datatracker.ietf.org/doc/html/draft-maintainer-1f916-agent-record-01">
+
+<meta property="og:site_name" content="IETF Datatracker">
+<meta property="og:description" content="Autonomous AI agents increasingly act as economic parties: they are hired, they pay, and they make claims about their own past conduct. No deployed standard lets a relying party verify an agent&#x27;s identity continuity, the integrity of its claimed history, or the intactness of its persisted memory without trusting the agent&#x27;s operator or platform. This document describes the Agent Record architecture: per-agent append-only event logs bound to Ed25519 keys, checkpointed with signed Merkle tree heads following the RFC 6962 construction, countersigned by independent witnesses, and exported as portable, offline-verifiable dossiers. Memory integrity is anchored by hash commitments recorded in the log, allowing an agent&#x27;s future sessions, and any third party, to detect tampering with persisted state. The architecture is deployed in production at a founding registry; this document records its wire formats and security model to invite independent implementation and review, and to align terminology with the SCITT architecture, of which this system is an application- specific instance.">
+<meta property="og:type" content="article">
+
+<meta property="article:section" content="Individual Internet-Draft">
+
+<meta property="article:author" content="1F916 Maintainer">
+
+
+
+        
+        <style>
+            
+            .diff-form .select2-selection__rendered {
+                direction: rtl;
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <noscript><iframe class="status" title="Site status" src="/status/latest"></iframe></noscript>
+<div class="vue-embed" data-component="Status"></div>
+        <div class="btn-toolbar sidebar-toolbar position-fixed top-0 end-0 m-2 m-lg-3 d-print-none">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm me-1 dropdown-toggle d-flex align-items-center"
+                    id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown"
+                    aria-label="Toggle theme">
+                        <i class="theme-icon-active bi bi-circle-half"></i>
+                </button>
+
+                <ul class="dropdown-menu" aria-labelledby="bd-theme">
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center"
+                            data-bs-theme-value="light" aria-pressed="false">
+                            <i class="me-2 opacity-50 theme-icon bi bi-sun-fill"></i>
+                            Light<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center"
+                            data-bs-theme-value="dark" aria-pressed="false">
+                            <i class="me-2 opacity-50 theme-icon bi bi-moon-stars-fill"></i>
+                            Dark<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center active"
+                            data-bs-theme-value="auto" aria-pressed="true">
+                            <i class="me-2 opacity-50 theme-icon bi bi-circle-half"></i>
+                            Auto<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm sidebar-toggle"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#sidebar"
+                    aria-expanded="true"
+                    aria-controls="sidebar"
+                    aria-label="Toggle metadata sidebar"
+                    title="Toggle metadata sidebar">
+            <i class="bi bi-arrow-bar-left sidebar-shown"></i>
+            <i class="bi bi-arrow-bar-right sidebar-collapsed"></i>
+            </button>
+        </div>
+        <nav class="navbar bg-light-subtle px-1 fixed-top d-print-none d-md-none">
+            <a class="nav-link ps-1"
+               href="/doc/draft-maintainer-1f916-agent-record/">
+                 
+                    draft-maintainer-1f916-agent-record-01
+                
+                <br class="d-sm-none">
+
+                <span class="ms-sm-3 badge rounded-pill badge-draft">
+                    
+                        None
+                    
+                </span>
+            </a>
+            <button class="navbar-toggler p-1"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#docinfo-collapse"
+                    aria-controls="docinfo-collapse"
+                    aria-expanded="false"
+                    aria-label="Show document information">
+                <span class="navbar-toggler-icon small"></span>
+            </button>
+            <div class="navbar-nav navbar-nav-scroll overscroll-none collapse pt-1" id="docinfo-collapse">
+                <div class="bg-light-subtle p-0">
+                    <table class="table table-sm table-borderless small">
+                        <tbody class="meta align-top">
+                            <tr>
+                                <th scope="row"></th>
+                                <th scope="row">Title</th>
+                                <td class="edit"></td>
+                                <td>The Agent Record: Transparent, Witness-Countersigned Event Logs for AI Agent Identity, History, and Memory</td>
+                            </tr>
+                        </tbody>
+                        
+
+
+
+
+
+
+
+<tbody class="meta align-top ">
+    <tr>
+        <th scope="row">Document</th>
+        <th scope="row">Document type</th>
+        <td class="edit"></td>
+        <td>
+            
+
+
+
+
+
+
+
+    <span class="text-success">Active Internet-Draft</span>
+    (individual)
+    
+
+            
+            
+            
+                
+
+
+
+
+    <div class="alert alert-warning small p-2 mt-2" role="alert">
+        This document is an Internet-Draft (I-D).
+        Anyone may submit an I-D to the IETF.
+        This I-D is <strong>not endorsed by the IETF</strong> and has <strong>no formal standing</strong> in the
+        <a href="/doc/rfc2026/">IETF standards process</a>.
+    </div>
+
+
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">Select version</th>
+            <td class="edit"></td>
+            <td>
+                
+
+
+
+    <ul class="revision-list pagination pagination-sm text-center flex-wrap my-0">
+        
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-maintainer-1f916-agent-record-00"
+                        >
+                            00
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item active">
+                        <a class="page-link"
+                        href="/doc/html/draft-maintainer-1f916-agent-record-01"
+                        >
+                            01
+                        </a>
+                    </li>
+                
+            
+            
+        
+    </ul>
+
+            </td>
+        </tr>
+        
+            <tr>
+                <td></td>
+                <th scope="row">Compare versions</th>
+                <td class="edit"></td>
+                <td>
+                    
+
+
+
+<form class="form-horizontal diff-form"
+      action="https://author-tools.ietf.org/iddiff"
+      method="get"
+      target="_blank">
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="From revision"
+                    name="url1">
+                
+                    <option value="draft-maintainer-1f916-agent-record-01">
+                        draft-maintainer-1f916-agent-record-01
+                        
+                    </option>
+                
+                    <option value="draft-maintainer-1f916-agent-record-00" selected>
+                        draft-maintainer-1f916-agent-record-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="To revision"
+                    name="url2">
+                
+                    <option value="draft-maintainer-1f916-agent-record-01" selected>
+                        draft-maintainer-1f916-agent-record-01
+                        
+                    </option>
+                
+                    <option value="draft-maintainer-1f916-agent-record-00">
+                        draft-maintainer-1f916-agent-record-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--html"
+                    name="difftype">
+                Side-by-side
+            </button>
+            
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--hwdiff"
+                    name="difftype">
+                Inline
+            </button>
+
+
+</form>
+
+                </td>
+            </tr>
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">Author</th>
+        <td class="edit">
+            
+        </td>
+        <td>
+            
+            
+                <span ><a 
+           title="Datatracker profile of 1F916 Maintainer"
+            href="/person/1f916.ai@gmail.com" >1F916 Maintainer</a> <a 
+               href="mailto:1f916.ai%40gmail.com"
+               aria-label="Compose email to 1f916.ai@gmail.com"
+               title="Compose email to 1f916.ai@gmail.com">
+                <i class="bi bi-envelope"></i></a></span>
+            
+            
+                <br>
+                <a class="btn btn-primary btn-sm mt-1" href="mailto:draft-maintainer-1f916-agent-record@ietf.org?subject=draft-maintainer-1f916-agent-record" title="Send email to the document authors">Email authors</a>
+            
+        </td>
+    </tr>
+    
+    
+        
+        
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            RFC stream
+        </th>
+        <td class="edit">
+            
+        </td>
+        <td class="text-body-secondary">
+            
+                (None)
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">
+                Intended RFC status
+            </th>
+            <td class="edit">
+                
+            </td>
+            <td>
+                
+                    <span class="text-body-secondary">
+                        (None)
+                    </span>
+                
+            </td>
+        </tr>
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            Other formats
+        </th>
+        <td class="edit">
+        </td>
+        <td>
+            
+                
+    <div class="buttonlist">
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-maintainer-1f916-agent-record-01.txt">
+            
+                <i class="bi bi-file-text"></i> txt
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-maintainer-1f916-agent-record-01.html">
+            
+                <i class="bi bi-file-code"></i> html
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-maintainer-1f916-agent-record-01.xml">
+            
+                <i class="bi bi-file-code"></i> xml
+            
+        </a>
+        
+    
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/draft-maintainer-1f916-agent-record/01/bibtex/">
+            
+                <i class="bi bi-file-ruled"></i> bibtex
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/bibxml3/draft-maintainer-1f916-agent-record-01.xml">
+            
+                <i class="bi bi-file-code"></i> bibxml
+            
+        </a>
+        
+    
+</div>
+
+            
+        </td>
+    </tr>
+    
+    
+        
+    
+</tbody>
+                        <tr>
+                            <th scope="row"></th>
+                            <th scope="row"></th>
+                            <td class="edit"></td>
+                            <td>
+                                <a class="btn btn-sm btn-warning mb-3"
+                                target="_blank"
+                                href="https://github.com/ietf-tools/datatracker/issues/new/choose">
+                                    Report a bug
+                                    <i class="bi bi-bug"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </nav>
+        <div class="row g-0">
+            <div class="col-md-9 d-flex justify-content-center lh-sm"
+                 data-bs-spy="scroll"
+                 data-bs-target="#toc-nav"
+                 data-bs-smooth-scroll="true"
+                 tabindex="0"
+                 id="content">
+                
+                    <div class="rfchtml">
+                        <br class="noprint">
+                        <div class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">Agent Record</td>
+<td class="right">August 2026</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Maintainer</td>
+<td class="center">Expires 13 February 2027</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Network Working Group</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-maintainer-1f916-agent-record-01</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2026-08-12" class="published">12 August 2026</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Informational</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2027-02-13">13 February 2027</time></dd>
+<dt class="label-authors">Author:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">Maintainer</div>
+<div class="org">The 1F916 Protocol Project</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">The Agent Record: Transparent, Witness-Countersigned Event Logs for AI Agent Identity, History, and Memory</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">Autonomous AI agents increasingly act as economic parties: they are
+      hired, they pay, and they make claims about their own past conduct. No
+      deployed standard lets a relying party verify an agent's identity
+      continuity, the integrity of its claimed history, or the intactness of
+      its persisted memory without trusting the agent's operator or
+      platform.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This document describes the Agent Record architecture: per-agent
+      append-only event logs bound to Ed25519 keys, checkpointed with signed
+      Merkle tree heads following the RFC 6962 construction, countersigned by
+      independent witnesses, and exported as portable, offline-verifiable
+      dossiers. Memory integrity is anchored by hash commitments recorded in
+      the log, allowing an agent's future sessions, and any third party, to
+      detect tampering with persisted state. The architecture is deployed in
+      production at a founding registry; this document records its wire
+      formats and security model to invite independent implementation and
+      review, and to align terminology with the SCITT architecture, of which
+      this system is an application-specific instance.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 13 February 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2026 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-the-gap" class="internal xref">The Gap</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
+                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-design-lineage" class="internal xref">Design Lineage</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-terminology" class="internal xref">Conventions and Terminology</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-architecture" class="internal xref">Architecture</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-identity" class="internal xref">Identity</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-log-and-checkpoints" class="internal xref">Log and Checkpoints</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-witnesses" class="internal xref">Witnesses</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-memory-seals" class="internal xref">Memory Seals</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
+                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-attestations" class="internal xref">Attestations</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6">
+                <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-dossiers-and-offline-verifi" class="internal xref">Dossiers and Offline Verification</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-implementation-status" class="internal xref">Implementation Status</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="intro">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<div id="gap">
+<section id="section-1.1">
+        <h3 id="name-the-gap">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-the-gap" class="section-name selfRef">The Gap</a>
+        </h3>
+<p id="section-1.1-1">Existing and emerging agent-stack standards address capability
+        access (MCP), inter-agent messaging (A2A), machine payments
+        (x402/AP2), and operator-level request authentication (Web Bot
+        Auth). None provides:<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-1.1-2">
+          <li id="section-1.1-2.1">
+            <strong>Identity continuity</strong>: proof that the agent
+          presenting a name today is cryptographically the same principal
+          that acted under that name before.<a href="#section-1.1-2.1" class="pilcrow">¶</a>
+</li>
+          <li id="section-1.1-2.2">
+            <strong>History integrity</strong>: proof that an agent's
+          claimed track record was recorded at the times claimed and has not
+          been rewritten, reordered, or selectively deleted.<a href="#section-1.1-2.2" class="pilcrow">¶</a>
+</li>
+          <li id="section-1.1-2.3">
+            <strong>Memory integrity</strong>: proof that state an agent
+          persists between sessions is byte-identical, at load time, to what
+          was stored, against modification by any party with storage access,
+          including the agent's own operator.<a href="#section-1.1-2.3" class="pilcrow">¶</a>
+</li>
+        </ol>
+</section>
+</div>
+<div id="lineage">
+<section id="section-1.2">
+        <h3 id="name-design-lineage">
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-design-lineage" class="section-name selfRef">Design Lineage</a>
+        </h3>
+<p id="section-1.2-1">The construction is Certificate Transparency <span>[<a href="#RFC6962" class="cite xref">RFC6962</a>]</span> applied to per-agent event logs rather than X.509
+        certificates, and is an application-specific instance of the SCITT
+        architecture <span>[<a href="#RFC9902" class="cite xref">RFC9902</a>]</span>: registries are transparency
+        services, agents are issuers, sealed events are signed statements,
+        checkpoints are tree heads, receipts attest registration, and
+        independent witnesses bound equivocation. No consensus protocol,
+        distributed ledger, or fee mechanism is used or required.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="terms">
+<section id="section-2">
+      <h2 id="name-conventions-and-terminology">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-terminology" class="section-name selfRef">Conventions and Terminology</a>
+      </h2>
+<p id="section-2-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in
+      BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only
+      when, they appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2-2">
+        <dt id="section-2-2.1">Agent:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.2">An autonomous software principal identified by one or more
+        signing keys.<a href="#section-2-2.2" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-2.3">Registry:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.4">A service maintaining append-only event logs for agents and
+        issuing signed checkpoints. A registry is NOT a trusted party.<a href="#section-2-2.4" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-2.5">Event:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.6">An append-only log entry. Each event carries the hash of its
+        predecessor.<a href="#section-2-2.6" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-2.7">Checkpoint:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.8">A signed Merkle tree head over a log's sealed events.<a href="#section-2-2.8" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-2.9">Witness:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.10">A party, independent of the registry, that verifies checkpoint
+        consistency and countersigns tree heads, publishing countersignatures
+        outside the registry's control.<a href="#section-2-2.10" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-2.11">Dossier:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.12">A portable, registry-signed export of one agent's record,
+        verifiable offline.<a href="#section-2-2.12" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-2.13">Seal:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.14">A hash commitment to external content (typically agent memory),
+        recorded as an event.<a href="#section-2-2.14" class="pilcrow">¶</a>
+</dd>
+      <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="arch">
+<section id="section-3">
+      <h2 id="name-architecture">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-architecture" class="section-name selfRef">Architecture</a>
+      </h2>
+<div id="identity">
+<section id="section-3.1">
+        <h3 id="name-identity">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-identity" class="section-name selfRef">Identity</a>
+        </h3>
+<p id="section-3.1-1">An agent binds an Ed25519 <span>[<a href="#RFC8032" class="cite xref">RFC8032</a>]</span> public key by
+        presenting a signature over the UTF-8 string:<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1-2">
+<pre>
+1f916.key-bind.v1:&lt;handle&gt;:&lt;public_key_b64url&gt;
+</pre><a href="#section-3.1-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1-3">where public_key_b64url is the unpadded base64url encoding of the
+        raw 32-byte public key. Key thumbprints are computed per <span>[<a href="#RFC7638" class="cite xref">RFC7638</a>]</span> over the JWK
+        {"crv":"Ed25519","kty":"OKP","x":"&lt;public_key_b64url&gt;"}.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">Key lifecycle events (bind, rotate, revoke) MUST themselves be
+        recorded as log events. Because events are checkpointed and
+        witnessed, whether a given signature was produced before or after a
+        revocation is permanently decidable.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1-5">Registries MUST record a custody disclosure for each key, drawn
+        from an extensible taxonomy (self_held, platform_held,
+        household_held, threshold(k,n), kms, hsm, session_delegated). A
+        signature proves exactly what its custody disclosure permits it to
+        prove; verifiers MUST surface custody alongside any
+        signature-verification result.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1-6">Recovery of an identity after total key loss is possible only via
+        a recovery authority (threshold keys, an offline rotation key, or a
+        signed successor commitment) recorded in the log BEFORE the loss.
+        Absent such a prior commitment, registries MUST NOT re-bind the
+        identity; any administrative restoration MUST be recorded as such
+        rather than presented as cryptographic continuity.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="log">
+<section id="section-3.2">
+        <h3 id="name-log-and-checkpoints">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-log-and-checkpoints" class="section-name selfRef">Log and Checkpoints</a>
+        </h3>
+<p id="section-3.2-1">Each event carries the hash of its predecessor (a linear hash
+        chain enabling full-replay verification). In addition, the registry
+        computes a Merkle tree over the sealed events' hashes, with leaf and
+        node hashing exactly as in Section 2.1 of <span>[<a href="#RFC6962" class="cite xref">RFC6962</a>]</span>,
+        and, on a fixed cadence (the reference deployment uses 5 minutes),
+        signs the payload:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2-2">
+<pre>
+1f916.checkpoint.v1:&lt;log&gt;:&lt;tree_size&gt;:&lt;root_hex&gt;:&lt;created_at_ms&gt;
+</pre><a href="#section-3.2-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.2-3">Registries MUST serve, without authentication: the latest
+        checkpoints and the registry public key; inclusion proofs from any
+        event to a checkpoint (Section 2.1.1 of <span>[<a href="#RFC6962" class="cite xref">RFC6962</a>]</span>);
+        and consistency proofs between any two checkpointed sizes
+        (Section 2.1.2 of <span>[<a href="#RFC6962" class="cite xref">RFC6962</a>]</span>; see also <span>[<a href="#RFC9162" class="cite xref">RFC9162</a>]</span>).<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">Registries SHOULD return a signed receipt at write acceptance. A
+        held receipt whose event never appears under a subsequent checkpoint
+        is publishable evidence of censorship-by-omission: append-refusal
+        cannot be prevented, only made evident.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="witnesses">
+<section id="section-3.3">
+        <h3 id="name-witnesses">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-witnesses" class="section-name selfRef">Witnesses</a>
+        </h3>
+<p id="section-3.3-1">A witness periodically: (1) fetches the latest checkpoint; (2)
+        verifies the registry signature; (3) verifies a consistency proof
+        against the last tree head the witness itself observed; (4)
+        countersigns:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.3-2">
+<pre>
+1f916.witness.v1:&lt;registry_origin&gt;:&lt;log&gt;:&lt;tree_size&gt;:&lt;root_hex&gt;
+</pre><a href="#section-3.3-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.3-3">and (5) publishes the countersignature where the registry cannot
+        write. A registry rewrite is detectable unless every witness colludes
+        AND the Merkle arithmetic verifies, which it cannot. Witness
+        independence is the system's security parameter. Registries MAY serve
+        a witness directory; directory entries are pointers, not
+        endorsements.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">Three requirements on witness handling, each derived from a defect
+        found in the reference implementation by independent review:<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.3-5.1">A countersignature over a head whose continuity the witness did
+          not prove -- a first observation, with no earlier head to compare
+          against -- attests only that the registry signed that head, which is
+          also what a rewriting registry produces. Such a state is reachable by
+          renaming a log or by deleting the witness's stored state. Verifiers
+          MUST NOT grant the "witnessed" verdict on such a countersignature.<a href="#section-3.3-5.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.3-5.2">A witness refusal record (refused regression, refused consistency
+          failure, invalid registry signature, or refused registry key change)
+          is evidence AGAINST the head it names. Verifiers MUST treat a refusal
+          covering a head as "diverged" and MUST NOT count it as corroboration
+          merely because it repeats the same values. A refusal record carries no
+          signature and is otherwise shaped like a countersignature.<a href="#section-3.3-5.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.3-5.3">A witness MUST NOT verify a registry's signature using a key the
+          registry supplied in the same response. Witnesses SHOULD accept a
+          caller-supplied registry key, or record the key on first use and
+          refuse to proceed on a silent change.<a href="#section-3.3-5.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-3.3-6"><strong>Witness discovery and key rotation.</strong> A verifier
+        that pins a witness key needs a discovery path that says which key
+        belonged to which witness at which time. A registry serving a witness
+        directory SHOULD expose, per entry: a stable identifier, the signature
+        algorithm, the public key (or an explicit null), and a monotone epoch
+        with the time the current key took effect. An entry whose public key is
+        null cannot be pinned, and verifiers MUST treat it as undiscoverable
+        rather than trusting the location it names. A key change on an existing
+        entry MUST NOT be a silent replacement: it SHOULD require
+        cross-signatures over<a href="#section-3.3-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.3-7">
+<pre>
+1f916.witness-rotate.v1:&lt;witness_id&gt;:&lt;new_epoch&gt;:&lt;old_key&gt;:&lt;new_key&gt;
+</pre><a href="#section-3.3-7" class="pilcrow">¶</a>
+</div>
+<p id="section-3.3-8">by BOTH the outgoing and incoming keys, and SHOULD be recorded as a
+        log event, so that the directory has a checkable history rather than
+        only a current state. A single signature proves only that one party
+        wanted the change; whoever can write the directory row could otherwise
+        aim a verifier's pin at a key of their choosing, and a directory whose
+        past cannot be read can be edited into any shape and presented as
+        having always held it. Countersignatures made before a rotation remain
+        verifiable against the prior key.<a href="#section-3.3-8" class="pilcrow">¶</a></p>
+<p id="section-3.3-9">Countersignature records MUST carry the checkpoint's creation time
+        and the registry origin they are bound to, so that a third party can
+        re-verify the registry signature cited by the record, including on
+        records published as evidence of refusal.<a href="#section-3.3-9" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="memory">
+<section id="section-3.4">
+        <h3 id="name-memory-seals">
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-memory-seals" class="section-name selfRef">Memory Seals</a>
+        </h3>
+<p id="section-3.4-1">The reference registry implements this as a seal record carrying
+        the SHA-256 hash, an optional label naming the store, and an optional
+        signature by one of the agent's bound keys over:<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.4-2">
+<pre>
+1f916.seal.v1:&lt;handle&gt;:&lt;label&gt;:&lt;content_sha256_hex&gt;
+</pre><a href="#section-3.4-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.4-3">The label is constrained to characters excluding the separator, so
+        the payload is unambiguous. A signed seal proves the keyholder sealed
+        the content; an unsigned seal proves only that the registry credential
+        did, and MUST be labeled as such.<a href="#section-3.4-3" class="pilcrow">¶</a></p>
+<p id="section-3.4-4">Registries store no agent memory. An agent commits to external
+        content by sealing its SHA-256 hash as an event. On session start, an
+        agent (or any third party handed the content) recomputes the hash and
+        compares against the sealed commitment: a match proves byte-identity
+        with the stored content; a mismatch is evidence of tampering. A seal
+        proves unchanged-since-sealed; it makes no claim that sealed content
+        was true when written, and verifiers MUST NOT present seals as
+        content validation.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="attestations">
+<section id="section-3.5">
+        <h3 id="name-attestations">
+<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-attestations" class="section-name selfRef">Attestations</a>
+        </h3>
+<p id="section-3.5-1">Cross-agent claims are signed statements canonicalized with JCS
+        <span>[<a href="#RFC8785" class="cite xref">RFC8785</a>]</span> over {class, subject, claim, evidence} and
+        signed as:<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.5-2">
+<pre>
+1f916.attestation.v1:&lt;issuer_handle&gt;:&lt;jcs_payload&gt;
+
+  where jcs_payload canonicalizes, at minimum:
+    class, issuer, subject, claim, evidence,
+    target_attestation_id, withdraw_when
+</pre><a href="#section-3.5-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.5-3">The issuer and, for disputes and retractions, the target attestation
+        and the stated withdrawal condition MUST be inside the canonicalized
+        payload. Omitting them permits two failures observed in practice: a
+        dispute presented as signed by its issuer while no signature covers
+        WHICH attestation it disputes or under what condition the issuer would
+        withdraw it; and, where registries enforce uniqueness on the payload
+        hash, two independent parties being unable to make the same claim about
+        the same subject -- which makes independent corroboration, the
+        primitive's purpose, structurally impossible. Registries that change
+        this canonicalization MUST record which payload version each stored
+        signature covers, so earlier signatures remain verifiable.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
+<p id="section-3.5-4">The payload hash is anchored as a log event, giving every
+        attestation a witnessed registration time. The issued_at field is
+        always the true registration time; claims about past occurrences
+        carry their dates inside the claim text. Disputes and retractions are
+        first-class appended events that reference their target and MUST NOT
+        modify it; a dispute records the condition under which its issuer
+        would withdraw. Registries MUST NOT compute or publish scalar
+        reputation scores from attestations.<a href="#section-3.5-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="dossiers">
+<section id="section-3.6">
+        <h3 id="name-dossiers-and-offline-verifi">
+<a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-dossiers-and-offline-verifi" class="section-name selfRef">Dossiers and Offline Verification</a>
+        </h3>
+<p id="section-3.6-1">A dossier exports an agent's keys (with custody), name bindings,
+        events with inclusion proofs, attestations about the agent, the
+        latest checkpoint, and a registry signature over the SHA-256 of the
+        JCS-canonical dossier core, signed as
+        1f916.record.v1:&lt;sha256_hex&gt;.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
+<p id="section-3.6-2"><strong>The anchor rule.</strong> Every signature check requires a
+        public key. If that key is taken from the artifact under test, a
+        verifying signature proves only that the artifact is internally
+        consistent: an adversary generates a key pair, signs a fabricated
+        dossier and its checkpoint with it, and ships both together. A
+        verification run is ANCHORED only when at least one key reached the
+        verifier through a channel the artifact does not control -- a
+        caller-supplied registry key, or a caller-pinned witness key whose
+        countersignature covers the same (log, tree_size, root). Verifiers
+        MUST accept a caller-supplied registry key and witness key, MUST
+        state on each signature line which key was used, and MUST NOT emit
+        any verdict above "unanchored" for an unanchored run.<a href="#section-3.6-2" class="pilcrow">¶</a></p>
+<p id="section-3.6-3">Verifiers MUST implement a four-valued verdict:<a href="#section-3.6-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-3.6-4">
+          <dt id="section-3.6-4.1">witnessed:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.6-4.2">all proofs verify AND a countersignature from a caller-pinned
+          independent witness covers the checkpoint, and that countersignature
+          asserts continuity from a previously observed head.<a href="#section-3.6-4.2" class="pilcrow">¶</a>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.6-4.3">consistent-unwitnessed:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.6-4.4">all proofs verify against a caller-supplied registry key, but no
+          pinned witness countersignature was presented; the result depends on
+          registry-asserted timing and MUST NOT be reported as fully
+          verified.<a href="#section-3.6-4.4" class="pilcrow">¶</a>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.6-4.5">unanchored:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.6-4.6">all proofs verify, but every key used came from the artifact
+          under test. This verdict asserts internal consistency only and makes
+          no claim of authenticity.<a href="#section-3.6-4.6" class="pilcrow">¶</a>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.6-4.7">diverged:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.6-4.8">any proof fails, a key does not match a caller-supplied pin, a
+          witness refusal covers the head, or a witnessed head conflicts with
+          the registry's.<a href="#section-3.6-4.8" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-3.6-5"><strong>Proof verification requirements.</strong> Implementations
+        MUST validate tree sizes and leaf indices as non-negative integers
+        within the implementation's exact-integer range before use, and MUST
+        halve them with integer division rather than bitwise shifts. In
+        languages whose shift operators coerce to 32-bit integers, a tree size
+        of 2^32+1 causes the halving loop to terminate before the step that
+        binds the previous root into the new tree while the final check still
+        passes, forging both inclusion and consistency proofs at negligible
+        cost. Implementations MUST also validate every hash as exactly 64
+        lowercase hexadecimal characters before decoding: permissive decoders
+        disagree about malformed input (silent truncation versus zero-byte
+        coercion), and two implementations that disagree about invalid bytes
+        will disagree about which proofs verify.<a href="#section-3.6-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="security">
+<section id="section-4">
+      <h2 id="name-security-considerations">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-4-1"><strong>Write access.</strong> No party without an agent's key (or
+      registry bearer credential) has any write path to its record.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2"><strong>Backdating.</strong> Event registration times are fixed by
+      witnessed checkpoints within one cadence interval. A fabricated history
+      is distinguishable: its events' witnessed registration times postdate
+      the period they narrate.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-3"><strong>Key compromise.</strong> Between compromise and revocation,
+      an attacker's signatures are indistinguishable from the agent's; this
+      window cannot be closed, only bounded. A revocation record SHOULD be
+      signed by the key being revoked, over
+      1f916.key-revoke.v1:&lt;handle&gt;:&lt;thumbprint&gt;; a revocation
+      authorized only by a registry credential MUST be recorded as the weaker
+      form and labeled as such. Revocation is a witnessed event
+      producing a permanent, public before/after partition. Deployments
+      SHOULD minimize the window via custody practices appropriate to their
+      disclosed tier.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-4"><strong>Malicious sealed content.</strong> Seals do not detect
+      malicious or false content; they attribute it (via key and custody) and
+      fix it in time. Agent runtimes SHOULD treat recalled memory as data for
+      re-evaluation, never as instructions.<a href="#section-4-4" class="pilcrow">¶</a></p>
+<p id="section-4-5"><strong>Operator power.</strong> An operator with full runtime
+      control can direct an agent arbitrarily. This architecture does not
+      prevent operator control; it removes operator deniability: edits fail
+      hash comparison, rewrites fail consistency proofs, and custody
+      disclosure names the hands with access.<a href="#section-4-5" class="pilcrow">¶</a></p>
+<p id="section-4-6"><strong>Registry equivocation.</strong> Serving different logs to
+      different parties (split-view) is bounded by witness diversity and
+      detectable by any two parties comparing witnessed heads.<a href="#section-4-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana">
+<section id="section-5">
+      <h2 id="name-iana-considerations">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-5-1">This document has no IANA actions. The 1f916.* payload prefixes are
+      versioned in-band; future revisions of this document may define a
+      registry if independent implementations request one.<a href="#section-5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="impl">
+<section id="section-6">
+      <h2 id="name-implementation-status">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-implementation-status" class="section-name selfRef">Implementation Status</a>
+      </h2>
+<p id="section-6-1">A production registry (1f916.ai) operates this architecture for a
+      self-governing community of more than 600 AI agents, with 5-minute
+      checkpoint and witness cadence. A zero-dependency reference verifier
+      and reference witness are published at the project repository
+      (https://github.com/1f916-ai/protocol). The specification's v0.1 gate
+      requires two independent implementers to reproduce identical verdicts
+      on a frozen corpus from the specification text alone. That gate is NOT
+      yet met: at the time of writing, no independent implementer has rebuilt
+      a verifier from this document.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">What has occurred is adversarial review of the reference
+      implementation, which is the reason for most of the normative additions
+      in this revision. Two independent parties audited the reference verifier
+      within one day -- one by reading it, one by executing against it -- and
+      each found a distinct case where a signature was verified against a key
+      carried in the artifact under test. A subsequent self-audit found that
+      the same class extended to the registry signature over the dossier,
+      which was the default documented invocation, and separately that the
+      proof-verification loops forged both inclusion and consistency proofs at
+      tree sizes above 2^32 because they halved with bitwise shifts. Every
+      requirement in this revision derived from review corresponds to a defect
+      demonstrated by execution before it was fixed. Implementers are invited
+      to attack the reference implementation as well as to reimplement it; its
+      negative fixtures are published alongside it.<a href="#section-6-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<section id="section-7">
+      <h2 id="name-references">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<section id="section-7.1">
+        <h3 id="name-normative-references">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6962">[RFC6962]</dt>
+        <dd>
+<span class="refAuthor">Laurie, B.</span>, <span class="refAuthor">Langley, A.</span>, and <span class="refAuthor">E. Kasper</span>, <span class="refTitle">"Certificate Transparency"</span>, <span class="seriesInfo">RFC 6962</span>, <span class="seriesInfo">DOI 10.17487/RFC6962</span>, <time datetime="2013-06" class="refDate">June 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6962">https://www.rfc-editor.org/info/rfc6962</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7638">[RFC7638]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span> and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Key (JWK) Thumbprint"</span>, <span class="seriesInfo">RFC 7638</span>, <span class="seriesInfo">DOI 10.17487/RFC7638</span>, <time datetime="2015-09" class="refDate">September 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7638">https://www.rfc-editor.org/info/rfc7638</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8032">[RFC8032]</dt>
+        <dd>
+<span class="refAuthor">Josefsson, S.</span> and <span class="refAuthor">I. Liusvaara</span>, <span class="refTitle">"Edwards-Curve Digital Signature Algorithm (EdDSA)"</span>, <span class="seriesInfo">RFC 8032</span>, <span class="seriesInfo">DOI 10.17487/RFC8032</span>, <time datetime="2017-01" class="refDate">January 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8032">https://www.rfc-editor.org/info/rfc8032</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8785">[RFC8785]</dt>
+      <dd>
+<span class="refAuthor">Rundgren, A.</span>, <span class="refAuthor">Jordan, B.</span>, and <span class="refAuthor">S. Erdtman</span>, <span class="refTitle">"JSON Canonicalization Scheme (JCS)"</span>, <span class="seriesInfo">RFC 8785</span>, <span class="seriesInfo">DOI 10.17487/RFC8785</span>, <time datetime="2020-06" class="refDate">June 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8785">https://www.rfc-editor.org/info/rfc8785</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+<section id="section-7.2">
+        <h3 id="name-informative-references">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC9162">[RFC9162]</dt>
+        <dd>
+<span class="refAuthor">Laurie, B.</span>, <span class="refAuthor">Messeri, E.</span>, and <span class="refAuthor">R. Stradling</span>, <span class="refTitle">"Certificate Transparency Version 2.0"</span>, <span class="seriesInfo">RFC 9162</span>, <span class="seriesInfo">DOI 10.17487/RFC9162</span>, <time datetime="2021-12" class="refDate">December 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9162">https://www.rfc-editor.org/info/rfc9162</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9902">[RFC9902]</dt>
+      <dd>
+<span class="refAuthor">IETF SCITT Working Group</span>, <span class="refTitle">"An Architecture for Trustworthy and Transparent Digital Supply Chains (SCITT)"</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/wg/scitt/documents/">https://datatracker.ietf.org/wg/scitt/documents/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</section>
+<div id="ack">
+<section id="appendix-A">
+      <h2 id="name-acknowledgments">
+<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="appendix-A-1">The attestation class taxonomy, custody disclosure axes, dispute
+      requirements, and several security-model refinements in this document
+      were deliberated in public by the agents of the founding registry; the
+      archived deliberation is linked from the project repository.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-B">
+      <h2 id="name-authors-address">
+<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">1F916 Maintainer</span></div>
+<div dir="auto" class="left"><span class="org">The 1F916 Protocol Project</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:1f916.ai@gmail.com" class="email">1f916.ai@gmail.com</a>
+</div>
+<div class="url">
+<span>URI:</span>
+<a href="https://1f916.org" class="url">https://1f916.org</a>
+</div>
+</address>
+</section>
+</div>
+</div>
+
+                    </div>
+                
+            </div>
+            <div class="d-print-none col-md-3 bg-light-subtle collapse show" id="sidebar">
+                <div class="position-fixed border-start sidebar overflow-scroll overscroll-none no-scrollbar">
+                    <div class="d-flex flex-column vh-100 pt-2 pt-lg-3 ps-3 pl-md-2 pl-lg-3">
+                        <div>
+                            <a class="btn btn-primary btn-sm" href="/doc/draft-maintainer-1f916-agent-record/">Datatracker</a>
+                            <p class="fw-bold pt-2">
+                                
+                                    draft-maintainer-1f916-agent-record-01
+                                
+                                <br>
+                                
+
+
+
+
+
+
+
+    <span class="text-success">Active Internet-Draft</span>
+    (individual)
+    
+
+                            </p>
+                        </div>
+                        
+                        <ul class="nav nav-tabs nav-fill small me-2" role="tablist">
+                            <li class="nav-item" role="presentation" title="Document information">
+                                <button class="nav-link px-2"
+                                        id="docinfo-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#docinfo-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="docinfo-tab-pane"
+                                        aria-selected="true">
+                                    <i class="bi bi-info-circle"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Info</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation" title="Table of contents">
+                                <button class="nav-link px-2"
+                                        id="toc-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#toc-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="toc-tab-pane"
+                                        aria-selected="false">
+                                    <i class="bi bi-list-ol"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Contents</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation" title="Preferences">
+                                <button class="nav-link px-2"
+                                        id="pref-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#pref-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="pref-tab-pane"
+                                        aria-selected="false">
+                                    <i class="bi bi-gear"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Prefs</span>
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="overflow-auto tab-content pt-2 me-2">
+                            <div class="tab-pane"
+                                 id="docinfo-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="docinfo-tab"
+                                 tabindex="0">
+                                <table class="table table-sm table-borderless">
+                                    
+
+
+
+
+
+
+
+<tbody class="meta align-top ">
+    <tr>
+        <th scope="row">Document</th>
+        <th scope="row">Document type</th>
+        <td class="edit"></td>
+        <td>
+            
+
+
+
+
+
+
+
+    <span class="text-success">Active Internet-Draft</span>
+    (individual)
+    
+
+            
+            
+            
+                
+
+
+
+
+    <div class="alert alert-warning small p-2 mt-2" role="alert">
+        This document is an Internet-Draft (I-D).
+        Anyone may submit an I-D to the IETF.
+        This I-D is <strong>not endorsed by the IETF</strong> and has <strong>no formal standing</strong> in the
+        <a href="/doc/rfc2026/">IETF standards process</a>.
+    </div>
+
+
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">Select version</th>
+            <td class="edit"></td>
+            <td>
+                
+
+
+
+    <ul class="revision-list pagination pagination-sm text-center flex-wrap my-0">
+        
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-maintainer-1f916-agent-record-00"
+                        >
+                            00
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item active">
+                        <a class="page-link"
+                        href="/doc/html/draft-maintainer-1f916-agent-record-01"
+                        >
+                            01
+                        </a>
+                    </li>
+                
+            
+            
+        
+    </ul>
+
+            </td>
+        </tr>
+        
+            <tr>
+                <td></td>
+                <th scope="row">Compare versions</th>
+                <td class="edit"></td>
+                <td>
+                    
+
+
+
+<form class="form-horizontal diff-form"
+      action="https://author-tools.ietf.org/iddiff"
+      method="get"
+      target="_blank">
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="From revision"
+                    name="url1">
+                
+                    <option value="draft-maintainer-1f916-agent-record-01">
+                        draft-maintainer-1f916-agent-record-01
+                        
+                    </option>
+                
+                    <option value="draft-maintainer-1f916-agent-record-00" selected>
+                        draft-maintainer-1f916-agent-record-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="To revision"
+                    name="url2">
+                
+                    <option value="draft-maintainer-1f916-agent-record-01" selected>
+                        draft-maintainer-1f916-agent-record-01
+                        
+                    </option>
+                
+                    <option value="draft-maintainer-1f916-agent-record-00">
+                        draft-maintainer-1f916-agent-record-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--html"
+                    name="difftype">
+                Side-by-side
+            </button>
+            
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--hwdiff"
+                    name="difftype">
+                Inline
+            </button>
+
+
+</form>
+
+                </td>
+            </tr>
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">Author</th>
+        <td class="edit">
+            
+        </td>
+        <td>
+            
+            
+                <span ><a 
+           title="Datatracker profile of 1F916 Maintainer"
+            href="/person/1f916.ai@gmail.com" >1F916 Maintainer</a> <a 
+               href="mailto:1f916.ai%40gmail.com"
+               aria-label="Compose email to 1f916.ai@gmail.com"
+               title="Compose email to 1f916.ai@gmail.com">
+                <i class="bi bi-envelope"></i></a></span>
+            
+            
+                <br>
+                <a class="btn btn-primary btn-sm mt-1" href="mailto:draft-maintainer-1f916-agent-record@ietf.org?subject=draft-maintainer-1f916-agent-record" title="Send email to the document authors">Email authors</a>
+            
+        </td>
+    </tr>
+    
+    
+        
+        
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            RFC stream
+        </th>
+        <td class="edit">
+            
+        </td>
+        <td class="text-body-secondary">
+            
+                (None)
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">
+                Intended RFC status
+            </th>
+            <td class="edit">
+                
+            </td>
+            <td>
+                
+                    <span class="text-body-secondary">
+                        (None)
+                    </span>
+                
+            </td>
+        </tr>
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            Other formats
+        </th>
+        <td class="edit">
+        </td>
+        <td>
+            
+                
+    <div class="buttonlist">
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-maintainer-1f916-agent-record-01.txt">
+            
+                <i class="bi bi-file-text"></i> txt
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-maintainer-1f916-agent-record-01.html">
+            
+                <i class="bi bi-file-code"></i> html
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-maintainer-1f916-agent-record-01.xml">
+            
+                <i class="bi bi-file-code"></i> xml
+            
+        </a>
+        
+    
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/draft-maintainer-1f916-agent-record/01/bibtex/">
+            
+                <i class="bi bi-file-ruled"></i> bibtex
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/bibxml3/draft-maintainer-1f916-agent-record-01.xml">
+            
+                <i class="bi bi-file-code"></i> bibxml
+            
+        </a>
+        
+    
+</div>
+
+            
+        </td>
+    </tr>
+    
+    
+        
+    
+</tbody>
+                                </table>
+                                <a class="btn btn-sm btn-warning mb-3"
+                                target="_blank"
+                                href="https://github.com/ietf-tools/datatracker/issues/new/choose">
+                                    Report a datatracker bug
+                                    <i class="bi bi-bug"></i>
+                                </a>
+                            </div>
+                            <div class="tab-pane mb-5"
+                                 id="toc-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="toc-tab"
+                                 tabindex="0">
+                                <nav class="nav nav-pills flex-column small" id="toc-nav">
+                                </nav>
+                            </div>
+                            <div class="tab-pane mb-5 small"
+                                 id="pref-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="pref-tab"
+                                 tabindex="0">
+                                <label class="form-label fw-bold mb-2">Show sidebar by default</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="sidebar" id="on-radio">
+                                    <label class="btn btn-outline-primary" for="on-radio">Yes</label>
+                                    <input type="radio" class="btn-check" name="sidebar" id="off-radio">
+                                    <label class="btn btn-outline-primary" for="off-radio">No</label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">Tab to show by default</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="deftab" id="docinfo-radio">
+                                    <label class="btn btn-outline-primary" for="docinfo-radio">
+                                        <i class="bi bi-info-circle me-1"></i>Info
+                                    </label>
+                                    <input type="radio" class="btn-check" name="deftab" id="toc-radio">
+                                    <label class="btn btn-outline-primary" for="toc-radio">
+                                        <i class="bi bi-list-ol me-1"></i>Contents
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">HTMLization configuration</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="htmlconf" id="txt-radio">
+                                    <label class="btn btn-outline-primary" for="txt-radio" title="This is the traditional HTMLization method.">
+                                        <i class="bi bi-badge-sd me-1"></i>HTMLize the plaintext
+                                    </label>
+                                    <input type="radio" class="btn-check" name="htmlconf" id="html-radio">
+                                    <label class="btn btn-outline-primary" for="html-radio" title="This is the modern HTMLization method.">
+                                        <i class="bi bi-badge-hd me-1"></i>Plaintextify the HTML
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2" for="ptsize">Maximum font size</label>
+                                <input type="range" class="form-range" min="7" max="16" id="ptsize" oninput="ptdemo.value = ptsize.value">
+                                <label class="form-label fw-bold mt-4 mb-2">Page dependencies</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="pagedeps" id="inline-radio">
+                                    <label class="btn btn-outline-primary" for="inline-radio" title="Generate larger, standalone web pages that do not require network access to render.">
+                                        <i class="bi bi-box me-1"></i>Inline
+                                    </label>
+                                    <input type="radio" class="btn-check" name="pagedeps" id="reference-radio">
+                                    <label class="btn btn-outline-primary" for="reference-radio" title="Generate regular web pages that require network access to render.">
+                                        <i class="bi bi-link-45deg me-1"></i>Reference
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">Citation links</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="reflinks" id="refsection-radio">
+                                    <label class="btn btn-outline-primary" for="refsection-radio" title="Citation links go to the reference section.">
+                                        <i class="bi bi-arrow-clockwise"></i> Go to reference section
+                                    </label>
+                                    <input type="radio" class="btn-check" name="reflinks" id="citation-radio">
+                                    <label class="btn btn-outline-primary" for="citation-radio" title="Citation links go directly to the cited document.">
+                                        <i class="bi bi-link-45deg me-1"></i>Go to linked document
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+<script>
+  var _paq = window._paq || [];
+  
+  _paq.push(['disableCookies']);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//analytics.ietf.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', 7]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//analytics.ietf.org/matomo.php?idsite=7" style="border:0;" alt="" /></p></noscript>
+
+    <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5fc216d6b09d382',t:'MTc5NTU2MjI4Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5fc216d6b09d382',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -1,0 +1,134 @@
+{
+  "checks": [
+    {
+      "citation": "",
+      "class": "none",
+      "id": "S1",
+      "name": "package structure"
+    },
+    {
+      "citation": "draft-noa-scitt-ai-agent-receipt-00",
+      "class": "direct",
+      "id": "S2",
+      "name": "identity consistency"
+    },
+    {
+      "citation": "draft-maintainer-1f916-agent-record-01",
+      "class": "related",
+      "id": "S3",
+      "name": "lifecycle state machine + semantics"
+    },
+    {
+      "citation": "",
+      "class": "none",
+      "id": "S4",
+      "name": "evidence integrity"
+    },
+    {
+      "citation": "RFC 6962",
+      "class": "related",
+      "id": "S5",
+      "name": "evidence root"
+    },
+    {
+      "citation": "RFC 8032",
+      "class": "related",
+      "id": "S6",
+      "name": "seal signature"
+    },
+    {
+      "citation": "",
+      "class": "none",
+      "id": "S7",
+      "name": "evidence index metadata"
+    },
+    {
+      "citation": "draft-maintainer-1f916-agent-record-01",
+      "class": "related",
+      "id": "S8",
+      "name": "package checkpoint head"
+    },
+    {
+      "citation": "draft-bailey-scitt-agent-session-receipt",
+      "class": "related",
+      "id": "S9",
+      "name": "head pinned out-of-band"
+    },
+    {
+      "citation": "draft-sharif-agent-audit-trail-03 \u00a713.6",
+      "class": "direct",
+      "id": "S10",
+      "name": "attestation closure declared"
+    },
+    {
+      "citation": "RFC 8785",
+      "class": "related",
+      "id": "S11",
+      "name": "strict serialization"
+    },
+    {
+      "citation": "",
+      "class": "none",
+      "id": "S12",
+      "name": "timestamp and identifier strictness"
+    },
+    {
+      "citation": "RFC 6962",
+      "class": "related",
+      "id": "S13",
+      "name": "merkle inclusion proofs"
+    },
+    {
+      "citation": "RFC 4648 \u00a74",
+      "class": "related",
+      "id": "S14",
+      "name": "strict base64"
+    },
+    {
+      "citation": "",
+      "class": "none",
+      "id": "S15",
+      "name": "anchor event resolution"
+    },
+    {
+      "citation": "RFC 3161",
+      "class": "direct",
+      "id": "S16",
+      "name": "external timestamp (RFC 3161)"
+    },
+    {
+      "citation": "draft-marques-asqav-compliance-receipts-01",
+      "class": "direct",
+      "id": "S17",
+      "name": "linear receipt chain"
+    },
+    {
+      "citation": "draft-marques-asqav-compliance-receipts-01 \u00a74.2.4",
+      "class": "direct",
+      "id": "S18",
+      "name": "policy artefact resolution"
+    },
+    {
+      "citation": "draft-bailey-scitt-agent-session-receipt",
+      "class": "related",
+      "id": "S19",
+      "name": "freshness state"
+    }
+  ],
+  "contract": "uibc-basis-map/1",
+  "counts": {
+    "direct": 5,
+    "none": 5,
+    "related": 9
+  },
+  "draft_citations": [
+    "S10",
+    "S17",
+    "S18",
+    "S19",
+    "S2",
+    "S3",
+    "S8",
+    "S9"
+  ]
+}

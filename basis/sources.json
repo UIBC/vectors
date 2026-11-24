@@ -1,0 +1,116 @@
+{
+  "contract": "uibc-basis-sources/1",
+  "note": "One entry per document the verifier cites as a basis. `url` was fetched on `verified_on` and answered; the check below refuses a citation that is not in this list, so a check cannot claim a basis nobody can look up. `kind` separates a published standard from an individual Internet-Draft: a draft is a proposal by named authors, not a consensus standard, and BASIS.md says so.",
+  "sources": {
+    "RFC 8785": {
+      "kind": "rfc",
+      "url": "https://www.rfc-editor.org/rfc/rfc8785.html",
+      "verified_on": "2026-11-25",
+      "what": "JSON Canonicalization Scheme (JCS): the bytes every seal and digest here is computed over",
+      "slug": "rfc8785",
+      "cache": "rfc8785.html",
+      "cache_bytes": 116980,
+      "cache_sha256": "fb209f57ddb3aa952057f0188284e5af6df562539ddc29adc164ddd544ee04aa"
+    },
+    "RFC 6962": {
+      "kind": "rfc",
+      "url": "https://www.rfc-editor.org/rfc/rfc6962.html",
+      "verified_on": "2026-11-25",
+      "what": "Certificate Transparency: the Merkle tree shape and inclusion-proof rule",
+      "slug": "rfc6962",
+      "cache": "rfc6962.html",
+      "cache_bytes": 68210,
+      "cache_sha256": "bc73bbd5b2a056c62c06061a0a849c9188554fe5b547bcb057d2a9cb76da2528"
+    },
+    "RFC 8032": {
+      "kind": "rfc",
+      "url": "https://www.rfc-editor.org/rfc/rfc8032.html",
+      "verified_on": "2026-11-25",
+      "what": "Ed25519: the signature algorithm the seal uses",
+      "slug": "rfc8032",
+      "cache": "rfc8032.html",
+      "cache_bytes": 124745,
+      "cache_sha256": "230b43b9fc78f03711e94711fb2e6e7bc56773c414309c1615fd9369ccc3f706"
+    },
+    "RFC 4648 §4": {
+      "kind": "rfc",
+      "url": "https://www.rfc-editor.org/rfc/rfc4648.html",
+      "verified_on": "2026-11-25",
+      "what": "Base64, section 4: the canonical form S14 insists on",
+      "slug": "rfc4648",
+      "cache": "rfc4648.html",
+      "cache_bytes": 44597,
+      "cache_sha256": "3c5a7a000472309f1733ffc23031b48be4dda35d875d1283a7915cef7e257e45"
+    },
+    "RFC 3161": {
+      "kind": "rfc",
+      "url": "https://www.rfc-editor.org/rfc/rfc3161.html",
+      "verified_on": "2026-11-25",
+      "what": "Time-Stamp Protocol: the token S16 verifies",
+      "slug": "rfc3161",
+      "cache": "rfc3161.html",
+      "cache_bytes": 62141,
+      "cache_sha256": "e70aae039c446c14334eac4be0584707c24ee0a85c20aacc8a22a532abb61be3"
+    },
+    "draft-sharif-agent-audit-trail-03 §13.6": {
+      "kind": "draft",
+      "url": "https://datatracker.ietf.org/doc/html/draft-sharif-agent-audit-trail-03",
+      "verified_on": "2026-11-25",
+      "what": "attestation closure: the six components S10 asks a submitter to declare",
+      "slug": "draft-sharif-agent-audit-trail-03",
+      "cache": "draft-sharif-agent-audit-trail-03.html",
+      "cache_bytes": 167020,
+      "cache_sha256": "97f3ae6372b846e3683e404c2da2b59b8173030c3074d0810ba4dd6ec8d42f46"
+    },
+    "draft-marques-asqav-compliance-receipts-01": {
+      "kind": "draft",
+      "url": "https://datatracker.ietf.org/doc/html/draft-marques-asqav-compliance-receipts-01",
+      "verified_on": "2026-11-25",
+      "what": "compliance profile of signed action receipts: the linear receipt chain S17 checks",
+      "slug": "draft-marques-asqav-compliance-receipts-01",
+      "cache": "draft-marques-asqav-compliance-receipts-01.html",
+      "cache_bytes": 141212,
+      "cache_sha256": "e7a97338adeef69deccfd4712637df8a315336e5ad567ed181d1462b377256f1"
+    },
+    "draft-marques-asqav-compliance-receipts-01 §4.2.4": {
+      "kind": "draft",
+      "url": "https://datatracker.ietf.org/doc/html/draft-marques-asqav-compliance-receipts-01",
+      "verified_on": "2026-11-25",
+      "what": "policy_digest = SHA-256 over JCS of a retained artefact: what S18 resolves",
+      "slug": "draft-marques-asqav-compliance-receipts-01",
+      "cache": "draft-marques-asqav-compliance-receipts-01.html",
+      "cache_bytes": 141212,
+      "cache_sha256": "e7a97338adeef69deccfd4712637df8a315336e5ad567ed181d1462b377256f1"
+    },
+    "draft-noa-scitt-ai-agent-receipt-00": {
+      "kind": "draft",
+      "url": "https://datatracker.ietf.org/doc/html/draft-noa-scitt-ai-agent-receipt-00",
+      "verified_on": "2026-11-25",
+      "what": "AI agent receipt: the identity binding S2 compares",
+      "slug": "draft-noa-scitt-ai-agent-receipt-00",
+      "cache": "draft-noa-scitt-ai-agent-receipt-00.html",
+      "cache_bytes": 73311,
+      "cache_sha256": "892c3ce2669f9ea53a72e028f0803a3803470a6101b5bcd8663cd74c3640c867"
+    },
+    "draft-maintainer-1f916-agent-record-01": {
+      "kind": "draft",
+      "url": "https://datatracker.ietf.org/doc/html/draft-maintainer-1f916-agent-record-01",
+      "verified_on": "2026-11-25",
+      "what": "agent action record: the lifecycle log shape S3/S8 follow",
+      "slug": "draft-maintainer-1f916-agent-record-01",
+      "cache": "draft-maintainer-1f916-agent-record-01.html",
+      "cache_bytes": 82044,
+      "cache_sha256": "605454fe421963145c776e1f73a8f196c9ffd061ee5c885aefeb3dcff702a142"
+    },
+    "draft-bailey-scitt-agent-session-receipt": {
+      "kind": "draft",
+      "url": "https://datatracker.ietf.org/doc/html/draft-bailey-scitt-agent-session-receipt",
+      "verified_on": "2026-11-25",
+      "what": "session receipt: the head commitment S9 pins",
+      "slug": "draft-bailey-scitt-agent-session-receipt",
+      "cache": "draft-bailey-scitt-agent-session-receipt.html",
+      "cache_bytes": 51188,
+      "cache_sha256": "83e60ea4b6ec6f495826a2f01244b005237b7821a999fee4641a1693ef0bf042"
+    }
+  }
+}

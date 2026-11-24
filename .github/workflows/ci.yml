@@ -30,6 +30,14 @@ jobs:
         run: python tools/run_adversarial.py
       - name: external timestamp (offline, against the shipped CA bundle)
         run: python tools/check_tsa.py
+      - name: basis split (direct / related / ours, citation by citation)
+        run: python tools/basis_map.py --check
+      - name: basis quotes (verbatim, offline, against the cached copy)
+        run: python tools/check_quotes.py --check
+      - name: none column (a search behind every `none`, a proposal behind two)
+        run: python tools/check_none.py
+      - name: none column self-test
+        run: python tools/check_none.py --selftest
 
   hygiene:
     # Two questions that the matrix gate cannot answer, because both can be
