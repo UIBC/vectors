@@ -54,13 +54,45 @@ jobs:
       - name: submission validator self-test (six doctored submissions must be refused)
         run: python tools/check_submission.py --selftest
 
+  crossversion:
+    # The eight rows above are the answer of a verifier AT the declared floor
+    # (min_verifier_version 0.5.0). This job asks the question the matrix cannot:
+    # what does a verifier BELOW the floor answer, and does it refuse to call a
+    # package healthy? Only one thing is forbidden there - PASS. Both INCONCLUSIVE
+    # ("cannot judge") and FAIL ("a defect was visible anyway") are honest answers,
+    # so a red cell here would mean the floor stopped working, not that an old
+    # release is old.
+    runs-on: ubuntu-latest
+    env:
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check "uibc-core==0.5.0"
+      - name: a second interpreter carrying the previous release
+        run: |
+          set -e
+          python -m venv .venv041
+          .venv041/bin/python -m pip install --disable-pip-version-check "uibc-core==0.4.1"
+          .venv041/bin/python -c "import uibc_core; print('0.4.1 side:', uibc_core.__version__)"
+      - name: cross-version matrix (above floor must match, below floor must never PASS)
+        run: python tools/run_crossversion.py --also .venv041/bin/python
+      - name: the committed matrix is not stale
+        run: |
+          set -e
+          python tools/run_crossversion.py --also .venv041/bin/python > /dev/null
+          git diff --exit-code crossversion-results.json VERSION-MATRIX.md \
+            || { echo "::error::VERSION-MATRIX.md or crossversion-results.json is stale - regenerate and commit"; exit 1; }
+
   gate-summary:
     # One required check with a stable name, instead of five check names that
     # change whenever the matrix changes. A branch rule that pins
     # "gate (windows-latest, 3.11)" silently stops protecting anything the
     # moment that leg is renamed or dropped, and nothing announces it. This job
     # is the only context the default-branch ruleset requires.
-    needs: [gate, hygiene]
+    needs: [gate, hygiene, crossversion]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -68,12 +100,15 @@ jobs:
         env:
           GATE: ${{ needs.gate.result }}
           HYGIENE: ${{ needs.hygiene.result }}
+          XVER: ${{ needs.crossversion.result }}
         run: |
           echo "gate:    $GATE"
           echo "hygiene: $HYGIENE"
-          if [ "$GATE" != "success" ] || [ "$HYGIENE" != "success" ]; then
+          echo "crossversion: $XVER"
+          if [ "$GATE" != "success" ] || [ "$HYGIENE" != "success" ] || [ "$XVER" != "success" ]; then
             echo "::error::a required leg did not succeed"
             exit 1
           fi
           echo "all required legs green"
+
 

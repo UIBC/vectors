@@ -44,6 +44,7 @@ The last three are a genuine finding, not a passing test. **D-002**: the S7 inde
 - `tools/make_receipt.py` — runs the six rows and writes a receipt with per-case byte digests
 - `tools/check_receipt.py` — re-derives those digests from this repo and rejects a receipt whose bytes moved
 - `EXPECTED.md` — the same table with the verifier version and the check that fired
+- `VERSION-MATRIX.md` — the same rows answered by an older verifier (0.4.1), and why its `INCONCLUSIVE` on `clean` is the version floor working rather than a regression; `tools/run_crossversion.py` regenerates it, CI fails if it goes stale
 - `RUNS.md` — the ledger; currently one author row, zero external runs
 
 ## Send back a receipt
