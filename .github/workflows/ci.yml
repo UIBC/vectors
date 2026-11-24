@@ -70,7 +70,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install --disable-pip-version-check "uibc-core==0.5.0"
+      - run: python -m pip install --disable-pip-version-check "uibc-core==0.5.0" asn1crypto cryptography
       - name: submissions (a stranger's run is judged by the corpus, not by the PR author)
         run: python tools/check_submission.py
       - name: submission validator self-test (doctored submissions must be refused, one honest one accepted)
@@ -96,12 +96,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install --disable-pip-version-check "uibc-core==0.5.0"
+      - run: python -m pip install --disable-pip-version-check "uibc-core==0.5.0" asn1crypto cryptography
       - name: a second interpreter carrying the previous release
         run: |
           set -e
           python -m venv .venv041
-          .venv041/bin/python -m pip install --disable-pip-version-check "uibc-core==0.4.1"
+          .venv041/bin/python -m pip install --disable-pip-version-check "uibc-core==0.4.1" asn1crypto cryptography
           .venv041/bin/python -c "import uibc_core; print('0.4.1 side:', uibc_core.__version__)"
       - name: cross-version matrix (above floor must match, below floor must never PASS)
         run: python tools/run_crossversion.py --also .venv041/bin/python
