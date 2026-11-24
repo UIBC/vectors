@@ -92,8 +92,15 @@ def parse_rows(log):
         label, rest = line[len(ROW_LINE):].strip().split(" rc=", 1)
         rc = int(rest.split(" ", 1)[0])
         verdict = rest.split("result=", 1)[1].split(" ", 1)[0]
-        case = label.split(" ")[0]
-        mode = "pinned" if "--pubkey" in label else "open"
+        # the row's flags, recovered from the label the log printed: the label
+        # is what a reviewer replays, so the mode is derived from it rather
+        # than from a second table that could disagree. `split()` not
+        # `split(" ")` - the log pads the label column, and padded spaces
+        # parsed as flags once, which turned every open row into `flags`.
+        parts = label.split()
+        case = parts[0]
+        flags = parts[1:]
+        mode = rv.mode_of(flags)
         rows.append({"case": case, "mode": mode, "verdict": verdict, "exit_code": rc})
     if not rows:
         raise SystemExit("no verdict rows found in the matrix output - refusing to write a "
@@ -105,7 +112,7 @@ def attach_emitted(rows):
     """Record which checks each row actually put under test."""
     by_label = {}
     for case, extra, _rc, _want in rv.ROWS:
-        mode = "pinned" if any(a == "--pubkey" for a in extra) else "open"
+        mode = rv.mode_of(extra)
         by_label[(case, mode)] = extra
     for r in rows:
         extra = by_label.get((r["case"], r["mode"]), [])

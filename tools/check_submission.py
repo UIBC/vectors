@@ -90,7 +90,7 @@ MIN_ATTESTATION = 40
 # case id -> expected verdict, derived from the gate itself so there is one table
 EXPECTED = {}
 for case, extra, _rc, want in rv.ROWS:
-    key = case + ("|pinned" if extra else "|open")
+    key = case + "|" + rv.mode_of(extra)
     EXPECTED[key] = want
 
 

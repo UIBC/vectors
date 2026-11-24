@@ -13,6 +13,7 @@ Gate: `tools/run_vectors.py` — exit 1 on any deviation from the rows below.
 | keyswap | `--pubkey keys/owner.key.pub` | FAIL | S6 seal signature | The seal's key does not match the pinned owner key. |
 | unsigned | open | INCONCLUSIVE | S6 seal signature | No seal: internally consistent, provenance unattested. A verifier that says PASS here cannot tell signed from unsigned. |
 | unknown-upgrade | open | INCONCLUSIVE | S6 seal signature | The manifest declares `status: PASS` and there is no seal. Self-declaration is not evidence and must not upgrade a verdict. |
+| full | `--expect-head sha256:bd646e83…` | PASS | S9, S10, S13, S14, S15, S17, S18 | The package carries all six closure components, a Merkle tree with proofs for both leaves, a two-receipt chain, an anchor that resolves against its own tree, and a policy digest over the JCS of the shipped artefact; the head is pinned out of band. |
 
 ## Why row 5 is written as PASS
 

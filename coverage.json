@@ -1,9 +1,9 @@
 {
   "contract": "uibc-coverage-map/1",
-  "corpus_digest": "bb7709e3ae9b6e574ca1ee9c88c863c3954de617d905933587763bd84969afaa",
+  "corpus_digest": "970769c67b1053b2f3c1e1c01fb79aae3103bef07dd196d52e5099c32233ae0c",
   "counts": {
     "specified": 19,
-    "matrix_reached": 10,
+    "matrix_reached": 18,
     "any_case_reached": 18,
     "deciding": 16,
     "unreached": 1
@@ -17,7 +17,7 @@
       "name": "package structure",
       "basis": "none",
       "citation": "",
-      "matrix_cases": 8,
+      "matrix_cases": 10,
       "adversarial_cases": 19,
       "non_pass": 1
     },
@@ -26,7 +26,7 @@
       "name": "identity consistency",
       "basis": "direct",
       "citation": "draft-noa-scitt-ai-agent-receipt-00",
-      "matrix_cases": 8,
+      "matrix_cases": 10,
       "adversarial_cases": 19,
       "non_pass": 0
     },
@@ -35,7 +35,7 @@
       "name": "lifecycle state machine + semantics",
       "basis": "related",
       "citation": "draft-maintainer-1f916-agent-record-01",
-      "matrix_cases": 8,
+      "matrix_cases": 10,
       "adversarial_cases": 19,
       "non_pass": 2
     },
@@ -44,7 +44,7 @@
       "name": "evidence integrity",
       "basis": "none",
       "citation": "",
-      "matrix_cases": 8,
+      "matrix_cases": 10,
       "adversarial_cases": 19,
       "non_pass": 4
     },
@@ -53,7 +53,7 @@
       "name": "evidence root",
       "basis": "related",
       "citation": "RFC 6962",
-      "matrix_cases": 8,
+      "matrix_cases": 10,
       "adversarial_cases": 19,
       "non_pass": 4
     },
@@ -62,7 +62,7 @@
       "name": "seal signature",
       "basis": "related",
       "citation": "RFC 8032",
-      "matrix_cases": 8,
+      "matrix_cases": 10,
       "adversarial_cases": 19,
       "non_pass": 9
     },
@@ -71,7 +71,7 @@
       "name": "evidence index metadata",
       "basis": "none",
       "citation": "",
-      "matrix_cases": 8,
+      "matrix_cases": 10,
       "adversarial_cases": 19,
       "non_pass": 1
     },
@@ -80,7 +80,7 @@
       "name": "package checkpoint head",
       "basis": "related",
       "citation": "draft-maintainer-1f916-agent-record-01",
-      "matrix_cases": 8,
+      "matrix_cases": 10,
       "adversarial_cases": 19,
       "non_pass": 6
     },
@@ -89,7 +89,7 @@
       "name": "head pinned out-of-band",
       "basis": "related",
       "citation": "draft-bailey-scitt-agent-session-receipt",
-      "matrix_cases": 0,
+      "matrix_cases": 2,
       "adversarial_cases": 1,
       "non_pass": 1
     },
@@ -98,7 +98,7 @@
       "name": "attestation closure declared",
       "basis": "direct",
       "citation": "draft-sharif-agent-audit-trail-03 §13.6",
-      "matrix_cases": 0,
+      "matrix_cases": 2,
       "adversarial_cases": 1,
       "non_pass": 1
     },
@@ -107,7 +107,7 @@
       "name": "strict serialization",
       "basis": "related",
       "citation": "RFC 8785",
-      "matrix_cases": 8,
+      "matrix_cases": 10,
       "adversarial_cases": 20,
       "non_pass": 2
     },
@@ -116,7 +116,7 @@
       "name": "timestamp and identifier strictness",
       "basis": "none",
       "citation": "",
-      "matrix_cases": 8,
+      "matrix_cases": 10,
       "adversarial_cases": 19,
       "non_pass": 0
     },
@@ -125,7 +125,7 @@
       "name": "merkle inclusion proofs",
       "basis": "related",
       "citation": "RFC 6962",
-      "matrix_cases": 0,
+      "matrix_cases": 2,
       "adversarial_cases": 1,
       "non_pass": 1
     },
@@ -134,7 +134,7 @@
       "name": "strict base64",
       "basis": "related",
       "citation": "RFC 4648 §4",
-      "matrix_cases": 0,
+      "matrix_cases": 2,
       "adversarial_cases": 1,
       "non_pass": 1
     },
@@ -143,7 +143,7 @@
       "name": "anchor event resolution",
       "basis": "none",
       "citation": "",
-      "matrix_cases": 0,
+      "matrix_cases": 2,
       "adversarial_cases": 1,
       "non_pass": 1
     },
@@ -152,7 +152,7 @@
       "name": "linear receipt chain",
       "basis": "direct",
       "citation": "draft-marques-asqav-compliance-receipts-01",
-      "matrix_cases": 0,
+      "matrix_cases": 2,
       "adversarial_cases": 1,
       "non_pass": 1
     },
@@ -161,7 +161,7 @@
       "name": "policy artefact resolution",
       "basis": "direct",
       "citation": "draft-marques-asqav-compliance-receipts-01 §4.2.4",
-      "matrix_cases": 0,
+      "matrix_cases": 2,
       "adversarial_cases": 1,
       "non_pass": 1
     },
@@ -170,7 +170,7 @@
       "name": "freshness state",
       "basis": "related",
       "citation": "draft-bailey-scitt-agent-session-receipt",
-      "matrix_cases": 0,
+      "matrix_cases": 1,
       "adversarial_cases": 1,
       "non_pass": 1
     }
@@ -223,6 +223,18 @@
       "mode": "open",
       "result": "INCONCLUSIVE",
       "checks": 10
+    },
+    {
+      "case": "full",
+      "mode": "flags",
+      "result": "PASS",
+      "checks": 17
+    },
+    {
+      "case": "full",
+      "mode": "flags",
+      "result": "PASS",
+      "checks": 18
     }
   ],
   "adversarial": [

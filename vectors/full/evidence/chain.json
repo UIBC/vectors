@@ -1,0 +1,21 @@
+{
+  "receipts": [
+    {
+      "envelope": {
+        "action": "evidence",
+        "note": "first record",
+        "seq": 1
+      },
+      "previous_receipt_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "envelope": {
+        "action": "submit",
+        "note": "second record",
+        "seq": 2
+      },
+      "previous_receipt_hash": "8718ef7596d380f85a00d89554b7dc88ba9917c917a696b2545b78a26a9f2d8c"
+    }
+  ],
+  "schema": "uibc-chain/1"
+}

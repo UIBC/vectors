@@ -17,7 +17,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MANIFEST = os.path.join(ROOT, "FIXTURES.sha256")
 TREES = ["vectors/clean", "vectors/tampered", "vectors/deleted", "vectors/keyswap",
-         "vectors/unsigned", "vectors/unknown-upgrade"]
+         "vectors/unsigned", "vectors/unknown-upgrade", "vectors/full"]
 
 
 def sha256(path):

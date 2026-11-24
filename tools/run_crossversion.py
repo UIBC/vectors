@@ -61,6 +61,7 @@ def which_version(python):
 
 
 def run_row(python, case, extra):
+    rv.reset_row_state(extra)
     env = dict(os.environ)
     env["PYTHONIOENCODING"] = "utf-8"
     cmd = [python, "-m", "uibc_core.cli", "verify", os.path.join(ROOT, "vectors", case), *extra]
@@ -110,7 +111,7 @@ def main():
         for case, extra, want_rc, want in rv.ROWS:
             floor = floor_of(case)
             got = run_row(python, case, extra)
-            label = case + ("|pinned" if extra else "|open")
+            label = case + "|" + rv.mode_of(extra)
             if got is None:
                 problems.append(f"V4: {version} could not be run on {label}")
                 continue

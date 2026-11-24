@@ -1,0 +1,21 @@
+{
+  "algorithm": "rfc6962-sha256",
+  "proofs": [
+    {
+      "index": 0,
+      "path": "files/report.txt",
+      "proof": [
+        "0db29ed7b08d5c5047ce4a15b51384c6f2c4f1dd542d97100ebf8b5e6a1459e9"
+      ]
+    },
+    {
+      "index": 1,
+      "path": "files/run.txt",
+      "proof": [
+        "a55de551391bfd8031e05ed1043a5493fced2a4697a23e603c08267ad7939b21"
+      ]
+    }
+  ],
+  "root": "c7c9f5140a470761d35328d0a36a3955fd40b8fc2d8372d973b660a3b03cfe0b",
+  "size": 2
+}

@@ -74,6 +74,24 @@
       "rule": "must equal frozen row (INCONCLUSIVE)"
     },
     {
+      "version": "0.5.0",
+      "row": "full|flags:expect-head",
+      "floor": "0.5.0",
+      "expected": "PASS",
+      "got": "PASS",
+      "ok": true,
+      "rule": "must equal frozen row (PASS)"
+    },
+    {
+      "version": "0.5.0",
+      "row": "full|flags:expect-head+state-file",
+      "floor": "0.5.0",
+      "expected": "INCONCLUSIVE",
+      "got": "INCONCLUSIVE",
+      "ok": true,
+      "rule": "must equal frozen row (INCONCLUSIVE)"
+    },
+    {
       "version": "0.4.1",
       "row": "clean|open",
       "floor": "0.5.0",
@@ -139,6 +157,24 @@
     {
       "version": "0.4.1",
       "row": "unknown-upgrade|open",
+      "floor": "0.5.0",
+      "expected": "INCONCLUSIVE or FAIL",
+      "got": "INCONCLUSIVE",
+      "ok": true,
+      "rule": "below floor -> INCONCLUSIVE or FAIL, never PASS"
+    },
+    {
+      "version": "0.4.1",
+      "row": "full|flags:expect-head",
+      "floor": "0.5.0",
+      "expected": "INCONCLUSIVE or FAIL",
+      "got": "INCONCLUSIVE",
+      "ok": true,
+      "rule": "below floor -> INCONCLUSIVE or FAIL, never PASS"
+    },
+    {
+      "version": "0.4.1",
+      "row": "full|flags:expect-head+state-file",
       "floor": "0.5.0",
       "expected": "INCONCLUSIVE or FAIL",
       "got": "INCONCLUSIVE",

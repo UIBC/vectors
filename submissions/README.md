@@ -108,7 +108,7 @@ submissions/<id>/witness/
   "contract": "uibc-witness-statement/1",
   "witness": "D. Reviewer",
   "role": "notified-body reviewer",
-  "attests": "Watched the eight-row run reproduce on this corpus and read the log as it was produced.",
+  "attests": "Watched the ten-row run reproduce on this corpus and read the log as it was produced.",
   "corpus_digest": "<the same digest as results.json>",
   "witness_pubkey": "<64 hex characters, matching witness.key.pub>",
   "observed_at": "2026-11-25T09:12:00Z",

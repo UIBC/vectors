@@ -20,6 +20,37 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VECTORS = os.path.join(ROOT, "vectors")
 OWNER_PUB = os.path.join(ROOT, "keys", "owner.key.pub")
 
+# The checkpoint `vector-full` declares after sealing. Pinning it is what makes
+# S9 speak; if the vector is rebuilt, this value moves and the row fails until
+# someone reads the new head out of the package - which is the point of a pin.
+FULL_HEAD = "sha256:bd646e8345c011e44dde4da486d093cf472ab01baa9efc42ada067cd5a8b83eb"
+# A state file the S19 row starts without. Removed before the row runs so the
+# first observation is first every time; a stale watermark would silently turn
+# this row into a comparison.
+STATE_FILE = os.path.join(ROOT, "build", "s19-state.json")
+
+
+def mode_of(extra):
+    """The row's mode label, derived from its flags in one place.
+
+    Four kinds: `open` (no flags), `pinned` (the owner key is pinned - the
+    case this matrix was built for), `flags:<name>` and `flags:<a>+<b>` for
+    every other flag set. The flag names are part of the label because two
+    rows can share a case and differ only by which flags they pass - keying
+    a row on "flags" alone let two `full` rows collide, and the submission
+    gate refused its own record for "appears twice". Every consumer that keys
+    rows by mode (the submission gate, the generator, the coverage map) asks
+    this function instead of re-deriving it.
+    """
+    if not extra:
+        return "open"
+    names = [a[2:] if a.startswith("--") else a for a in extra if a.startswith("--")]
+    if not names:
+        return "open"
+    if names == ["pubkey"]:
+        return "pinned"
+    return "flags:" + "+".join(sorted(names))
+
 ROWS = [
     # (case, extra args, expected exit code, expected result)
     ("clean",    [],                                      0, "PASS"),
@@ -35,10 +66,40 @@ ROWS = [
     # a manifest that *declares* PASS without a seal: a declaration is not
     # evidence, and INCONCLUSIVE must not be upgradable by self-description
     ("unknown-upgrade", [],                                1, "INCONCLUSIVE"),
+    # The opt-in half. These rows give the verifier the artefacts and flags the
+    # checks above never receive, so a submission built on this matrix can claim
+    # the rules that only speak when asked - not just the ten that always run.
+    # `vector-full` carries closure, a Merkle tree, a receipt chain, an anchor
+    # set and a policy map, and pins the head out of band; the pin is the
+    # checkpoint the package itself declares, so a drifted head breaks this row.
+    ("full",    ["--expect-head", FULL_HEAD],              0, "PASS"),
+    # S19 remembers a high-water mark instead of being told the head each time.
+    # A first observation is INCONCLUSIVE on purpose: there is nothing yet to
+    # compare against, and "nothing compared" is not "nothing wrong".
+    ("full",    ["--expect-head", FULL_HEAD,
+                 "--state-file", STATE_FILE],              1, "INCONCLUSIVE"),
 ]
 
 
+def reset_row_state(extra):
+    """Clear the state file a row starts from, if it carries one.
+
+    Every consumer of this matrix calls this before running a row: the gate
+    here, the cross-version replay, the submission generator. It lives in one
+    place because the cross-version replay forgot it once and read the
+    watermark the gate had just written, then answered PASS where the frozen
+    row says INCONCLUSIVE.
+    """
+    if STATE_FILE in extra:
+        os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
+        try:
+            os.remove(STATE_FILE)
+        except OSError:
+            pass
+
+
 def verify(case, extra):
+    reset_row_state(extra)
     path = os.path.join(VECTORS, case)
     cmd = [sys.executable, "-m", "uibc_core.cli", "verify", path, *extra]
     env = dict(os.environ)

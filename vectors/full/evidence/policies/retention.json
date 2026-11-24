@@ -1,0 +1,5 @@
+{
+  "id": "retention-1",
+  "retain_days": 365,
+  "rule": "evidence is retained for one year from submission"
+}

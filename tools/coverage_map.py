@@ -60,7 +60,8 @@ def collect():
     rows = []
     for case, extra, want_rc, want_result in rv.ROWS:
         doc = verify(case, extra)
-        mode = "pinned" if any(a == "--pubkey" for a in extra) else "open"
+        mode = ("pinned" if any(a == "--pubkey" for a in extra)
+                else ("flags" if extra else "open"))
         rows.append({"case": case, "mode": mode, "result": doc.get("result"),
                      "checks": len(doc.get("checks", []))})
         for c in doc.get("checks", []):

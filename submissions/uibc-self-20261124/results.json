@@ -1,6 +1,6 @@
 {
   "contract_version": "uibc-submission-results/1",
-  "corpus_digest": "bb7709e3ae9b6e574ca1ee9c88c863c3954de617d905933587763bd84969afaa",
+  "corpus_digest": "970769c67b1053b2f3c1e1c01fb79aae3103bef07dd196d52e5099c32233ae0c",
   "verifier": {
     "id": "uibc-core-verifier",
     "version": "0.5.0",
@@ -149,6 +149,57 @@
         "S8",
         "S11",
         "S12"
+      ]
+    },
+    {
+      "case": "full",
+      "mode": "flags:expect-head",
+      "verdict": "PASS",
+      "exit_code": 0,
+      "checks_emitted": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S9",
+        "S10",
+        "S11",
+        "S12",
+        "S13",
+        "S14",
+        "S15",
+        "S17",
+        "S18"
+      ]
+    },
+    {
+      "case": "full",
+      "mode": "flags:expect-head+state-file",
+      "verdict": "INCONCLUSIVE",
+      "exit_code": 1,
+      "checks_emitted": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S9",
+        "S10",
+        "S11",
+        "S12",
+        "S13",
+        "S14",
+        "S15",
+        "S17",
+        "S18",
+        "S19"
       ]
     }
   ],

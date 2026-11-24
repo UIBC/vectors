@@ -6,5 +6,7 @@
 [OK] keyswap --pubkey keys/owner.key.pub rc=1 result=FAIL (expected rc=1 result=FAIL)
 [OK] unsigned                     rc=1 result=INCONCLUSIVE (expected rc=1 result=INCONCLUSIVE)
 [OK] unknown-upgrade              rc=1 result=INCONCLUSIVE (expected rc=1 result=INCONCLUSIVE)
+[OK] full --expect-head sha256:bd646e8345c011e44dde4da486d093cf472ab01baa9efc42ada067cd5a8b83eb rc=0 result=PASS (expected rc=0 result=PASS)
+[OK] full --expect-head sha256:bd646e8345c011e44dde4da486d093cf472ab01baa9efc42ada067cd5a8b83eb --state-file build/s19-state.json rc=1 result=INCONCLUSIVE (expected rc=1 result=INCONCLUSIVE)
 
-MATRIX GATE OK - all 8 rows match.
+MATRIX GATE OK - all 10 rows match.
