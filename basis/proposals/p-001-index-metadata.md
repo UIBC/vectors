@@ -32,6 +32,12 @@ Two shapes are offered deliberately: the first folds the metadata into the exist
 
 We are not claiming to be first to notice metadata malleability, and we are not asking that our field names be adopted. The ask is narrower: that the requirement be *stated somewhere*, so that "index not covered" becomes a named failure rather than an implementation detail.
 
+## Prior art we found, and what it changes
+
+Searching before drafting turned up a practitioner repository, `getaskclaw/multi-agent-dialogue-protocol` issue #5, which derives an evidence index on demand and keeps a tamper canary that fails both the report and the validator independently. Its design and ours agree on the substance.
+
+That changes the claim in this draft, not the argument. **The idea is not new and this proposal does not present it as ours.** What is missing is a *sentence somebody else is obliged to honour* — a repository can be ignored, and an implementation that omits the index check is not failing any published requirement today. The ask below is therefore for a normative sentence, not for recognition.
+
 ## What we ask
 
 1. Whether this belongs in the agent-receipt draft as a requirement, or as a security-consideration paragraph with an example.

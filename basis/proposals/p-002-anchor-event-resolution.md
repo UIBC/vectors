@@ -1,6 +1,22 @@
 # Proposal: how a verifier resolves an anchor event
 
-**Status:** draft, not sent. · Check affected: S15 · Filed against: SCITT time-anchor work (`draft-fassbender-scitt-time-anchor`) · Date: 2026-11-25
+> **Status: withdrawn, 2026-11-25, the same day it was written.** The survey this draft asks for
+> has already been answered — twice, with MUST. `draft-crovia-tacet-01` requires: *"A verifier that
+> cannot reach a header source MUST report the anchor as unchecked, never as failed, and MUST expose
+> the height and the expected Merkle root so that a human can check them elsewhere."*
+> `draft-fassbender-scitt-time-anchor-07` §3.1 step 8 goes further and classifies an unreplayable
+> branch as *unevaluated rather than as failing*. The three-state distinction this draft was going
+> to propose is therefore normative already, and filing it would have been the overclaim that
+> `BASIS.md` exists to prevent.
+>
+> What survives is a reclassification, not a proposal: **S15 belongs to `related`**, grounded in
+> those two drafts. Our part is only that we also resolve a non-header anchor (a SCITT time-stamp
+> token) and choose the resolution order. The record lives in `basis/none.json`.
+>
+> The text below is kept unedited, because deleting a withdrawn proposal leaves no trace that we
+> checked, and the trace is the point.
+
+**Status when written:** draft, not sent. · Check affected: S15 · Filed against: SCITT time-anchor work (`draft-fassbender-scitt-time-anchor`) · Date: 2026-11-25
 
 ## The problem
 

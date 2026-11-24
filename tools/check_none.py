@@ -78,6 +78,37 @@ def problems(bdoc, ndoc):
                 probs.append(f"N4: {cid} claims an external basis with no document URL")
             if e.get("proposed_class") not in ("direct", "related"):
                 probs.append(f"N4: {cid} claims an external basis but proposes no class")
+        if e.get("prior_art"):
+            pa = e["prior_art"]
+            if not pa.get("url") or not pa.get("why_it_does_not_settle_it"):
+                probs.append(f"N8: {cid} records prior art without a URL or without saying why it "
+                             f"does not settle the requirement")
+        if e.get("english"):
+            f = ROOT / e["english"]
+            if not f.exists():
+                probs.append(f"N7: {cid} names an English draft that does not exist")
+            elif "Open questions" not in f.read_text(encoding="utf-8"):
+                probs.append(f"N7: {cid} English draft has no 'Open questions' section")
+
+    # N6: no orphan proposals. A file nobody references is either a draft we
+    # abandoned silently or one we forgot to record - both are the kind of gap
+    # this record exists to close.
+    referenced = set()
+    withdrawn = set()
+    for e in ndoc["checks"]:
+        for key in ("proposal", "english", "withdrawn_proposal"):
+            if e.get(key):
+                referenced.add(e[key])
+        if e.get("withdrawn_proposal"):
+            withdrawn.add(e["withdrawn_proposal"])
+    for f in sorted((ROOT / "basis" / "proposals").glob("*.md")):
+        rel = f"basis/proposals/{f.name}"
+        if rel not in referenced:
+            probs.append(f"N6: {rel} is in the tree but no record references it")
+    for rel in sorted(withdrawn):
+        p = ROOT / rel
+        if p.exists() and "Status: withdrawn" not in p.read_text(encoding="utf-8"):
+            probs.append(f"N6: {rel} is recorded as withdrawn but carries no withdrawal note")
     return probs, none_ids
 
 
@@ -116,6 +147,15 @@ def render(bdoc, ndoc, none_ids):
             lines += ["", e["note"]]
         if e.get("proposal"):
             lines += ["", f"Proposal: [`{e['proposal']}`]({e['proposal']}) — draft, not sent."]
+        if e.get("english"):
+            lines += [f"English draft: [`{e['english']}`]({e['english']}) — draft, not filed."]
+        if e.get("withdrawn_proposal"):
+            lines += [f"Withdrawn proposal: [`{e['withdrawn_proposal']}`]({e['withdrawn_proposal']}) "
+                      f"— kept on disk, withdrawn the same day it was written."]
+        if e.get("prior_art"):
+            pa = e["prior_art"]
+            lines += ["", f"Prior art: [{pa['doc']}]({pa['url']}) — {pa.get('what', '')}. "
+                      f"{pa.get('why_it_does_not_settle_it', '')}"]
         if e.get("upstream"):
             lines += ["", f"Reclassification needs an upstream change: `{e['upstream']}`."]
         lines.append("")

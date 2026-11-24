@@ -11,7 +11,7 @@ neighbour found.
 |---|---|---|---|---|
 | S1 | package structure | `no-external-text-found` | draft-noa-scitt-ai-agent-receipt-00 | It constrains the protected header and payload, not a directory of files. |
 | S12 | timestamp and identifier strictness | `external-basis-found` | draft-chang-delta1-settlement-00 | The documents constrain the fields' meaning; they do not tell a verifier to reject impossible values on sight. That refusal is ours - which is exactly what `related` means. |
-| S15 | anchor event resolution | `proposal-drafted` | draft-fassbender-scitt-time-anchor-05 | It motivates time anchors; it does not specify resolution semantics for a verifier. |
+| S15 | anchor event resolution | `external-basis-found` | draft-crovia-tacet-01 | It scopes OTS-style header anchors. Our rule also resolves a non-header anchor (a SCITT time-stamp token), and the order in which anchor types are tried is ours - which is why this is `related` rather than `direct`. |
 | S4 | evidence integrity | `no-external-text-found` | draft-sharif-agent-audit-trail-03 | It requires digests of closure components, which is S10, not of package files. |
 | S7 | evidence index metadata | `proposal-drafted` | C2PA hard binding (via streaming-video-technology-alliance CML results page) | A hard binding binds an asset's bytes to a manifest. Our gap is a manifest's own metadata, which no content hash covers, so editing it leaves every check green. Different direction, different object. |
 
@@ -40,11 +40,13 @@ Reclassification needs an upstream change: `uibc_core/basis.py, S12 entry`.
 
 ### S15 — anchor event resolution
 
-- 2026-11-25 · `OpenTimestamps anchor event resolution verifier requirement` → No external text we found tells a verifier how to resolve an anchor event or recompute a root after resolution; the closest material describes calendars and proofs, not the verification step.
+- 2026-11-25 · `OpenTimestamps verification resolve block merkle root mismatch semantics draft` → draft-crovia-tacet-01 states: "A verifier that cannot reach a header source MUST report the anchor as unchecked, never as failed, and MUST expose the height and the expected Merkle root so that a human can check them elsewhere." draft-fassbender-scitt-time-anchor-07 says a branch whose replay cannot complete returns NULL, and "Section 3.1 step 8 classifies the branch as unevaluated rather than as failing."
+- 2026-11-25 · `anchor event resolution verifier requirement recompute root` → fassbender-07 also constrains the replay itself: append, prepend and SHA-256 only. The three-state reporting this repo was about to propose is already normative in two drafts.
 
-A resolution rule every implementation must invent separately is a good candidate for a shared one.
+p-002 was drafted today and withdrawn the same day: the survey it asked for had already been answered, twice, with MUST. Filing it would have been exactly the overclaim this table exists to prevent, so the withdrawal is recorded in the file rather than deleted.
+Withdrawn proposal: [`basis/proposals/p-002-anchor-event-resolution.md`](basis/proposals/p-002-anchor-event-resolution.md) — kept on disk, withdrawn the same day it was written.
 
-Proposal: [`basis/proposals/p-002-anchor-event-resolution.md`](basis/proposals/p-002-anchor-event-resolution.md) — draft, not sent.
+Reclassification needs an upstream change: `uibc_core/basis.py, S15 entry`.
 
 ### S4 — evidence integrity
 
@@ -56,10 +58,14 @@ Half the rule is common practice, half is our hardening; neither is a published 
 
 - 2026-11-25 · `C2PA hard binding manifest metadata digest exclude` → C2PA requires a hard binding from manifest to asset content, and at most one of them. That binds content to manifest; it does not require that a package's index metadata carry a digest of its own, separate from the content hashes it lists.
 - 2026-11-25 · `agent receipt index digest metadata not covered by content hash` → No hit in the drafts we have cached; the closest statements are about closure components (S10) and chain links (S17), both of which are about different objects.
+- 2026-11-25 · `IETF draft agent receipt manifest digest over metadata evidence index integrity 2026` → No IETF text. One practitioner repository (getaskclaw/multi-agent-dialogue-protocol, issue #5) already builds an evidence-index canary whose tamper flips both a report and a validator independently. The idea is not novel; the normative sentence is what is missing.
 
-This is the D-002 defect turned into a proposal: the sentence that survived an edit is the sentence nobody hashed.
+This is the D-002 defect turned into a proposal: the sentence that survived an edit is the sentence nobody hashed. Prior art found the same day it was written, so the draft says so rather than presenting the idea as ours.
 
 Proposal: [`basis/proposals/p-001-index-metadata.md`](basis/proposals/p-001-index-metadata.md) — draft, not sent.
+English draft: [`basis/proposals/p-001-index-metadata.en.md`](basis/proposals/p-001-index-metadata.en.md) — draft, not filed.
+
+Prior art: [getaskclaw/multi-agent-dialogue-protocol issue #5](https://github.com/getaskclaw/multi-agent-dialogue-protocol/issues/5) — an evidence index derived on demand, with a tamper canary that fails the report and the validator independently. a repository is not a requirement; nothing there obliges anyone else to cover the index
 
 ## What this file does not say
 
