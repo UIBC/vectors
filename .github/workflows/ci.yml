@@ -28,8 +28,8 @@ jobs:
 
   hygiene:
     # Two questions that the matrix gate cannot answer, because both can be
-    # false while all six rows still match. One runner is enough: neither
-    # question is platform-dependent, and neither needs uibc-core installed.
+    # false while all eight rows still match. One runner is enough, and nothing
+    # here needs uibc-core: this job is about the repository's own bytes.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -49,9 +49,26 @@ jobs:
             echo "--- $f"
             python tools/check_receipt.py "$f"
           done
+
+  submission:
+    # The submission validator is no longer dependency-free: since a named
+    # witness must now ship a signed statement (S11/S12), the self-test signs
+    # one with a freshly generated key and one with the published owner seed.
+    # It therefore needs uibc-core's Ed25519 primitives, and it lives in its own
+    # job for the same reason crossversion does - so that hygiene stays a test
+    # of the repository's bytes and nothing else.
+    runs-on: ubuntu-latest
+    env:
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check "uibc-core==0.5.0"
       - name: submissions (a stranger's run is judged by the corpus, not by the PR author)
         run: python tools/check_submission.py
-      - name: submission validator self-test (six doctored submissions must be refused)
+      - name: submission validator self-test (doctored submissions must be refused, one honest one accepted)
         run: python tools/check_submission.py --selftest
 
   crossversion:
@@ -92,7 +109,7 @@ jobs:
     # "gate (windows-latest, 3.11)" silently stops protecting anything the
     # moment that leg is renamed or dropped, and nothing announces it. This job
     # is the only context the default-branch ruleset requires.
-    needs: [gate, hygiene, crossversion]
+    needs: [gate, hygiene, crossversion, submission]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -101,11 +118,13 @@ jobs:
           GATE: ${{ needs.gate.result }}
           HYGIENE: ${{ needs.hygiene.result }}
           XVER: ${{ needs.crossversion.result }}
+          SUB: ${{ needs.submission.result }}
         run: |
           echo "gate:    $GATE"
           echo "hygiene: $HYGIENE"
           echo "crossversion: $XVER"
-          if [ "$GATE" != "success" ] || [ "$HYGIENE" != "success" ] || [ "$XVER" != "success" ]; then
+          echo "submission: $SUB"
+          if [ "$GATE" != "success" ] || [ "$HYGIENE" != "success" ] || [ "$XVER" != "success" ] || [ "$SUB" != "success" ]; then
             echo "::error::a required leg did not succeed"
             exit 1
           fi
