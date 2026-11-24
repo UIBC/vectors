@@ -27,6 +27,11 @@
   ],
   "contact": "https://github.com/UIBC",
   "independence": "same-maintainer",
+  "scope": {
+    "not_covered": []
+  },
+  "competence_basis": "none - no personnel qualification, laboratory accreditation or third-party witness accompanies this record",
+  "witness": null,
   "submitted_at": "2026-11-24",
-  "note": "A submission by the corpus author, kept as the first row so the format is exercised by something real rather than by an empty directory. It certifies nothing and it is not a second opinion."
+  "note": "A submission by the corpus author, kept as the first row so the format is exercised by something real rather than by an empty directory. It certifies nothing and it is not a second opinion. competence_basis and witness are stated as absent rather than omitted, because a reviewer asks those two questions before asking whether anything passed."
 }
