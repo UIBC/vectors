@@ -1,0 +1,17 @@
+{
+  "contract": "uibc-basis-sources/1",
+  "note": "One entry per document the verifier cites as a basis. `url` was fetched on `verified_on` and answered; the check below refuses a citation that is not in this list, so a check cannot claim a basis nobody can look up. `kind` separates a published standard from an individual Internet-Draft: a draft is a proposal by named authors, not a consensus standard, and BASIS.md says so.",
+  "sources": {
+    "RFC 8785": {"kind": "rfc", "url": "https://www.rfc-editor.org/rfc/rfc8785.html", "verified_on": "2026-11-25", "what": "JSON Canonicalization Scheme (JCS): the bytes every seal and digest here is computed over"},
+    "RFC 6962": {"kind": "rfc", "url": "https://www.rfc-editor.org/rfc/rfc6962.html", "verified_on": "2026-11-25", "what": "Certificate Transparency: the Merkle tree shape and inclusion-proof rule"},
+    "RFC 8032": {"kind": "rfc", "url": "https://www.rfc-editor.org/rfc/rfc8032.html", "verified_on": "2026-11-25", "what": "Ed25519: the signature algorithm the seal uses"},
+    "RFC 4648 §4": {"kind": "rfc", "url": "https://www.rfc-editor.org/rfc/rfc4648.html", "verified_on": "2026-11-25", "what": "Base64, section 4: the canonical form S14 insists on"},
+    "RFC 3161": {"kind": "rfc", "url": "https://www.rfc-editor.org/rfc/rfc3161.html", "verified_on": "2026-11-25", "what": "Time-Stamp Protocol: the token S16 verifies"},
+    "draft-sharif-agent-audit-trail-03 §13.6": {"kind": "draft", "url": "https://datatracker.ietf.org/doc/html/draft-sharif-agent-audit-trail-03", "verified_on": "2026-11-25", "what": "attestation closure: the six components S10 asks a submitter to declare"},
+    "draft-marques-asqav-compliance-receipts-01": {"kind": "draft", "url": "https://datatracker.ietf.org/doc/html/draft-marques-asqav-compliance-receipts-01", "verified_on": "2026-11-25", "what": "compliance profile of signed action receipts: the linear receipt chain S17 checks"},
+    "draft-marques-asqav-compliance-receipts-01 §4.2.4": {"kind": "draft", "url": "https://datatracker.ietf.org/doc/html/draft-marques-asqav-compliance-receipts-01", "verified_on": "2026-11-25", "what": "policy_digest = SHA-256 over JCS of a retained artefact: what S18 resolves"},
+    "draft-noa-scitt-ai-agent-receipt-00": {"kind": "draft", "url": "https://datatracker.ietf.org/doc/html/draft-noa-scitt-ai-agent-receipt-00", "verified_on": "2026-11-25", "what": "AI agent receipt: the identity binding S2 compares"},
+    "draft-maintainer-1f916-agent-record-01": {"kind": "draft", "url": "https://datatracker.ietf.org/doc/html/draft-maintainer-1f916-agent-record-01", "verified_on": "2026-11-25", "what": "agent action record: the lifecycle log shape S3/S8 follow"},
+    "draft-bailey-scitt-agent-session-receipt": {"kind": "draft", "url": "https://datatracker.ietf.org/doc/html/draft-bailey-scitt-agent-session-receipt", "verified_on": "2026-11-25", "what": "session receipt: the head commitment S9 pins"}
+  }
+}

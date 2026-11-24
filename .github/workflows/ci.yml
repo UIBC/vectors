@@ -30,6 +30,8 @@ jobs:
         run: python tools/run_adversarial.py
       - name: external timestamp (offline, against the shipped CA bundle)
         run: python tools/check_tsa.py
+      - name: basis split (direct / related / ours, citation by citation)
+        run: python tools/basis_map.py --check
 
   hygiene:
     # Two questions that the matrix gate cannot answer, because both can be

@@ -76,7 +76,7 @@ python tools/stranger.py           # every gate, timed, with a machine-readable 
 
 ## Everything a stranger can run, and what each one proves
 
-`python tools/stranger.py` runs all of it and writes `stranger-run.json`: each gate's argv, exit code, duration and the line that carries its promise. Measured 2026-11-25 on one machine: 13 gates, 27.3 s.
+`python tools/stranger.py` runs all of it and writes `stranger-run.json`: each gate's argv, exit code, duration and the line that carries its promise. Measured 2026-11-25 on one machine: 14 gates, 27.8 s.
 
 | command | expected line |
 |---|---|
@@ -92,6 +92,7 @@ python tools/stranger.py           # every gate, timed, with a machine-readable 
 | `python tools/check_key_hygiene.py` | `KEY HYGIENE OK - … no seed outside keys/` |
 | `python tools/make_submission.py --id uibc-self-20261124 --reproduce` | `SUBMISSION REPRODUCED` |
 | `python tools/coverage_map.py --check` | `COVERAGE OK - 19/19 matrix, 19/19 any case, 16/19 deciding, 0 unreached.` |
+| `python tools/basis_map.py --check` | `BASIS OK - 5 direct, 9 related, 5 ours; every citation resolves.` |
 | `python tools/run_crossversion.py --also <python-with-0.4.1>` | `CROSSVERSION OK - 2 verifier(s) x 10 rows` |
 
 The last line needs a **second** interpreter: with only one, the floor cannot be exercised and the tool exits 3 with `CROSSVERSION DEGENERATE`, rather than printing a green that certifies nothing. That refusal is deliberate — the same reason `run_adversarial.py` prints `[DEFECT]` instead of hiding D-002.
@@ -105,6 +106,12 @@ Three rows of machinery are **not on this branch**: the third verifier (`second-
 `registry/external-runs.json` is the ledger, and `python tools/check_external_runs.py` makes its headline a **derived** number: it must equal the number of records that are complete, name a log whose SHA-256 matches, carry this repository's corpus digest, and are not byte-identical to our own `submissions/*/run.log` (a re-run on another machine does not reproduce our bytes). A failing run stays in the ledger as a failure and does not raise the count. `--selftest` proves all of it on seven doctored ledgers, including one that types a headline with no record behind it.
 
 **The number today is 0.** That is not a placeholder; it is the gate refusing to let us say anything else.
+
+## Where the nineteen checks come from
+
+`BASIS.md` publishes the split, per check, from the verifier's own `basis` fields: **5 direct, 9 related, 5 ours.** *Direct* means an external document states the requirement; *related* means the mechanism is borrowed and the requirement is ours; *ours* means there is no external text behind it at all.
+
+This is the first question a corpus that grades itself has to answer, and "19 checks" alone invites the assumption that all nineteen were mandated. Each citation resolves through `basis/sources.json`, where every entry carries the URL and the date it was fetched; a citation that is not there, a `direct` claim with no citation, or a `none` claim that cites something, all fail the gate. **Six of the eleven sources are individual Internet-Drafts, not consensus standards, and eight of the nineteen checks rest on them** — `BASIS.md` says so in the same table, because citing a proposal and citing a rule are different claims.
 
 ## Scope
 

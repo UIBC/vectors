@@ -63,6 +63,10 @@ GATES = [
     # the corpus reaches. If that file drifts from the corpus, the number a reader
     # quotes is wrong, which is worse than the number being small.
     ("coverage map", ["tools/coverage_map.py", "--check"], "COVERAGE OK"),
+    # Nineteen checks is a count; the split behind it is the claim a reviewer
+    # actually tests. This gate keeps the published split equal to the
+    # verifier's own basis fields, citation by citation.
+    ("basis split", ["tools/basis_map.py", "--check"], "BASIS OK"),
 ]
 
 
