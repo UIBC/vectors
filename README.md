@@ -93,6 +93,7 @@ python tools/stranger.py           # every gate, timed, with a machine-readable 
 | `python tools/make_submission.py --id uibc-self-20261124 --reproduce` | `SUBMISSION REPRODUCED` |
 | `python tools/coverage_map.py --check` | `COVERAGE OK - 19/19 matrix, 19/19 any case, 16/19 deciding, 0 unreached.` |
 | `python tools/basis_map.py --check` | `BASIS OK - 5 direct, 9 related, 5 ours; every citation resolves.` |
+| `python tools/check_quotes.py --check` | `QUOTES OK - 5 quoted sentence(s) for 5 direct check(s), verbatim in the cached copy.` |
 | `python tools/run_crossversion.py --also <python-with-0.4.1>` | `CROSSVERSION OK - 2 verifier(s) x 10 rows` |
 
 The last line needs a **second** interpreter: with only one, the floor cannot be exercised and the tool exits 3 with `CROSSVERSION DEGENERATE`, rather than printing a green that certifies nothing. That refusal is deliberate — the same reason `run_adversarial.py` prints `[DEFECT]` instead of hiding D-002.
@@ -112,6 +113,8 @@ Three rows of machinery are **not on this branch**: the third verifier (`second-
 `BASIS.md` publishes the split, per check, from the verifier's own `basis` fields: **5 direct, 9 related, 5 ours.** *Direct* means an external document states the requirement; *related* means the mechanism is borrowed and the requirement is ours; *ours* means there is no external text behind it at all.
 
 This is the first question a corpus that grades itself has to answer, and "19 checks" alone invites the assumption that all nineteen were mandated. Each citation resolves through `basis/sources.json`, where every entry carries the URL and the date it was fetched; a citation that is not there, a `direct` claim with no citation, or a `none` claim that cites something, all fail the gate. **Six of the eleven sources are individual Internet-Drafts, not consensus standards, and eight of the nineteen checks rest on them** — `BASIS.md` says so in the same table, because citing a proposal and citing a rule are different claims.
+
+`QUOTES.md` goes one step further for the five `direct` checks: it prints the sentence each one rests on, and `tools/check_quotes.py` matches that sentence character for character against a cached copy of the document, whose digest is recorded too. A paraphrase cannot pass as a quotation, and the check runs offline — no network, no trust in us. The gate already earned its keep: it found that the S18 citation names §4.2.4 of a draft that has no §4.2.4 (the rule is §4.2.2). The correction is recorded in `basis/quotes.json` and printed in `QUOTES.md`; the verifier's citation string is an upstream fix.
 
 ## Scope
 

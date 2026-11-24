@@ -1,0 +1,3740 @@
+﻿
+<!DOCTYPE html>
+
+
+
+
+
+
+
+<html data-bs-theme="auto" lang="en">
+    <head>
+        
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>
+            
+                draft-sharif-agent-audit-trail-03
+            
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://static.ietf.org/fonts/inter/import.css" rel="stylesheet">
+        <link href="https://static.ietf.org/fonts/noto-sans-mono/import.css" rel="stylesheet">
+        
+            <link rel="stylesheet" href="https://static.ietf.org/dt/12.83.2/ietf/css/document_html_referenced.css">
+            
+            <script type="module" crossorigin="" src="https://static.ietf.org/dt/12.83.2/assets/embedded-72dc5a5f.js"></script>
+<link href="https://static.ietf.org/dt/12.83.2/assets/create-pinia-singleton-4fceef90.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+<link href="https://static.ietf.org/dt/12.83.2/assets/Scrollbar-0888439d.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+            <script src="https://static.ietf.org/dt/12.83.2/ietf/js/document_html.js"></script>
+            <script src="https://static.ietf.org/dt/12.83.2/ietf/js/theme.js"></script>
+        
+        <link rel="alternate" type="application/atom+xml" title="Document changes" href="/feed/document-changes/draft-sharif-agent-audit-trail/">
+        <meta name="description"
+            
+                content="Agent Audit Trail: A Standard Logging Format for Autonomous AI Systems (Internet-Draft, 2026)"
+            >
+        
+
+<link rel="apple-touch-icon"
+      sizes="180x180"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-180.png">
+<link rel="icon"
+      sizes="32x32"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-32.png">
+<link rel="icon"
+      sizes="16x16"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-mask.svg"
+      color="#ffffff">
+<meta name="msapplication-TileColor"
+      content="#ffffff">
+<meta name="theme-color"
+      content="#ffffff">
+        
+
+
+
+
+<meta property="og:title" content="Agent Audit Trail: A Standard Logging Format for Autonomous AI Systems">
+<meta property="og:url" content="https://datatracker.ietf.org/doc/html/draft-sharif-agent-audit-trail-03">
+
+
+<link rel="canonical" href="https://datatracker.ietf.org/doc/html/draft-sharif-agent-audit-trail-03">
+
+<meta property="og:site_name" content="IETF Datatracker">
+<meta property="og:description" content="This document specifies a standard logging format for autonomous AI agent systems. The Agent Audit Trail (AAT) defines a JSON-based record structure with mandatory fields for agent identity, action classification, outcome tracking, and trust level reporting. Records are linked via tamper-evident hash chaining using SHA-256 per RFC 8785, with optional ECDSA signatures for non-repudiation. The format addresses requirements from the EU AI Act (Regulation 2024/1689), which mandates automatic recording of events for high-risk AI systems effective August 2026. It also maps to SOC 2 Trust Services Criteria, ISO/IEC 42001, ISO/IEC 24970, prEN 18229-1, and PCI DSS v4.0.1 logging requirements. The design is transport-agnostic and supports export to JSONL, Syslog (RFC 5424), and CSV while preserving chain integrity. Privacy is addressed through input/output hashing, content fingerprinting, and tombstone-based deletion compatible with GDPR Article 17. This revision (-01) adds pre-execution recording requirements, recording independence, deny reason codes, replay protection, external timestamp anchoring, and content fingerprinting based on feedback from independent implementers. This revision (-02) adds a Decision Reproducibility section (Section 13) that distinguishes record reproducibility, available for any model, from decision reproducibility, available only for open-weight models executed at temperature zero in an attested environment, and defines the associated record fields. This revision (-03) adds the Attestation Closure requirement (Section 13.6): the digests recorded for decision reproducibility MUST cover the complete computational closure of the inference function -- model weights, tokenizer, chat template, inference engine build, decoding configuration, and numeric environment -- together with new record fields (tokenizer_digest, chat_template_digest, engine_build_digest) and a minimal-change threat analysis (Section 13.7) showing that any component left outside the attested set is a forgery channel.">
+<meta property="og:type" content="article">
+
+<meta property="article:section" content="Individual Internet-Draft">
+
+<meta property="article:author" content="Raza Sharif">
+
+
+
+        
+        <style>
+            
+            .diff-form .select2-selection__rendered {
+                direction: rtl;
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <noscript><iframe class="status" title="Site status" src="/status/latest"></iframe></noscript>
+<div class="vue-embed" data-component="Status"></div>
+        <div class="btn-toolbar sidebar-toolbar position-fixed top-0 end-0 m-2 m-lg-3 d-print-none">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm me-1 dropdown-toggle d-flex align-items-center"
+                    id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown"
+                    aria-label="Toggle theme">
+                        <i class="theme-icon-active bi bi-circle-half"></i>
+                </button>
+
+                <ul class="dropdown-menu" aria-labelledby="bd-theme">
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center"
+                            data-bs-theme-value="light" aria-pressed="false">
+                            <i class="me-2 opacity-50 theme-icon bi bi-sun-fill"></i>
+                            Light<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center"
+                            data-bs-theme-value="dark" aria-pressed="false">
+                            <i class="me-2 opacity-50 theme-icon bi bi-moon-stars-fill"></i>
+                            Dark<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center active"
+                            data-bs-theme-value="auto" aria-pressed="true">
+                            <i class="me-2 opacity-50 theme-icon bi bi-circle-half"></i>
+                            Auto<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm sidebar-toggle"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#sidebar"
+                    aria-expanded="true"
+                    aria-controls="sidebar"
+                    aria-label="Toggle metadata sidebar"
+                    title="Toggle metadata sidebar">
+            <i class="bi bi-arrow-bar-left sidebar-shown"></i>
+            <i class="bi bi-arrow-bar-right sidebar-collapsed"></i>
+            </button>
+        </div>
+        <nav class="navbar bg-light-subtle px-1 fixed-top d-print-none d-md-none">
+            <a class="nav-link ps-1"
+               href="/doc/draft-sharif-agent-audit-trail/">
+                 
+                    draft-sharif-agent-audit-trail-03
+                
+                <br class="d-sm-none">
+
+                <span class="ms-sm-3 badge rounded-pill badge-draft">
+                    
+                        Internet-Draft
+                    
+                </span>
+            </a>
+            <button class="navbar-toggler p-1"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#docinfo-collapse"
+                    aria-controls="docinfo-collapse"
+                    aria-expanded="false"
+                    aria-label="Show document information">
+                <span class="navbar-toggler-icon small"></span>
+            </button>
+            <div class="navbar-nav navbar-nav-scroll overscroll-none collapse pt-1" id="docinfo-collapse">
+                <div class="bg-light-subtle p-0">
+                    <table class="table table-sm table-borderless small">
+                        <tbody class="meta align-top">
+                            <tr>
+                                <th scope="row"></th>
+                                <th scope="row">Title</th>
+                                <td class="edit"></td>
+                                <td>Agent Audit Trail: A Standard Logging Format for Autonomous AI Systems</td>
+                            </tr>
+                        </tbody>
+                        
+
+
+
+
+
+
+
+<tbody class="meta align-top ">
+    <tr>
+        <th scope="row">Document</th>
+        <th scope="row">Document type</th>
+        <td class="edit"></td>
+        <td>
+            
+
+
+
+
+
+
+
+    <div>This is an older version of an Internet-Draft whose latest revision state is "Active".</div>
+
+            
+            
+            
+                
+
+
+
+
+    <div class="alert alert-warning small p-2 mt-2" role="alert">
+        This document is an Internet-Draft (I-D).
+        Anyone may submit an I-D to the IETF.
+        This I-D is <strong>not endorsed by the IETF</strong> and has <strong>no formal standing</strong> in the
+        <a href="/doc/rfc2026/">IETF standards process</a>.
+    </div>
+
+
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">Select version</th>
+            <td class="edit"></td>
+            <td>
+                
+
+
+
+    <ul class="revision-list pagination pagination-sm text-center flex-wrap my-0">
+        
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-00"
+                        >
+                            00
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-01"
+                        rel="nofollow">
+                            01
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-02"
+                        rel="nofollow">
+                            02
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item active">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-03"
+                        rel="nofollow">
+                            03
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-04"
+                        rel="nofollow">
+                            04
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-05"
+                        rel="nofollow">
+                            05
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-06"
+                        rel="nofollow">
+                            06
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-07"
+                        rel="nofollow">
+                            07
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-08"
+                        rel="nofollow">
+                            08
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-09"
+                        rel="nofollow">
+                            09
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-10"
+                        rel="nofollow">
+                            10
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-11"
+                        >
+                            11
+                        </a>
+                    </li>
+                
+            
+            
+        
+    </ul>
+
+            </td>
+        </tr>
+        
+            <tr>
+                <td></td>
+                <th scope="row">Compare versions</th>
+                <td class="edit"></td>
+                <td>
+                    
+
+
+
+<form class="form-horizontal diff-form"
+      action="https://author-tools.ietf.org/iddiff"
+      method="get"
+      target="_blank">
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="From revision"
+                    name="url1">
+                
+                    <option value="draft-sharif-agent-audit-trail-11">
+                        draft-sharif-agent-audit-trail-11
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-10" selected>
+                        draft-sharif-agent-audit-trail-10
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-09">
+                        draft-sharif-agent-audit-trail-09
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-08">
+                        draft-sharif-agent-audit-trail-08
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-07">
+                        draft-sharif-agent-audit-trail-07
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-06">
+                        draft-sharif-agent-audit-trail-06
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-05">
+                        draft-sharif-agent-audit-trail-05
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-04">
+                        draft-sharif-agent-audit-trail-04
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-03">
+                        draft-sharif-agent-audit-trail-03
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-02">
+                        draft-sharif-agent-audit-trail-02
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-01">
+                        draft-sharif-agent-audit-trail-01
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-00">
+                        draft-sharif-agent-audit-trail-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="To revision"
+                    name="url2">
+                
+                    <option value="draft-sharif-agent-audit-trail-11" selected>
+                        draft-sharif-agent-audit-trail-11
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-10">
+                        draft-sharif-agent-audit-trail-10
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-09">
+                        draft-sharif-agent-audit-trail-09
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-08">
+                        draft-sharif-agent-audit-trail-08
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-07">
+                        draft-sharif-agent-audit-trail-07
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-06">
+                        draft-sharif-agent-audit-trail-06
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-05">
+                        draft-sharif-agent-audit-trail-05
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-04">
+                        draft-sharif-agent-audit-trail-04
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-03">
+                        draft-sharif-agent-audit-trail-03
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-02">
+                        draft-sharif-agent-audit-trail-02
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-01">
+                        draft-sharif-agent-audit-trail-01
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-00">
+                        draft-sharif-agent-audit-trail-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--html"
+                    name="difftype">
+                Side-by-side
+            </button>
+            
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--hwdiff"
+                    name="difftype">
+                Inline
+            </button>
+
+
+</form>
+
+                </td>
+            </tr>
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">Author</th>
+        <td class="edit">
+            
+        </td>
+        <td>
+            
+            
+                <span ><a 
+           title="Datatracker profile of Raza Sharif"
+            href="/person/raza@cybersecai.co.uk" >Raza Sharif</a> <a 
+               href="mailto:raza%40cybersecai.co.uk"
+               aria-label="Compose email to raza@cybersecai.co.uk"
+               title="Compose email to raza@cybersecai.co.uk">
+                <i class="bi bi-envelope"></i></a></span>
+            
+            
+        </td>
+    </tr>
+    
+    
+        
+        
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            RFC stream
+        </th>
+        <td class="edit">
+            
+        </td>
+        <td class="text-body-secondary">
+            
+                (None)
+            
+        </td>
+    </tr>
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            Other formats
+        </th>
+        <td class="edit">
+        </td>
+        <td>
+            
+                
+    <div class="buttonlist">
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-sharif-agent-audit-trail-03.txt">
+            
+                <i class="bi bi-file-text"></i> txt
+            
+        </a>
+        
+    
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/draft-sharif-agent-audit-trail/03/bibtex/">
+            
+                <i class="bi bi-file-ruled"></i> bibtex
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/bibxml3/draft-sharif-agent-audit-trail-03.xml">
+            
+                <i class="bi bi-file-code"></i> bibxml
+            
+        </a>
+        
+    
+</div>
+
+            
+        </td>
+    </tr>
+    
+    
+        
+    
+</tbody>
+                        <tr>
+                            <th scope="row"></th>
+                            <th scope="row"></th>
+                            <td class="edit"></td>
+                            <td>
+                                <a class="btn btn-sm btn-warning mb-3"
+                                target="_blank"
+                                href="https://github.com/ietf-tools/datatracker/issues/new/choose">
+                                    Report a bug
+                                    <i class="bi bi-bug"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </nav>
+        <div class="row g-0">
+            <div class="col-md-9 d-flex justify-content-center lh-sm"
+                 data-bs-spy="scroll"
+                 data-bs-target="#toc-nav"
+                 data-bs-smooth-scroll="true"
+                 tabindex="0"
+                 id="content">
+                
+                    <div class="rfcmarkup">
+                        <br class="noprint">
+                        <!-- [html-validate-disable-block attr-quotes, void-style, element-permitted-content, heading-level -- FIXME: rfcmarkup/rfc2html generates HTML with issues] -->
+                        <div class="rfcmarkup"><pre>Internet Engineering Task Force                               R. Sharif
+Internet-Draft                                            CyberSecAI Ltd
+Intended status: Standards Track                       September 5, 2026
+Expires: March 9, 2027
+
+
+   <h1>Agent Audit Trail: A Standard Logging Format for Autonomous AI</h1>
+                                <h1>Systems</h1>
+                  <h1>draft-sharif-agent-audit-trail-03</h1>
+
+Abstract
+
+   This document specifies a standard logging format for autonomous
+   AI agent systems.  The Agent Audit Trail (AAT) defines a
+   JSON-based record structure with mandatory fields for agent
+   identity, action classification, outcome tracking, and trust
+   level reporting.  Records are linked via tamper-evident hash
+   chaining using SHA-256 per <a href="/doc/html/rfc8785">RFC 8785</a>, with optional ECDSA
+   signatures for non-repudiation.
+
+   The format addresses requirements from the EU AI Act
+   (Regulation 2024/1689), which mandates automatic recording of
+   events for high-risk AI systems effective August 2026.  It also
+   maps to SOC 2 Trust Services Criteria, ISO/IEC 42001,
+   ISO/IEC 24970, prEN 18229-1, and PCI DSS v4.0.1 logging
+   requirements.
+
+   The design is transport-agnostic and supports export to JSONL,
+   Syslog (<a href="/doc/html/rfc5424">RFC 5424</a>), and CSV while preserving chain integrity.
+   Privacy is addressed through input/output hashing, content
+   fingerprinting, and tombstone-based deletion compatible with
+   GDPR Article 17.
+
+   This revision (-01) adds pre-execution recording requirements,
+   recording independence, deny reason codes, replay protection,
+   external timestamp anchoring, and content fingerprinting based
+   on feedback from independent implementers.
+
+   This revision (-02) adds a Decision Reproducibility section
+   (<a href="#section-13">Section 13</a>) that distinguishes record reproducibility,
+   available for any model, from decision reproducibility,
+   available only for open-weight models executed at temperature
+   zero in an attested environment, and defines the associated
+   record fields.
+
+   This revision (-03) adds the Attestation Closure requirement
+   (<a href="#section-13.6">Section 13.6</a>): the digests recorded for decision
+   reproducibility MUST cover the complete computational closure
+   of the inference function -- model weights, tokenizer, chat
+   template, inference engine build, decoding configuration, and
+   numeric environment -- together with new record fields
+   (tokenizer_digest, chat_template_digest, engine_build_digest)
+   and a minimal-change threat analysis (<a href="#section-13.7">Section 13.7</a>) showing
+   that any component left outside the attested set is a forgery
+   channel.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of <a href="/doc/html/bcp78">BCP 78</a> and <a href="/doc/html/bcp79">BCP 79</a>.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current
+   Internet-Drafts is at <a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a>.
+
+   Internet-Drafts are draft documents valid for a maximum of six
+   months and may be updated, replaced, or obsoleted by other
+   documents at any time.  It is inappropriate to use Internet-Drafts
+   as reference material or to cite them other than as &quot;work in
+   progress.&quot;
+
+   This Internet-Draft will expire on March 3, 2027.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="/doc/html/bcp78">BCP 78</a> and the IETF Trust&#x27;s Legal
+   Provisions Relating to IETF Documents
+   (<a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with
+   respect to this document.  Code Components extracted from this
+   document must include Revised BSD License text as described in
+   Section 4.e of the <a href="https://trustee.ietf.org/license-info">Trust Legal Provisions</a> and are provided
+   without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   <a href="#section-1">1</a>.  Introduction  . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-4">4</a>
+     <a href="#section-1.1">1.1</a>.  The Problem . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-4">4</a>
+     <a href="#section-1.2">1.2</a>.  Design Goals  . . . . . . . . . . . . . . . . . . . . .  <a href="#page-5">5</a>
+   <a href="#section-2">2</a>.  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-5">5</a>
+   <a href="#section-3">3</a>.  Audit Record Format . . . . . . . . . . . . . . . . . . . .  <a href="#page-7">7</a>
+     <a href="#section-3.1">3.1</a>.  Mandatory Fields  . . . . . . . . . . . . . . . . . . .  <a href="#page-7">7</a>
+     <a href="#section-3.2">3.2</a>.  Optional Fields . . . . . . . . . . . . . . . . . . . . <a href="#page-10">10</a>
+     <a href="#section-3.3">3.3</a>.  Field Constraints . . . . . . . . . . . . . . . . . . . <a href="#page-13">13</a>
+   <a href="#section-4">4</a>.  Pre-Execution Recording . . . . . . . . . . . . . . . . . . <a href="#page-14">14</a>
+     <a href="#section-4.1">4.1</a>.  Record Phase  . . . . . . . . . . . . . . . . . . . . . <a href="#page-14">14</a>
+     <a href="#section-4.2">4.2</a>.  Pre-Execution Requirements  . . . . . . . . . . . . . . <a href="#page-15">15</a>
+     <a href="#section-4.3">4.3</a>.  High-Risk System Requirements . . . . . . . . . . . . . <a href="#page-15">15</a>
+   <a href="#section-5">5</a>.  Recording Independence  . . . . . . . . . . . . . . . . . . <a href="#page-16">16</a>
+     <a href="#section-5.1">5.1</a>.  Self-Recording  . . . . . . . . . . . . . . . . . . . . <a href="#page-16">16</a>
+     <a href="#section-5.2">5.2</a>.  Independent Recording . . . . . . . . . . . . . . . . . <a href="#page-16">16</a>
+   <a href="#section-6">6</a>.  Tamper-Evident Chaining . . . . . . . . . . . . . . . . . . <a href="#page-17">17</a>
+     <a href="#section-6.1">6.1</a>.  Hash Computation  . . . . . . . . . . . . . . . . . . . <a href="#page-17">17</a>
+     <a href="#section-6.2">6.2</a>.  Signature Envelope  . . . . . . . . . . . . . . . . . . <a href="#page-18">18</a>
+     <a href="#section-6.3">6.3</a>.  Chain Verification  . . . . . . . . . . . . . . . . . . <a href="#page-19">19</a>
+   <a href="#section-7">7</a>.  Action Type Definitions . . . . . . . . . . . . . . . . . . <a href="#page-19">19</a>
+     <a href="#section-7.1">7.1</a>.  tool_call . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-20">20</a>
+     <a href="#section-7.2">7.2</a>.  tool_response . . . . . . . . . . . . . . . . . . . . . <a href="#page-20">20</a>
+     <a href="#section-7.3">7.3</a>.  decision  . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-21">21</a>
+     <a href="#section-7.4">7.4</a>.  delegation  . . . . . . . . . . . . . . . . . . . . . . <a href="#page-21">21</a>
+     <a href="#section-7.5">7.5</a>.  escalation  . . . . . . . . . . . . . . . . . . . . . . <a href="#page-22">22</a>
+     <a href="#section-7.6">7.6</a>.  error . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-22">22</a>
+     <a href="#section-7.7">7.7</a>.  lifecycle . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-23">23</a>
+   <a href="#section-8">8</a>.  Session Structure . . . . . . . . . . . . . . . . . . . . . <a href="#page-23">23</a>
+     <a href="#section-8.1">8.1</a>.  Genesis Record  . . . . . . . . . . . . . . . . . . . . <a href="#page-23">23</a>
+     <a href="#section-8.2">8.2</a>.  Ordered Chain . . . . . . . . . . . . . . . . . . . . . <a href="#page-24">24</a>
+     <a href="#section-8.3">8.3</a>.  Session Close . . . . . . . . . . . . . . . . . . . . . <a href="#page-24">24</a>
+   <a href="#section-9">9</a>.  Retention Requirements  . . . . . . . . . . . . . . . . . . <a href="#page-25">25</a>
+     <a href="#section-9.1">9.1</a>.  High-Risk Systems . . . . . . . . . . . . . . . . . . . <a href="#page-25">25</a>
+     <a href="#section-9.2">9.2</a>.  General-Purpose Systems . . . . . . . . . . . . . . . . <a href="#page-26">26</a>
+     <a href="#section-9.3">9.3</a>.  Tombstone Records . . . . . . . . . . . . . . . . . . . <a href="#page-26">26</a>
+   <a href="#section-10">10</a>. Export Formats  . . . . . . . . . . . . . . . . . . . . . . <a href="#page-27">27</a>
+     <a href="#section-10.1">10.1</a>. JSONL (Primary) . . . . . . . . . . . . . . . . . . . . <a href="#page-27">27</a>
+     <a href="#section-10.2">10.2</a>. Syslog (<a href="/doc/html/rfc5424">RFC 5424</a>) . . . . . . . . . . . . . . . . . . . <a href="#page-27">27</a>
+     <a href="#section-10.3">10.3</a>. CSV . . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-28">28</a>
+   <a href="#section-11">11</a>. Regulatory Mapping  . . . . . . . . . . . . . . . . . . . . <a href="#page-29">29</a>
+     <a href="#section-11.1">11.1</a>. EU AI Act . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-29">29</a>
+     <a href="#section-11.2">11.2</a>. SOC 2 . . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-30">30</a>
+     <a href="#section-11.3">11.3</a>. ISO/IEC 42001 . . . . . . . . . . . . . . . . . . . . . <a href="#page-30">30</a>
+     <a href="#section-11.4">11.4</a>. ISO/IEC 24970 . . . . . . . . . . . . . . . . . . . . . <a href="#page-31">31</a>
+     <a href="#section-11.5">11.5</a>. prEN 18229-1  . . . . . . . . . . . . . . . . . . . . . <a href="#page-31">31</a>
+     <a href="#section-11.6">11.6</a>. PCI DSS v4.0.1 . . . . . . . . . . . . . . . . . . . . <a href="#page-31">31</a>
+   <a href="#section-12">12</a>. Privacy Considerations  . . . . . . . . . . . . . . . . . . <a href="#page-32">32</a>
+     <a href="#section-12.1">12.1</a>. Data Minimization . . . . . . . . . . . . . . . . . . . <a href="#page-32">32</a>
+     <a href="#section-12.2">12.2</a>. Right to Erasure  . . . . . . . . . . . . . . . . . . . <a href="#page-33">33</a>
+   <a href="#section-13">13</a>. Decision Reproducibility  . . . . . . . . . . . . . . . . . <a href="#page-33">33</a>
+     <a href="#section-13.1">13.1</a>. Two Distinct Properties . . . . . . . . . . . . . . . <a href="#page-33">33</a>
+     <a href="#section-13.2">13.2</a>. Conditions for Decision Reproducibility  . . . . . . . <a href="#page-34">34</a>
+     <a href="#section-13.3">13.3</a>. Reproducibility Record Fields . . . . . . . . . . . . <a href="#page-34">34</a>
+     <a href="#section-13.4">13.4</a>. Verification Procedure  . . . . . . . . . . . . . . . <a href="#page-35">35</a>
+     <a href="#section-13.5">13.5</a>. Scope and Limitations . . . . . . . . . . . . . . . . <a href="#page-35">35</a>
+     <a href="#section-13.6">13.6</a>. Attestation Closure . . . . . . . . . . . . . . . . . <a href="#page-36">36</a>
+     <a href="#section-13.7">13.7</a>. Minimal-Change Threat Model . . . . . . . . . . . . . <a href="#page-36">36</a>
+   <a href="#section-14">14</a>. Security Considerations . . . . . . . . . . . . . . . . . . <a href="#page-36">36</a>
+     <a href="#section-14.1">14.1</a>. Log Tampering . . . . . . . . . . . . . . . . . . . . . <a href="#page-33">33</a>
+     <a href="#section-14.2">14.2</a>. Log Injection . . . . . . . . . . . . . . . . . . . . . <a href="#page-34">34</a>
+     <a href="#section-14.3">14.3</a>. Timing Attacks  . . . . . . . . . . . . . . . . . . . . <a href="#page-34">34</a>
+     <a href="#section-14.4">14.4</a>. Chain Breaks  . . . . . . . . . . . . . . . . . . . . . <a href="#page-35">35</a>
+     <a href="#section-14.5">14.5</a>. Replay Attacks  . . . . . . . . . . . . . . . . . . . . <a href="#page-35">35</a>
+   <a href="#section-15">15</a>. IANA Considerations . . . . . . . . . . . . . . . . . . . . <a href="#page-36">36</a>
+     <a href="#section-15.1">15.1</a>. Action Type Registry  . . . . . . . . . . . . . . . . . <a href="#page-36">36</a>
+     <a href="#section-15.2">15.2</a>. Outcome Registry  . . . . . . . . . . . . . . . . . . . <a href="#page-36">36</a>
+   <a href="#section-16">16</a>. References  . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-37">37</a>
+     <a href="#section-16.1">16.1</a>. Normative References  . . . . . . . . . . . . . . . . . <a href="#page-37">37</a>
+     <a href="#section-16.2">16.2</a>. Informative References  . . . . . . . . . . . . . . . . <a href="#page-38">38</a>
+   <a href="#appendix-A">Appendix A</a>.  Example Audit Trail  . . . . . . . . . . . . . . . <a href="#page-40">40</a>
+   <a href="#appendix-B">Appendix B</a>.  EU AI Act Compliance Checklist . . . . . . . . . . <a href="#page-46">46</a>
+   <a href="#appendix-C">Appendix C</a>.  Implementation Notes . . . . . . . . . . . . . . . <a href="#page-48">48</a>
+   <a href="#appendix-D">Appendix D</a>.  Changes from -00 . . . . . . . . . . . . . . . . . <a href="#page-52">52</a>
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-53">53</a>
+   Author&#x27;s Address  . . . . . . . . . . . . . . . . . . . . . . . <a href="#page-53">53</a>
+
+<h2><a class="selflink" id="section-1" href="#section-1">1</a>.  Introduction</h2>
+
+<h3><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  The Problem</h3>
+
+   The EU Artificial Intelligence Act (Regulation 2024/1689) enters
+   full application on 2 August 2026.  Article 12 requires that
+   high-risk AI systems &quot;shall technically allow for the automatic
+   recording of events (&#x27;logs&#x27;) over the lifetime of the system.&quot;
+   Article 12(2) further specifies that logging capabilities shall
+   conform to recognized standards or common specifications.
+
+   Despite this regulatory mandate, no standard exists for HOW
+   autonomous AI agents should log their activities.  Current
+   approaches suffer from several deficiencies:
+
+   o  Proprietary formats that vary across vendors, making cross-
+      system auditing impossible.
+
+   o  No tamper-evidence, allowing post-hoc modification of logs
+      without detection.
+
+   o  Inconsistent action taxonomies that prevent meaningful
+      comparison of agent behavior across implementations.
+
+   o  No linkage between agent identity and logged actions,
+      making attribution unreliable.
+
+   o  No session structure, making it impossible to reconstruct
+      the full sequence of an agent&#x27;s autonomous decision chain.
+
+   o  No requirement for WHEN a record must be written relative
+      to the action it describes, allowing post-execution logs
+      to masquerade as enforcement evidence.
+
+   This document fills this gap by defining the Agent Audit Trail
+   (AAT), a standard JSON-based logging format with tamper-evident
+   chaining, a defined action taxonomy, pre-execution recording
+   requirements, and explicit regulatory mapping.
+
+<h3><a class="selflink" id="section-1.2" href="#section-1.2">1.2</a>.  Design Goals</h3>
+
+   The AAT format is designed with the following goals:
+
+   o  Regulatory compliance: Direct mapping to EU AI Act
+      Article 12 requirements and other frameworks.
+
+   o  Tamper evidence: Hash-chained records that make
+      unauthorized modification detectable.
+
+   o  Interoperability: A single format usable across different
+      agent frameworks, model providers, and orchestration
+      systems.
+
+   o  Privacy by design: No raw personal data in records;
+      cryptographic hashes of inputs and outputs instead.
+
+   o  Transport agnostic: Exportable to JSONL, Syslog, and CSV
+      without losing chain integrity.
+
+   o  Incremental adoption: Mandatory fields are minimal;
+      optional fields support progressive enhancement.
+
+   o  Enforcement evidence: Pre-execution recording ensures that
+      audit records prove policy enforcement, not merely
+      observation.
+
+<h2><a class="selflink" id="section-2" href="#section-2">2</a>.  Terminology</h2>
+
+   The key words &quot;MUST&quot;, &quot;MUST NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;,
+   &quot;SHALL NOT&quot;, &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;, &quot;NOT
+   RECOMMENDED&quot;, &quot;MAY&quot;, and &quot;OPTIONAL&quot; in this document are to be
+   interpreted as described in <a href="/doc/html/bcp14">BCP 14</a> [<a href="/doc/html/rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] [<a href="/doc/html/rfc8174" title="&quot;Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words&quot;">RFC8174</a>] when,
+   and only when, they appear in capitalized form, as shown here.
+
+   Agent:  An autonomous software system that uses one or more
+      large language models to make decisions and take actions
+      with limited or no human intervention per action.
+
+   Agent Audit Trail (AAT):  An ordered sequence of audit records
+      produced by an agent during a session, linked by hash
+      chaining.
+
+   Audit Record:  A single JSON object representing one logged
+      event in an agent&#x27;s operation.
+
+   Session:  A bounded sequence of agent operations that begins
+      with a genesis record and ends with a session close record.
+
+   Genesis Record:  The first record in a session, which has no
+      parent and establishes the chain root.
+
+   Tombstone Record:  A record that replaces a deleted record&#x27;s
+      content while preserving the hash chain.
+
+   Trust Level:  A classification from L0 (no verification) to
+      L4 (full mutual authentication with revocation checking)
+      as defined in [<a href="#ref-MCPS" title="&quot;MCPS: Cryptographic Security Layer for the Model Context Protocol&quot;">MCPS</a>].
+
+   Action Type:  A controlled vocabulary value describing the
+      category of agent activity being logged.
+
+   Chain Hash:  The SHA-256 digest of the previous record&#x27;s
+      canonical JSON representation, linking records into a
+      tamper-evident sequence.
+
+   Pre-Execution Recording:  The practice of writing an audit
+      record BEFORE the action it describes is executed, ensuring
+      that the record serves as evidence of an enforcement
+      decision rather than a post-hoc observation.
+
+   Recording Component:  The software component responsible for
+      writing audit records.  This may be the agent itself, a
+      gateway, middleware, or an external observer.
+
+   Content Fingerprint:  A SHA-256 hash of the full action
+      content computed before any redaction, enabling proof of
+      content existence after the content itself has been erased.
+
+<h2><a class="selflink" id="section-3" href="#section-3">3</a>.  Audit Record Format</h2>
+
+   Each audit record is a JSON object.  Fields are divided into
+   mandatory (MUST be present in every record) and optional (MAY
+   be present based on the action type and deployment context).
+
+<h3><a class="selflink" id="section-3.1" href="#section-3.1">3.1</a>.  Mandatory Fields</h3>
+
+   record_id:  String.  REQUIRED.  A UUID version 4 [<a href="/doc/html/rfc9562" title="&quot;Universally Unique IDentifiers (UUIDs)&quot;">RFC9562</a>]
+      uniquely identifying this record.  Implementations MUST
+      generate a fresh UUIDv4 for each record.  Duplicate
+      record_id values within a session indicate a processing
+      error and MUST be flagged by validators.
+
+      Example: &quot;f47ac10b-58cc-4372-a567-0e02b2c3d479&quot;
+
+   timestamp:  String.  REQUIRED.  The time at which the event
+      occurred, formatted per <a href="/doc/html/rfc3339">RFC 3339</a> [<a href="/doc/html/rfc3339" title="&quot;Date and Time on the Internet: Timestamps&quot;">RFC3339</a>] with mandatory
+      UTC offset.  Implementations SHOULD use UTC (indicated by
+      &quot;Z&quot; suffix).  Millisecond precision is RECOMMENDED.
+      Microsecond precision is OPTIONAL.
+
+      Example: &quot;2026-03-29T14:30:00.123Z&quot;
+
+   agent_id:  String.  REQUIRED.  A URI [<a href="/doc/html/rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>] uniquely
+      identifying the agent instance.  This SHOULD be a
+      persistent identifier that survives agent restarts.  When
+      used with MCPS [<a href="#ref-MCPS" title="&quot;MCPS: Cryptographic Security Layer for the Model Context Protocol&quot;">MCPS</a>], this MUST match the agent_id in the
+      Agent Passport.
+
+      Example: &quot;urn:agent:payment-bot.acme.example&quot;
+
+   agent_version:  String.  REQUIRED.  The semantic version
+      [<a href="#ref-SEMVER" title="&quot;Semantic Versioning 2.0.0&quot;">SEMVER</a>] of the agent software.  This allows correlation
+      of behavior changes with software updates.
+
+      Example: &quot;2.1.0&quot;
+
+   session_id:  String.  REQUIRED.  A UUID version 4 identifying
+      the current session.  All records within a single session
+      MUST share the same session_id.
+
+      Example: &quot;a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;
+
+   action_type:  String.  REQUIRED.  One of the registered
+      action type values defined in <a href="#section-7">Section 7</a>.  The initial
+      registry contains: &quot;tool_call&quot;, &quot;tool_response&quot;,
+      &quot;decision&quot;, &quot;delegation&quot;, &quot;escalation&quot;, &quot;error&quot;,
+      &quot;lifecycle&quot;.
+
+   action_detail:  Object.  REQUIRED.  A JSON object containing
+      action-type-specific fields as defined in <a href="#section-7">Section 7</a>.  The
+      structure of this object varies by action_type.  Unknown
+      fields within action_detail SHOULD be preserved by
+      processors.
+
+   outcome:  String.  REQUIRED.  The result of the action.  One
+      of the registered outcome values: &quot;success&quot;, &quot;failure&quot;,
+      &quot;timeout&quot;, &quot;denied&quot;, &quot;escalated&quot;.  See <a href="#section-15.2">Section 15.2</a> for
+      the outcome registry.
+
+      o  &quot;success&quot;: The action completed as intended.
+
+      o  &quot;failure&quot;: The action did not complete due to an error.
+
+      o  &quot;timeout&quot;: The action exceeded its time budget.
+
+      o  &quot;denied&quot;: The action was blocked by a policy or
+         authorization check.
+
+      o  &quot;escalated&quot;: The action was redirected to a human or
+         higher-authority agent.
+
+   trust_level:  String.  REQUIRED.  The trust level at which
+      the agent was operating when this action occurred.  One of:
+      &quot;L0&quot;, &quot;L1&quot;, &quot;L2&quot;, &quot;L3&quot;, &quot;L4&quot;.
+
+      o  L0: No verification.  The agent has no cryptographic
+         identity.
+
+      o  L1: Self-signed identity.  The agent possesses a key
+         pair but no external attestation.
+
+      o  L2: Authority-signed identity.  A Trust Authority has
+         issued the agent&#x27;s passport.
+
+      o  L3: Mutual authentication.  Both parties have verified
+         each other&#x27;s identity.
+
+      o  L4: Full mutual authentication with revocation
+         checking and continuous monitoring.
+
+   parent_record_id:  String or null.  REQUIRED.  The record_id
+      of the immediately preceding record in the session chain.
+      For genesis records (the first record in a session), this
+      field MUST be null.  For all subsequent records, this MUST
+      contain the record_id of the previous record.
+
+   prev_hash:  String or null.  REQUIRED.  The SHA-256 hash of
+      the canonical JSON representation (per <a href="/doc/html/rfc8785">RFC 8785</a> [<a href="/doc/html/rfc8785" title="&quot;JSON Canonicalization Scheme (JCS)&quot;">RFC8785</a>])
+      of the previous record.  For genesis records, this field
+      MUST be null.  The hash MUST be encoded as a lowercase
+      hexadecimal string (64 characters).
+
+      Example: &quot;a7ffc6f8bf1ed76651c14756a061d662...&quot;
+
+   record_phase:  String.  REQUIRED.  Indicates when this record
+      was written relative to the action it describes.  One of:
+
+      o  &quot;pre_execution&quot;: The record was written BEFORE the
+         action was executed.  The outcome field reflects the
+         enforcement decision (e.g., &quot;denied&quot; or &quot;escalated&quot;),
+         not the result of execution.
+
+      o  &quot;post_execution&quot;: The record was written AFTER the
+         action completed.  The outcome field reflects the
+         actual result of execution.
+
+      o  &quot;concurrent&quot;: The record was written during the
+         execution of the action (e.g., streaming operations
+         or long-running tasks).
+
+      See <a href="#section-4">Section 4</a> for requirements on when each phase value
+      MUST be used.
+
+<h3><a class="selflink" id="section-3.2" href="#section-3.2">3.2</a>.  Optional Fields</h3>
+
+   The following fields are OPTIONAL and MAY be included in any
+   audit record:
+
+   human_override:  Object.  Present when a human intervened in
+      or overrode the agent&#x27;s action.  Contains:
+
+      o  &quot;operator_id&quot;: String.  An identifier for the human
+         operator (SHOULD be a pseudonym or role, not a real
+         name, for privacy).
+
+      o  &quot;reason&quot;: String.  Free-text explanation of the
+         override.
+
+      o  &quot;original_action&quot;: Object.  The action the agent would
+         have taken without intervention.
+
+   risk_score:  Number.  A value between 0.0 and 1.0 indicating
+      the agent&#x27;s assessed risk of the action.  0.0 indicates
+      minimal risk; 1.0 indicates maximum risk.
+
+   model_id:  String.  The identifier of the language model used
+      for the decision.  Example: &quot;gpt-4o-2025-03-01&quot; or
+      &quot;claude-sonnet-4-20250514&quot;.
+
+   input_hash:  String.  The SHA-256 hash of the input provided
+      to the agent for this action, encoded as lowercase
+      hexadecimal.  Used instead of raw input to preserve
+      privacy.
+
+   output_hash:  String.  The SHA-256 hash of the output
+      produced by the agent for this action, encoded as
+      lowercase hexadecimal.
+
+   latency_ms:  Number.  The wall-clock time in milliseconds
+      from action initiation to completion.
+
+   cost_estimate:  Object.  Estimated cost of the action:
+
+      o  &quot;amount&quot;: Number.  The monetary amount.
+
+      o  &quot;currency&quot;: String.  ISO 4217 currency code.
+
+      o  &quot;breakdown&quot;: Object.  Optional sub-costs (e.g.,
+         &quot;compute&quot;, &quot;api_calls&quot;, &quot;tokens&quot;).
+
+   sanctions_check:  Object.  Result of sanctions screening:
+
+      o  &quot;provider&quot;: String.  The screening provider.
+
+      o  &quot;checked_at&quot;: String.  <a href="/doc/html/rfc3339">RFC 3339</a> timestamp of check.
+
+      o  &quot;result&quot;: String.  One of &quot;clear&quot;, &quot;match&quot;, &quot;error&quot;.
+
+      o  &quot;list_version&quot;: String.  Version of the sanctions list.
+
+   jurisdiction:  String.  ISO 3166-1 alpha-2 country code
+      indicating the jurisdiction governing this action.
+
+   signature:  String.  An ECDSA P-256 signature over the
+      canonical JSON of this record (excluding the signature
+      field itself), encoded as Base64url per <a href="/doc/html/rfc4648#section-5">RFC 4648
+      Section&nbsp;5</a>.  See <a href="#section-6.2">Section 6.2</a>.
+
+   deny_reasons:  Array of String.  OPTIONAL.  When outcome is
+      &quot;denied&quot;, this field captures the specific reasons for
+      denial.  Each entry SHOULD be a machine-readable code
+      from the following list:
+
+      o  &quot;INSUFFICIENT_TRUST_LEVEL&quot;: The agent&#x27;s trust level is
+         below the minimum required for the action.
+
+      o  &quot;CAPABILITY_NOT_GRANTED&quot;: The agent does not hold the
+         required capability or permission.
+
+      o  &quot;REPLAY_DETECTED&quot;: The action appears to be a replay
+         of a previously executed action.
+
+      o  &quot;NONCE_REUSED&quot;: The nonce in the request has already
+         been consumed within this session.
+
+      o  &quot;TIMESTAMP_STALE&quot;: The action&#x27;s timestamp is outside
+         the acceptable freshness window.
+
+      o  &quot;AGENT_REVOKED&quot;: The agent&#x27;s identity or passport has
+         been revoked.
+
+      o  &quot;SANCTIONS_HIT&quot;: The action involves a sanctioned
+         entity.
+
+      o  &quot;SEQUENCE_VIOLATION&quot;: The action violates the expected
+         sequence of operations.
+
+      o  &quot;ACTION_UNKNOWN&quot;: The requested action is not in the
+         agent&#x27;s registered capability set.
+
+      Implementations MAY define additional reason codes.  Custom
+      codes SHOULD use a prefix identifying the implementation
+      (e.g., &quot;ACME_LIMIT_EXCEEDED&quot;).  For deployments at trust
+      level L2 or above, this field is RECOMMENDED when outcome
+      is &quot;denied&quot;.
+
+   nonce:  String.  OPTIONAL.  A unique value containing at
+      least 128 bits of entropy, encoded as a lowercase
+      hexadecimal string (minimum 32 characters).  Used for
+      replay protection.  For deployments at trust level L2 or
+      above, this field SHOULD be present.  Verifiers MAY reject
+      records with duplicate nonce values within the same
+      session.  See <a href="#section-14.5">Section 14.5</a> for replay protection details.
+
+   external_timestamp:  Object.  OPTIONAL.  An external
+      timestamp anchor from a trusted Time Stamping Authority
+      (TSA) per <a href="/doc/html/rfc3161">RFC 3161</a> [<a href="/doc/html/rfc3161" title="&quot;Internet X.509 Public Key Infrastructure Time-Stamp Protocol (TSP)&quot;">RFC3161</a>].  Contains:
+
+      o  &quot;tsa_url&quot;: String.  REQUIRED within this object.  The
+         URL of the Time Stamping Authority that produced the
+         token.
+
+      o  &quot;token&quot;: String.  REQUIRED within this object.  The
+         Base64-encoded <a href="/doc/html/rfc3161">RFC 3161</a> timestamp token.
+
+      o  &quot;anchored_at&quot;: String.  REQUIRED within this object.
+         The <a href="/doc/html/rfc3339">RFC 3339</a> timestamp returned by the TSA.
+
+      For deployments at trust level L3 or above, external
+      timestamp anchoring is RECOMMENDED.  External timestamps
+      provide independent proof of when a record was created,
+      mitigating clock manipulation attacks (<a href="#section-14.3">Section 14.3</a>).
+
+   content_fingerprint:  String.  OPTIONAL.  The SHA-256 hash
+      of the full action content (including any input, output,
+      and reasoning data) computed BEFORE any redaction or
+      hashing is applied, encoded as lowercase hexadecimal.
+      This field enables verification that content existed at
+      the time of recording even after the content has been
+      erased pursuant to GDPR Article 17 or similar regulations.
+      The content fingerprint MUST be computed over a
+      deterministic serialization of the full content; JCS
+      (<a href="/doc/html/rfc8785">RFC 8785</a>) is RECOMMENDED for this purpose.
+
+   recording_component:  String.  OPTIONAL.  A URI identifying
+      the component that wrote this audit record.  When the
+      recording component differs from the agent (i.e., when a
+      gateway, middleware, or external observer wrote the
+      record), this field MUST be present.  When absent, the
+      agent identified by agent_id is assumed to be the
+      recording component.  See <a href="#section-5">Section 5</a> for recording
+      independence requirements.
+
+<h3><a class="selflink" id="section-3.3" href="#section-3.3">3.3</a>.  Field Constraints</h3>
+
+   The following constraints apply to all audit records:
+
+   o  All string fields MUST be valid UTF-8.
+
+   o  The total size of a single audit record SHOULD NOT exceed
+      64 KB when serialized as JSON.  Records exceeding 256 KB
+      MUST be rejected by validators.
+
+   o  Timestamps MUST NOT be backdated.  The timestamp of record
+      N+1 MUST be greater than or equal to the timestamp of
+      record N within the same session.
+
+   o  The action_detail object MUST contain at least one field
+      relevant to the action_type.
+
+   o  Implementations MUST NOT add fields with names beginning
+      with &quot;aat_&quot; to action_detail, as this prefix is reserved
+      for future extensions of this specification.
+
+   o  The record_phase field MUST accurately reflect the
+      temporal relationship between the record and the action.
+      Setting record_phase to &quot;pre_execution&quot; for a record
+      written after the action has completed is a conformance
+      violation.
+
+<h2><a class="selflink" id="section-4" href="#section-4">4</a>.  Pre-Execution Recording</h2>
+
+   The -00 revision of this specification did not require that a
+   record be written at the moment of authorisation rather than at
+   the moment of completion.  A post-execution log can be fully
+   conformant to the -00 format while providing no evidence that
+   a policy check actually prevented an action.  This section
+   closes that gap.
+
+<h3><a class="selflink" id="section-4.1" href="#section-4.1">4.1</a>.  Record Phase</h3>
+
+   The record_phase field (<a href="#section-3.1">Section 3.1</a>) declares when the record
+   was written.  The three permitted values have distinct
+   evidentiary properties:
+
+   o  &quot;pre_execution&quot;: The record exists BEFORE the action runs.
+      If the outcome is &quot;denied&quot;, the record proves that the
+      action was evaluated and rejected prior to execution.  If
+      the outcome is &quot;success&quot; (i.e., the action was authorised
+      to proceed), the record proves that an authorisation
+      decision was made before execution.
+
+   o  &quot;post_execution&quot;: The record exists AFTER the action has
+      completed.  The record documents what happened but cannot
+      prove that a policy gate existed before the action ran.
+
+   o  &quot;concurrent&quot;: The record is written during a long-running
+      or streaming action.  This is appropriate for actions
+      whose outcome is not yet known.
+
+<h3><a class="selflink" id="section-4.2" href="#section-4.2">4.2</a>.  Pre-Execution Requirements</h3>
+
+   The following pre-execution recording requirements apply:
+
+   o  When action_type is &quot;decision&quot; and outcome is &quot;denied&quot;,
+      the record MUST have record_phase set to &quot;pre_execution&quot;.
+      A denial that is only logged after execution provides no
+      evidence that the denial was enforced.
+
+   o  When action_type is &quot;decision&quot; and outcome is &quot;escalated&quot;,
+      the record MUST have record_phase set to &quot;pre_execution&quot;.
+      An escalation record written after the fact does not prove
+      that the agent deferred to a human before acting.
+
+   o  When action_type is &quot;delegation&quot; and outcome is &quot;denied&quot;,
+      the record MUST have record_phase set to &quot;pre_execution&quot;.
+
+   o  For all other action_type and outcome combinations,
+      record_phase MAY be any of the three permitted values.
+      &quot;post_execution&quot; is RECOMMENDED for &quot;tool_response&quot; and
+      &quot;error&quot; records, as these inherently describe completed
+      events.
+
+<h3><a class="selflink" id="section-4.3" href="#section-4.3">4.3</a>.  High-Risk System Requirements</h3>
+
+   For systems classified as high-risk under the EU AI Act
+   (Regulation 2024/1689, Annex III), additional pre-execution
+   recording requirements apply:
+
+   o  Any action that modifies external state (e.g., writes to a
+      database, sends a message, updates a configuration) MUST
+      be preceded by a record with record_phase set to
+      &quot;pre_execution&quot; and outcome reflecting the authorisation
+      decision.
+
+   o  Any action that moves money or initiates a financial
+      transaction MUST be preceded by a pre-execution record.
+
+   o  Any delegation to another agent MUST be preceded by a
+      pre-execution record documenting the delegation decision.
+
+   In these cases, two records are expected per action: a
+   pre-execution record documenting the authorisation decision,
+   followed by a post-execution record documenting the outcome.
+   Both records MUST share the same action_detail content (or a
+   reference linking them), and the post-execution record SHOULD
+   reference the pre-execution record&#x27;s record_id in an
+   &quot;authorization_record_id&quot; field within action_detail.
+
+<h2><a class="selflink" id="section-5" href="#section-5">5</a>.  Recording Independence</h2>
+
+   This section specifies requirements for the component that
+   writes audit records, addressing the question of whether an
+   agent may log its own actions.
+
+<h3><a class="selflink" id="section-5.1" href="#section-5.1">5.1</a>.  Self-Recording</h3>
+
+   At trust levels L0 and L1, the agent itself MAY write its own
+   audit records.  However, when an agent writes its own records,
+   the following declaration requirements apply:
+
+   o  The recording_component field (<a href="#section-3.2">Section 3.2</a>) MAY be absent
+      (indicating self-recording) or MUST be set to the same
+      URI as the agent_id field.
+
+   o  The genesis record&#x27;s action_detail SHOULD include a field
+      &quot;recording_mode&quot; with value &quot;self&quot; to declare that the
+      agent is its own recorder.
+
+   Self-recording provides weaker evidentiary guarantees because
+   the agent could, in principle, omit or alter records of its
+   own actions without external detection.
+
+<h3><a class="selflink" id="section-5.2" href="#section-5.2">5.2</a>.  Independent Recording</h3>
+
+   For deployments at trust level L2 and above, audit records
+   SHOULD be written by a component independent of the agent.
+   Independent recording components include:
+
+   o  An API gateway or reverse proxy that observes agent
+      traffic and writes records before forwarding requests.
+
+   o  A sidecar process or middleware that intercepts agent
+      actions and writes records.
+
+   o  An external monitoring system that receives action
+      notifications and writes records independently.
+
+   When an independent recording component is used:
+
+   o  The recording_component field MUST be present and MUST
+      contain a URI identifying the independent component.
+
+   o  The independent component SHOULD sign records using its
+      own key, distinct from the agent&#x27;s key, providing
+      independent attestation.
+
+   o  The genesis record&#x27;s action_detail SHOULD include a field
+      &quot;recording_mode&quot; with value &quot;independent&quot; and a field
+      &quot;recording_component_id&quot; containing the URI of the
+      recording component.
+
+   Independent recording provides stronger evidence that the
+   audit trail faithfully represents the agent&#x27;s actions, as the
+   recording component has no incentive to omit or alter records.
+
+<h2><a class="selflink" id="section-6" href="#section-6">6</a>.  Tamper-Evident Chaining</h2>
+
+<h3><a class="selflink" id="section-6.1" href="#section-6.1">6.1</a>.  Hash Computation</h3>
+
+   The prev_hash field creates a tamper-evident chain across all
+   records in a session.  The hash is computed as follows:
+
+   1.  Take the complete JSON object of the previous record,
+       INCLUDING all fields (mandatory and optional) that were
+       present in the record as stored.
+
+   2.  Serialize the JSON object using the JSON Canonicalization
+       Scheme (JCS) defined in <a href="/doc/html/rfc8785">RFC 8785</a> [<a href="/doc/html/rfc8785" title="&quot;JSON Canonicalization Scheme (JCS)&quot;">RFC8785</a>].  JCS
+       produces a deterministic byte sequence from any JSON
+       value.
+
+   3.  Compute the SHA-256 hash of the canonical byte sequence.
+
+   4.  Encode the resulting 32-byte hash as a 64-character
+       lowercase hexadecimal string.
+
+   The formula is:
+
+       prev_hash(N) = hex(SHA-256(JCS(record(N-1))))
+
+   For the genesis record (N=0), prev_hash MUST be null.
+
+   Implementations MUST use JCS (<a href="/doc/html/rfc8785">RFC 8785</a>) for canonicalization.
+   Alternative canonicalization schemes MUST NOT be used, as they
+   would break chain verification across implementations.
+
+<h3><a class="selflink" id="section-6.2" href="#section-6.2">6.2</a>.  Signature Envelope</h3>
+
+   When cryptographic non-repudiation is required, records MAY
+   include an ECDSA P-256 signature.  The signing procedure is:
+
+   1.  Construct the complete audit record with all fields
+       EXCEPT the &quot;signature&quot; field.
+
+   2.  Serialize using JCS (<a href="/doc/html/rfc8785">RFC 8785</a>).
+
+   3.  Compute SHA-256 of the canonical bytes.
+
+   4.  Sign the hash using ECDSA P-256 with the agent&#x27;s private
+       key, per FIPS 186-5 [<a href="#ref-FIPS186-5">FIPS186-5</a>].
+
+   5.  Encode the signature as Base64url (<a href="/doc/html/rfc4648#section-5">RFC 4648 Section&nbsp;5</a>)
+       using IEEE P1363 fixed-length r||s encoding (64 bytes
+       total: 32 bytes r, 32 bytes s).
+
+   6.  Add the &quot;signature&quot; field to the record.
+
+   When verifying, the verifier MUST remove the &quot;signature&quot; field
+   before computing the hash for comparison.
+
+   Note: When both prev_hash and signature are present, prev_hash
+   is computed over the COMPLETE previous record INCLUDING its
+   signature field.  Only the current record&#x27;s signature is
+   excluded during signing of the current record.
+
+   When used with MCPS [<a href="#ref-MCPS" title="&quot;MCPS: Cryptographic Security Layer for the Model Context Protocol&quot;">MCPS</a>], the signing key SHOULD be the same
+   key used in the agent&#x27;s Agent Passport, providing a direct
+   binding between audit records and cryptographic identity.
+
+<h3><a class="selflink" id="section-6.3" href="#section-6.3">6.3</a>.  Chain Verification</h3>
+
+   To verify a session&#x27;s audit trail integrity, a verifier MUST:
+
+   1.  Confirm the first record has parent_record_id = null and
+       prev_hash = null.
+
+   2.  For each subsequent record N (where N &gt; 0):
+
+       a.  Compute hex(SHA-256(JCS(record(N-1)))).
+
+       b.  Compare the computed hash with record(N).prev_hash.
+
+       c.  If the values differ, the chain is broken at
+           record N and the trail MUST be flagged as tampered.
+
+   3.  If signatures are present, verify each signature using
+       the agent&#x27;s public key.
+
+   4.  Verify that timestamps are monotonically non-decreasing.
+
+   5.  Verify that parent_record_id of record N equals the
+       record_id of record N-1.
+
+   6.  Verify that record_phase values are consistent with the
+       requirements in <a href="#section-4.2">Section 4.2</a>.
+
+   7.  If nonce values are present, verify that no duplicate
+       nonces exist within the session.
+
+   A chain verification failure MUST be reported as a critical
+   integrity error.  Partial chain verification (e.g., verifying
+   only the last K records) is NOT RECOMMENDED but MAY be used
+   for performance reasons if the full chain has been previously
+   verified.
+
+<h2><a class="selflink" id="section-7" href="#section-7">7</a>.  Action Type Definitions</h2>
+
+   Each action type defines a specific structure for the
+   action_detail object.
+
+<h3><a class="selflink" id="section-7.1" href="#section-7.1">7.1</a>.  tool_call</h3>
+
+   Logged when the agent invokes an external tool or API.
+
+   action_detail fields:
+
+   o  &quot;tool_name&quot;: String.  REQUIRED.  The name of the tool
+      being called.
+
+   o  &quot;tool_server&quot;: String.  OPTIONAL.  URI of the MCP server
+      or API endpoint providing the tool.
+
+   o  &quot;parameters_hash&quot;: String.  REQUIRED.  SHA-256 hash of
+      the serialized parameters sent to the tool.
+
+   o  &quot;tool_version&quot;: String.  OPTIONAL.  Version of the tool
+      definition.
+
+   o  &quot;authorization&quot;: String.  OPTIONAL.  The authorization
+      mechanism used (e.g., &quot;bearer_token&quot;, &quot;api_key&quot;,
+      &quot;mutual_tls&quot;).
+
+<h3><a class="selflink" id="section-7.2" href="#section-7.2">7.2</a>.  tool_response</h3>
+
+   Logged when the agent receives a response from a tool.
+
+   action_detail fields:
+
+   o  &quot;tool_name&quot;: String.  REQUIRED.  The name of the tool
+      that responded.
+
+   o  &quot;response_hash&quot;: String.  REQUIRED.  SHA-256 hash of
+      the response payload.
+
+   o  &quot;response_size&quot;: Number.  OPTIONAL.  Size of the response
+      in bytes.
+
+   o  &quot;parent_call_id&quot;: String.  REQUIRED.  The record_id of
+      the corresponding tool_call record.
+
+<h3><a class="selflink" id="section-7.3" href="#section-7.3">7.3</a>.  decision</h3>
+
+   Logged when the agent makes an autonomous decision.
+
+   action_detail fields:
+
+   o  &quot;decision_type&quot;: String.  REQUIRED.  Category of decision
+      (e.g., &quot;route&quot;, &quot;approve&quot;, &quot;reject&quot;, &quot;classify&quot;,
+      &quot;generate&quot;).
+
+   o  &quot;reasoning_hash&quot;: String.  OPTIONAL.  SHA-256 hash of the
+      agent&#x27;s reasoning chain or chain-of-thought.
+
+   o  &quot;confidence&quot;: Number.  OPTIONAL.  Confidence score between
+      0.0 and 1.0.
+
+   o  &quot;alternatives_considered&quot;: Number.  OPTIONAL.  Count of
+      alternative actions the agent evaluated.
+
+   o  &quot;policy_ref&quot;: String.  OPTIONAL.  Identifier of the
+      policy or rule that governed this decision.
+
+   o  &quot;authorization_record_id&quot;: String.  OPTIONAL.  When this
+      is a post-execution record for a previously authorised
+      action, contains the record_id of the pre-execution
+      record that authorised it.
+
+<h3><a class="selflink" id="section-7.4" href="#section-7.4">7.4</a>.  delegation</h3>
+
+   Logged when the agent delegates work to another agent.
+
+   action_detail fields:
+
+   o  &quot;delegate_agent_id&quot;: String.  REQUIRED.  URI of the agent
+      receiving the delegation.
+
+   o  &quot;delegate_trust_level&quot;: String.  REQUIRED.  Trust level
+      of the delegate agent.
+
+   o  &quot;task_description_hash&quot;: String.  REQUIRED.  SHA-256 hash
+      of the delegated task description.
+
+   o  &quot;constraints&quot;: Array of String.  OPTIONAL.  Constraints
+      imposed on the delegate.
+
+   o  &quot;timeout_ms&quot;: Number.  OPTIONAL.  Maximum time allowed
+      for the delegate to complete the task.
+
+<h3><a class="selflink" id="section-7.5" href="#section-7.5">7.5</a>.  escalation</h3>
+
+   Logged when the agent escalates to a human operator or
+   higher-authority system.
+
+   action_detail fields:
+
+   o  &quot;escalation_reason&quot;: String.  REQUIRED.  Why the agent
+      escalated (e.g., &quot;confidence_below_threshold&quot;,
+      &quot;policy_requires_human&quot;, &quot;risk_score_exceeded&quot;,
+      &quot;error_recovery&quot;).
+
+   o  &quot;escalation_target&quot;: String.  REQUIRED.  Identifier of
+      the human or system receiving the escalation.
+
+   o  &quot;context_hash&quot;: String.  OPTIONAL.  SHA-256 hash of the
+      context provided to the escalation target.
+
+   o  &quot;urgency&quot;: String.  OPTIONAL.  One of &quot;low&quot;, &quot;medium&quot;,
+      &quot;high&quot;, &quot;critical&quot;.
+
+<h3><a class="selflink" id="section-7.6" href="#section-7.6">7.6</a>.  error</h3>
+
+   Logged when the agent encounters an error condition.
+
+   action_detail fields:
+
+   o  &quot;error_code&quot;: String.  REQUIRED.  A machine-readable
+      error code.
+
+   o  &quot;error_message&quot;: String.  REQUIRED.  A human-readable
+      error description.
+
+   o  &quot;error_category&quot;: String.  REQUIRED.  One of &quot;transport&quot;,
+      &quot;authentication&quot;, &quot;authorization&quot;, &quot;validation&quot;,
+      &quot;timeout&quot;, &quot;internal&quot;, &quot;external&quot;.
+
+   o  &quot;recoverable&quot;: Boolean.  REQUIRED.  Whether the agent
+      can continue operating after this error.
+
+   o  &quot;stack_hash&quot;: String.  OPTIONAL.  SHA-256 hash of the
+      stack trace, for debugging without exposing internals.
+
+<h3><a class="selflink" id="section-7.7" href="#section-7.7">7.7</a>.  lifecycle</h3>
+
+   Logged for agent lifecycle events (start, stop, pause,
+   configuration changes).
+
+   action_detail fields:
+
+   o  &quot;event&quot;: String.  REQUIRED.  One of &quot;session_start&quot;,
+      &quot;session_end&quot;, &quot;pause&quot;, &quot;resume&quot;,
+      &quot;configuration_change&quot;, &quot;key_rotation&quot;,
+      &quot;trust_level_change&quot;.
+
+   o  &quot;previous_state&quot;: String.  OPTIONAL.  The state before
+      this lifecycle event.
+
+   o  &quot;new_state&quot;: String.  OPTIONAL.  The state after this
+      lifecycle event.
+
+   o  &quot;trigger&quot;: String.  OPTIONAL.  What caused the lifecycle
+      event (e.g., &quot;scheduled&quot;, &quot;manual&quot;, &quot;policy&quot;,
+      &quot;error_recovery&quot;).
+
+<h2><a class="selflink" id="section-8" href="#section-8">8</a>.  Session Structure</h2>
+
+<h3><a class="selflink" id="section-8.1" href="#section-8.1">8.1</a>.  Genesis Record</h3>
+
+   Every session MUST begin with a genesis record.  The genesis
+   record has the following characteristics:
+
+   o  action_type MUST be &quot;lifecycle&quot;.
+
+   o  action_detail.event MUST be &quot;session_start&quot;.
+
+   o  parent_record_id MUST be null.
+
+   o  prev_hash MUST be null.
+
+   o  record_phase MUST be &quot;concurrent&quot;.
+
+   o  The action_detail SHOULD include the agent&#x27;s configuration
+      hash, enabled tools list, and operating parameters to
+      establish a baseline for the session.
+
+   o  The action_detail SHOULD include &quot;recording_mode&quot; (either
+      &quot;self&quot; or &quot;independent&quot;) to declare how records are being
+      written for this session.
+
+   Example genesis action_detail:
+
+       {
+         &quot;event&quot;: &quot;session_start&quot;,
+         &quot;new_state&quot;: &quot;active&quot;,
+         &quot;trigger&quot;: &quot;scheduled&quot;,
+         &quot;config_hash&quot;: &quot;b5bb9d8014a0f9b1d6...&quot;,
+         &quot;recording_mode&quot;: &quot;independent&quot;,
+         &quot;recording_component_id&quot;:
+           &quot;urn:gateway:enforcement.acme.example&quot;,
+         &quot;enabled_tools&quot;: [
+           &quot;payment_transfer&quot;,
+           &quot;sanctions_check&quot;,
+           &quot;balance_query&quot;
+         ]
+       }
+
+<h3><a class="selflink" id="section-8.2" href="#section-8.2">8.2</a>.  Ordered Chain</h3>
+
+   After the genesis record, all records MUST form a strictly
+   ordered chain:
+
+   o  Each record&#x27;s parent_record_id MUST equal the previous
+      record&#x27;s record_id.
+
+   o  Each record&#x27;s prev_hash MUST equal
+      hex(SHA-256(JCS(previous_record))).
+
+   o  Timestamps MUST be monotonically non-decreasing.
+
+   o  No gaps in the chain are permitted.  If a record cannot
+      be produced (e.g., due to a crash), a recovery record
+      with action_type &quot;error&quot; MUST be inserted to document the
+      gap when the agent resumes.
+
+   Branching (multiple records claiming the same parent) is NOT
+   permitted within a single session.  If an agent forks into
+   parallel execution paths, each path MUST use a separate
+   session_id and the delegation record in the parent session
+   MUST reference the child session_id.
+
+<h3><a class="selflink" id="section-8.3" href="#section-8.3">8.3</a>.  Session Close</h3>
+
+   Every session SHOULD end with a close record.  The close
+   record has the following characteristics:
+
+   o  action_type MUST be &quot;lifecycle&quot;.
+
+   o  action_detail.event MUST be &quot;session_end&quot;.
+
+   o  record_phase MUST be &quot;post_execution&quot;.
+
+   o  action_detail MUST include a &quot;session_hash&quot; field
+      containing the SHA-256 hash of the concatenation of all
+      record hashes in the session, in order:
+
+       session_hash = hex(SHA-256(
+         prev_hash(1) || prev_hash(2) || ... || prev_hash(N)
+       ))
+
+      where N is the close record itself and prev_hash values
+      are the raw 32-byte digests (not hex-encoded) prior to
+      concatenation.
+
+   o  action_detail SHOULD include &quot;record_count&quot; (integer)
+      and &quot;duration_ms&quot; (number) summarizing the session.
+
+   If an agent terminates abnormally without producing a close
+   record, the session is considered &quot;orphaned.&quot;  Monitoring
+   systems SHOULD detect orphaned sessions and produce a
+   synthetic close record with outcome &quot;failure&quot; and
+   action_detail.trigger &quot;crash_recovery&quot;.
+
+<h2><a class="selflink" id="section-9" href="#section-9">9</a>.  Retention Requirements</h2>
+
+<h3><a class="selflink" id="section-9.1" href="#section-9.1">9.1</a>.  High-Risk Systems</h3>
+
+   For AI systems classified as high-risk under the EU AI Act
+   (Annex III), audit trail records SHOULD be retained for a
+   minimum of 12 months from the session close timestamp.
+
+   This aligns with Article 12(1) which states that logging
+   capabilities shall be such that logs are kept for a period
+   appropriate to the intended purpose of the high-risk AI
+   system, of at least six months unless provided otherwise in
+   applicable Union or national law.
+
+   The 12-month RECOMMENDATION in this specification exceeds the
+   minimum 6-month requirement to account for audit cycles and
+   incident investigation timelines.
+
+<h3><a class="selflink" id="section-9.2" href="#section-9.2">9.2</a>.  General-Purpose Systems</h3>
+
+   For AI systems not classified as high-risk, audit trail
+   records SHOULD be retained for a minimum of 6 months from
+   the session close timestamp.
+
+   Deployments subject to financial regulations (e.g., PCI DSS,
+   SOC 2) MAY require longer retention periods as specified by
+   those frameworks.
+
+<h3><a class="selflink" id="section-9.3" href="#section-9.3">9.3</a>.  Tombstone Records</h3>
+
+   When individual records must be deleted (e.g., pursuant to
+   GDPR Article 17 right to erasure), the record MUST be
+   replaced with a tombstone record that preserves chain
+   integrity.  A tombstone record:
+
+   o  Retains the original record_id, timestamp,
+      parent_record_id, and prev_hash.
+
+   o  Sets action_type to &quot;lifecycle&quot;.
+
+   o  Sets action_detail to:
+
+       {
+         &quot;event&quot;: &quot;record_deleted&quot;,
+         &quot;deletion_reason&quot;: &quot;gdpr_art17&quot;,
+         &quot;deleted_at&quot;: &quot;2026-06-15T10:00:00Z&quot;,
+         &quot;original_action_type&quot;: &quot;tool_call&quot;
+       }
+
+   o  Sets outcome to &quot;success&quot;.
+
+   o  Retains the signature field if originally present.
+
+   The original record&#x27;s content is destroyed.  Because the
+   tombstone preserves the original record_id and prev_hash,
+   subsequent records in the chain remain verifiable.  However,
+   the prev_hash of the NEXT record will no longer match the
+   tombstone (since the content changed).  To handle this,
+   implementations MUST also store a &quot;tombstone_hash&quot; field in
+   the tombstone record containing the original record&#x27;s hash,
+   allowing validators to accept the chain break.
+
+   When the content_fingerprint field (<a href="#section-3.2">Section 3.2</a>) was present
+   in the original record, it SHOULD be retained in the
+   tombstone record.  This allows verification that specific
+   content existed at the time of recording without requiring
+   retention of the content itself.
+
+<h2><a class="selflink" id="section-10" href="#section-10">10</a>.  Export Formats</h2>
+
+   Implementations MUST support at least one export format.
+   JSONL is the RECOMMENDED primary format.
+
+<h3><a class="selflink" id="section-10.1" href="#section-10.1">10.1</a>.  JSONL (Primary)</h3>
+
+   The primary export format is JSON Lines (JSONL), where each
+   line contains exactly one complete audit record serialized
+   as JSON.  Lines are separated by a single newline character
+   (U+000A).
+
+   o  Each line MUST be a valid JSON object.
+
+   o  The order of lines MUST match the chain order
+      (genesis first, close last).
+
+   o  The file SHOULD use UTF-8 encoding without a byte order
+      mark (BOM).
+
+   o  The file extension SHOULD be &quot;.jsonl&quot;.
+
+<h3><a class="selflink" id="section-10.2" href="#section-10.2">10.2</a>.  Syslog (<a href="/doc/html/rfc5424">RFC 5424</a>)</h3>
+
+   For integration with existing logging infrastructure, audit
+   records MAY be exported as Syslog messages per <a href="/doc/html/rfc5424">RFC 5424</a>
+   [<a href="/doc/html/rfc5424" title="&quot;The Syslog Protocol&quot;">RFC5424</a>].  The mapping is:
+
+   o  FACILITY: local0 (16).
+
+   o  SEVERITY: based on outcome -- success=6 (Informational),
+      failure=3 (Error), timeout=4 (Warning),
+      denied=5 (Notice), escalated=5 (Notice).
+
+   o  APP-NAME: the agent_id (truncated to 48 characters).
+
+   o  MSGID: the action_type.
+
+   o  STRUCTURED-DATA: SD-ID &quot;aat@IANA-PEN&quot; containing
+      record_id, session_id, trust_level, prev_hash,
+      record_phase.
+
+   o  MSG: JSON serialization of the full audit record.
+
+   The prev_hash and chain integrity MUST be preserved in the
+   structured data to enable reconstruction of the chain from
+   Syslog archives.
+
+<h3><a class="selflink" id="section-10.3" href="#section-10.3">10.3</a>.  CSV</h3>
+
+   For human review and spreadsheet analysis, audit records MAY
+   be exported as CSV per <a href="/doc/html/rfc4180">RFC 4180</a> [<a href="/doc/html/rfc4180" title="&quot;Common Format and MIME Type for Comma-Separated Values (CSV) Files&quot;">RFC4180</a>].  The mapping is:
+
+   o  Header row: record_id, timestamp, agent_id,
+      agent_version, session_id, action_type, outcome,
+      trust_level, record_phase, parent_record_id, prev_hash,
+      action_detail.
+
+   o  The action_detail column contains the JSON serialization
+      of the action_detail object.
+
+   o  CSV export is inherently lossy for optional fields.
+      Implementations SHOULD document which optional fields
+      are included.
+
+   CSV exports MUST NOT be used as the authoritative record.
+   The JSONL format MUST be retained as the source of truth.
+
+<h2><a class="selflink" id="section-11" href="#section-11">11</a>.  Regulatory Mapping</h2>
+
+<h3><a class="selflink" id="section-11.1" href="#section-11.1">11.1</a>.  EU AI Act</h3>
+
+   The following table maps AAT features to EU AI Act articles:
+
+   Article 12 (Record-Keeping):
+      AAT provides automatic recording via the mandatory audit
+      record format (<a href="#section-3">Section 3</a>).  Hash chaining (<a href="#section-6">Section 6</a>)
+      ensures records &quot;allow the tracing back of the AI system&#x27;s
+      operation.&quot;  The session structure (<a href="#section-8">Section 8</a>) provides the
+      &quot;period of each use&quot; required by Art 12(1)(c).
+      Pre-execution recording (<a href="#section-4">Section 4</a>) ensures that records
+      serve as evidence of enforcement, not merely observation.
+
+   Article 13 (Transparency):
+      The action_type taxonomy (<a href="#section-7">Section 7</a>) and decision records
+      (<a href="#section-7.3">Section 7.3</a>) provide interpretability of agent behavior.
+      The model_id field documents which model was used.
+      The human_override field documents human interventions.
+
+   Article 14 (Human Oversight):
+      The escalation action type (<a href="#section-7.5">Section 7.5</a>) documents when
+      and why agents escalated to humans.  The human_override
+      optional field (<a href="#section-3.2">Section 3.2</a>) captures human interventions.
+      Trust levels document the degree of autonomous operation.
+
+   Article 72 (Reporting):
+      The export formats (<a href="#section-10">Section 10</a>) enable provision of logs
+      to national competent authorities.  The session_hash in
+      session close records (<a href="#section-8.3">Section 8.3</a>) provides a verifiable
+      summary for regulatory reporting.
+
+<h3><a class="selflink" id="section-11.2" href="#section-11.2">11.2</a>.  SOC 2</h3>
+
+   SOC 2 Trust Services Criteria relevant to AAT:
+
+   o  CC6.1 (Logical Access): trust_level and authorization
+      fields document access controls.
+
+   o  CC7.2 (System Monitoring): Continuous audit trail with
+      tamper-evident chaining satisfies monitoring requirements.
+
+   o  CC8.1 (Change Management): lifecycle action type records
+      document configuration changes.
+
+<h3><a class="selflink" id="section-11.3" href="#section-11.3">11.3</a>.  ISO/IEC 42001</h3>
+
+   ISO/IEC 42001 (AI Management System) clauses addressed:
+
+   o  Clause 6.1.2 (AI Risk Assessment): risk_score and
+      decision records support risk documentation.
+
+   o  Clause 8.4 (AI System Operation): Full session audit
+      trails document operational behavior.
+
+   o  Clause 9.1 (Monitoring): Continuous logging with chain
+      verification supports monitoring requirements.
+
+<h3><a class="selflink" id="section-11.4" href="#section-11.4">11.4</a>.  ISO/IEC 24970</h3>
+
+   ISO/IEC 24970 (AI system lifecycle processes) addresses
+   the full lifecycle of AI systems from conception through
+   retirement.  AAT supports the following aspects:
+
+   o  Process outcomes: AAT lifecycle records (<a href="#section-7.7">Section 7.7</a>)
+      document agent lifecycle transitions that map to
+      ISO/IEC 24970 process outcomes.
+
+   o  Traceability: Hash-chained audit trails provide the
+      traceability required across lifecycle stages.
+
+   o  Verification and validation: Pre-execution recording
+      (<a href="#section-4">Section 4</a>) and recording independence (<a href="#section-5">Section 5</a>)
+      support the verification evidence requirements.
+
+<h3><a class="selflink" id="section-11.5" href="#section-11.5">11.5</a>.  prEN 18229-1</h3>
+
+   prEN 18229-1 (European standard for AI transparency)
+   establishes transparency requirements for AI systems
+   deployed in the European market.  AAT addresses:
+
+   o  Operational transparency: The action_type taxonomy
+      (<a href="#section-7">Section 7</a>) and decision records provide the
+      operational transparency required by prEN 18229-1.
+
+   o  Explainability support: The reasoning_hash, confidence,
+      and alternatives_considered fields in decision records
+      support explainability documentation.
+
+   o  Record integrity: Tamper-evident chaining (<a href="#section-6">Section 6</a>)
+      meets the record integrity requirements for trustworthy
+      transparency documentation.
+
+<h3><a class="selflink" id="section-11.6" href="#section-11.6">11.6</a>.  PCI DSS v4.0.1</h3>
+
+   PCI DSS v4.0.1 requirements addressed by AAT:
+
+   o  Requirement 10.2: AAT provides audit logs for all agent
+      actions including tool calls, decisions, and errors.
+
+   o  Requirement 10.3: Record fields (timestamp, agent_id,
+      action_type, outcome) map directly to required audit
+      trail entries.
+
+   o  Requirement 10.5: Hash chaining and optional signatures
+      protect audit trail integrity.
+
+   o  Requirement 10.7: Retention requirements (<a href="#section-9">Section 9</a>)
+      align with PCI DSS retention periods.
+
+<h2><a class="selflink" id="section-12" href="#section-12">12</a>.  Privacy Considerations</h2>
+
+<h3><a class="selflink" id="section-12.1" href="#section-12.1">12.1</a>.  Data Minimization</h3>
+
+   AAT is designed with privacy by default:
+
+   o  Raw input and output data MUST NOT be stored in audit
+      records.  Implementations MUST use the input_hash and
+      output_hash fields instead.
+
+   o  The human_override.operator_id SHOULD be a pseudonymous
+      identifier or role name, not a natural person&#x27;s name.
+
+   o  The reasoning_hash field in decision records stores a hash
+      of the reasoning chain, not the reasoning itself.
+
+   o  Tool parameters are recorded via parameters_hash, not in
+      cleartext.
+
+   o  Sanctions check results record only &quot;clear&quot;, &quot;match&quot;, or
+      &quot;error&quot; -- not the details of what was screened.
+
+   o  The content_fingerprint field stores a hash of the full
+      content, not the content itself.  This hash cannot be
+      reversed to recover the original data.
+
+   Implementations that need to retain raw data for debugging
+   MUST store it in a separate system with appropriate access
+   controls, linked to the audit trail via record_id.
+
+<h3><a class="selflink" id="section-12.2" href="#section-12.2">12.2</a>.  Right to Erasure</h3>
+
+   To support GDPR Article 17 (right to erasure) and similar
+   regulations, AAT uses tombstone records (<a href="#section-9.3">Section 9.3</a>) rather
+   than record deletion.  This approach:
+
+   o  Removes all personal data from the record.
+
+   o  Preserves chain integrity for regulatory compliance.
+
+   o  Documents the fact and reason for deletion.
+
+   o  Is compatible with the EU AI Act&#x27;s record-keeping
+      requirements, which do not require retention of personal
+      data but do require retention of operational logs.
+
+   o  When content_fingerprint is retained in the tombstone
+      (<a href="#section-9.3">Section 9.3</a>), enables proof that the erased content
+      existed without retaining the content itself.
+
+   Data controllers MUST implement a process to identify which
+   audit records contain personal data (even in hashed form) and
+   respond to erasure requests by creating tombstone records
+   within 30 days.
+
+<h2><a class="selflink" id="section-13" href="#section-13">13</a>.  Decision Reproducibility</h2>
+
+   Sections <a href="#section-6">6</a> and <a href="#section-8">8</a> establish the integrity of the RECORD of a
+   decision.  This section addresses a distinct property: the
+   ability to reproduce the DECISION itself.  It distinguishes
+   two properties that are frequently conflated and defines the
+   conditions and record fields required for each.
+
+<h3><a class="selflink" id="section-13.1" href="#section-13.1">13.1</a>.  Two Distinct Properties</h3>
+
+   This specification distinguishes:
+
+   o  Record reproducibility (traceability): the ability of any
+      party to re-verify the integrity of a recorded decision by
+      recomputing the hash chain (<a href="#section-6">Section 6</a>).  This property is
+      available for ALL agents, regardless of the underlying
+      model, and is the default guarantee of this specification.
+
+   o  Decision reproducibility: the ability of an independent
+      party to re-execute the model computation on the recorded
+      input and obtain a byte-identical output.  This property is
+      available ONLY under the conditions of <a href="#section-13.2">Section 13.2</a>.
+
+   An implementation MUST NOT represent a decision as reproducible
+   unless all conditions in <a href="#section-13.2">Section 13.2</a> are satisfied.  A
+   decision that is only recorded is &quot;reconstructable&quot;, not
+   &quot;reproducible&quot;.
+
+<h3><a class="selflink" id="section-13.2" href="#section-13.2">13.2</a>.  Conditions for Decision Reproducibility</h3>
+
+   A decision record MAY be marked reproducible only if ALL of the
+   following conditions hold:
+
+   o  Open weights.  The model weights are obtainable by the
+      verifier, and their cryptographic digest is recorded in the
+      model_weights_digest field (<a href="#section-13.3">Section 13.3</a>).
+
+   o  Deterministic decoding.  Sampling is disabled: temperature
+      is 0 with greedy selection (top_k = 1); OR an explicitly
+      recorded fixed seed is used together with recorded top_k
+      and top_p values.  The decoding parameters MUST be recorded
+      in the inference_config field.
+
+   o  Attested environment.  The execution environment is pinned
+      and attestable -- inference engine and version, hardware
+      platform, and batch configuration -- such that
+      floating-point reduction order is invariant across runs.
+      Where the platform supports it, a hardware attestation (for
+      example, a TEE quote per [<a href="/doc/html/rfc9334" title="&quot;Remote ATtestation procedureS (RATS) Architecture&quot;">RFC9334</a>]) SHOULD be recorded in
+      the environment_attestation field.
+
+   o  Sealed inputs.  The complete input to the model (prompt,
+      system context, retrieved context, and any tool outputs) is
+      recorded or digested via the content_fingerprint field
+      (<a href="#section-3.2">Section 3.2</a>), so that the exact input can be reconstructed.
+
+   o  Attestation closure.  The recorded digests cover the
+      complete computational closure of the inference function
+      per <a href="#section-13.6">Section 13.6</a>, including the tokenizer, the chat
+      template, and the inference engine build.  A decision whose
+      attested set omits any closure component MUST NOT be marked
+      reproducible.
+
+   Setting temperature to 0 alone does NOT satisfy this section.
+   On an inference service that neither exposes weights nor pins
+   the environment (for example, a hosted frontier inference
+   API), request batching and hardware selection remain outside
+   the caller&#x27;s control and can alter floating-point reduction
+   order, flipping the selection of near-tied tokens.  Such
+   decisions MUST be marked as reconstructable, not reproducible
+   (<a href="#section-13.5">Section 13.5</a>).
+
+<h3><a class="selflink" id="section-13.3" href="#section-13.3">13.3</a>.  Reproducibility Record Fields</h3>
+
+   The following OPTIONAL fields MAY appear in a &quot;decision&quot; record
+   (<a href="#section-7.3">Section 7.3</a>) to support decision reproducibility:
+
+   o  model_weights_digest: String.  The SHA-256 digest of the
+      model weight file(s), encoded as lowercase hexadecimal and
+      prefixed with &quot;sha256:&quot;.
+
+   o  tokenizer_digest: String.  The SHA-256 digest of the
+      tokenizer definition (vocabulary, merge rules, and
+      normalization configuration), encoded as lowercase
+      hexadecimal and prefixed with &quot;sha256:&quot;.  Where the
+      tokenizer is embedded in the weight file(s) covered by
+      model_weights_digest, this field MAY reference that digest.
+
+   o  chat_template_digest: String.  The SHA-256 digest of the
+      prompt/chat template applied between the recorded input and
+      the token sequence presented to the model, encoded as
+      lowercase hexadecimal and prefixed with &quot;sha256:&quot;.  Where
+      the template is embedded in the weight file(s) covered by
+      model_weights_digest, this field MAY reference that digest.
+
+   o  engine_build_digest: String.  The SHA-256 digest of the
+      inference engine binary or container image actually
+      executed (not merely its version string), encoded as
+      lowercase hexadecimal and prefixed with &quot;sha256:&quot;.
+
+   o  inference_config: Object.  The decoding parameters used.
+      Contains &quot;temperature&quot; (Number), &quot;top_k&quot; (Number),
+      &quot;top_p&quot; (Number), &quot;seed&quot; (Number or null), and
+      &quot;max_tokens&quot; (Number).
+
+   o  output_digest: String.  The SHA-256 digest of the produced
+      output, computed over a deterministic serialization (JCS
+      [<a href="/doc/html/rfc8785" title="&quot;JSON Canonicalization Scheme (JCS)&quot;">RFC8785</a>] is RECOMMENDED) and encoded as lowercase
+      hexadecimal.
+
+   o  environment: Object.  The pinned execution environment.
+      Contains &quot;engine&quot; (String), &quot;engine_version&quot; (String),
+      &quot;hardware&quot; (String), &quot;batch_size&quot; (Number), and
+      &quot;num_threads&quot; (Number).
+
+   o  environment_attestation: String.  A Base64-encoded hardware
+      attestation (for example, a TEE quote per [<a href="/doc/html/rfc9334" title="&quot;Remote ATtestation procedureS (RATS) Architecture&quot;">RFC9334</a>]) or a
+      URI referencing one, binding the recorded environment to
+      hardware-signed evidence.
+
+   o  reproducibility_class: String.  One of &quot;reproducible&quot; (the
+      decision can be re-executed per <a href="#section-13.4">Section 13.4</a>) or
+      &quot;reconstructable&quot; (only the record can be re-verified).
+
+<h3><a class="selflink" id="section-13.4" href="#section-13.4">13.4</a>.  Verification Procedure</h3>
+
+   To verify decision reproducibility, a verifier:
+
+   1.  Confirms that model_weights_digest matches the digest of
+       the obtained weights, and that tokenizer_digest,
+       chat_template_digest, and engine_build_digest (where
+       present) match the corresponding obtained artifacts
+       (<a href="#section-13.6">Section 13.6</a>).
+
+   2.  Confirms the environment object matches the recorded
+       pinned configuration, and validates
+       environment_attestation if present.
+
+   3.  Re-executes the model on the sealed input using the
+       recorded inference_config.
+
+   4.  Computes the digest of the produced output and compares it
+       to output_digest.  A match confirms the decision was
+       reproduced.  A mismatch indicates environment divergence
+       or tampering and MUST be reported.
+
+<h3><a class="selflink" id="section-13.5" href="#section-13.5">13.5</a>.  Scope and Limitations</h3>
+
+   Decision reproducibility is achievable only for models
+   executed in an environment the operator can pin and attest --
+   typically an open-weight model run under the operator&#x27;s
+   control.  It is NOT achievable for models served through
+   interfaces that neither expose weights nor pin the execution
+   environment.
+
+   Records for such decisions MUST set reproducibility_class to
+   &quot;reconstructable&quot;.  This does not diminish their evidentiary
+   value for traceability: the record remains tamper-evident
+   (<a href="#section-6">Section 6</a>) and, where signed, non-repudiable (<a href="#section-6.2">Section 6.2</a>).
+   The distinction is between evidence that a decision was made
+   and recorded (available for all models) and evidence that the
+   decision can be independently re-derived (available only for
+   attested, open-weight execution).
+
+   Decision reproducibility also assumes a frozen model.  A
+   change to the model weights, the inference engine, or the
+   environment invalidates reproduction against the recorded
+   digests; such a change SHOULD be recorded as a &quot;lifecycle&quot;
+   event (<a href="#section-7.7">Section 7.7</a>).
+
+<h3><a class="selflink" id="section-13.6" href="#section-13.6">13.6</a>.  Attestation Closure</h3>
+
+   The output of an inference call is determined not by the model
+   weights alone but by the composition of every component on the
+   path from recorded input to produced output:
+
+      output = engine(build, flags, threads)
+               . chat_template
+               . tokenizer
+               . weights (as loaded in memory)
+               . decoding_configuration
+               applied to the sealed input
+
+   This composition is the computational closure of the decision.
+   An attestation is CLOSED when every component of the closure
+   is covered by a recorded digest or by a recorded, pinned
+   configuration value; it is OPEN when any component is not.
+
+   Requirements:
+
+   o  A decision record MUST NOT set reproducibility_class to
+      &quot;reproducible&quot; unless its attestation is closed: the
+      weights, tokenizer, chat template, and engine build are
+      digested (<a href="#section-13.3">Section 13.3</a>); the complete decoding
+      configuration is recorded in inference_config; the numeric
+      environment (hardware, batch_size, num_threads) is recorded
+      in the environment object; and the input is sealed.
+
+   o  Every decoding parameter that the inference engine exposes
+      MUST either be recorded in inference_config or be fixed at
+      an engine default that is itself covered by
+      engine_build_digest.  An unrecorded parameter that alters
+      the output is a forgery channel (<a href="#section-13.7">Section 13.7</a>).
+
+   o  The digests in <a href="#section-13.3">Section 13.3</a> attest artifacts AT REST.
+      Where the deployment requires binding to the artifacts AS
+      EXECUTED (defending against post-load modification of
+      weights in memory), a runtime attestation (for example, a
+      TEE quote per [<a href="/doc/html/rfc9334" title="&quot;Remote ATtestation procedureS (RATS) Architecture&quot;">RFC9334</a>]) SHOULD be recorded in
+      environment_attestation and SHOULD bind to the same
+      execution that produced the output, not merely to the same
+      platform.
+
+<h3><a class="selflink" id="section-13.7" href="#section-13.7">13.7</a>.  Minimal-Change Threat Model</h3>
+
+   The closure requirement in <a href="#section-13.6">Section 13.6</a> is justified by the
+   following minimal-change analysis: for each component left
+   outside the attested set, a minimal modification exists that
+   changes the produced output while every recorded attestation
+   continues to verify.
+
+   o  Chat template.  A single-character change to the template
+      alters the token sequence presented to the model.  The
+      weights digest, decoding configuration, and input seal all
+      continue to verify.  Mitigated by chat_template_digest.
+
+   o  Tokenizer.  A single added merge rule or a change of
+      Unicode normalization form alters tokenization of the same
+      input bytes.  Mitigated by tokenizer_digest.
+
+   o  Engine build.  A patch-level change to the inference
+      engine can alter kernel selection and floating-point
+      reduction order, flipping near-tied token selections.  A
+      version STRING does not capture build flags; mitigated by
+      engine_build_digest over the executed binary or image.
+
+   o  Decoding configuration.  A change to any sampling or
+      penalty parameter not recorded in inference_config (for
+      example, a repetition penalty) yields a different
+      deterministic function at temperature 0: both functions
+      reproduce individually, but they are not the same
+      function.  This vector has been empirically demonstrated
+      by the author: two temperature-0 executions of the same
+      open-weight model on the same input, differing only in an
+      unrecorded penalty parameter, each self-reproduced
+      byte-identically while producing different outputs.
+      Mitigated by the completeness requirement of
+      <a href="#section-13.6">Section 13.6</a>.
+
+   o  Numeric environment.  A change to thread or batch count
+      can reorder floating-point reductions.  Whether a given
+      change flips the output depends on whether any decoding
+      step is near-tied; the record MUST pin these values so the
+      question does not arise at verification time.
+
+   o  Weights in memory.  Modification of loaded weights after
+      the at-rest digest is checked (time-of-check/time-of-use)
+      leaves every recorded digest valid.  Mitigated by runtime
+      attestation bound to the execution (<a href="#section-13.6">Section 13.6</a>).
+
+   o  Input canonicalization.  Two inputs that render
+      identically may differ in bytes (zero-width characters,
+      line-ending conventions, Unicode normalization).  The
+      content_fingerprint is computed over exact bytes; verifiers
+      MUST compare bytes, not rendered text, and SHOULD flag
+      non-canonical or invisible code points in disputed inputs.
+
+   o  Attestation relay.  An attestation quote produced by a
+      clean environment may be presented alongside output
+      produced elsewhere.  Environment attestations SHOULD be
+      cryptographically bound to the specific execution (for
+      example, by including the output_digest or record nonce in
+      the attested report data).
+
+   The general principle: the minimum change that defeats an
+   attestation is one bit in the largest component outside it.
+   Closure (<a href="#section-13.6">Section 13.6</a>) removes the outside.
+
+<h2><a class="selflink" id="section-14" href="#section-14">14</a>.  Security Considerations</h2>
+
+<h3><a class="selflink" id="section-14.1" href="#section-14.1">14.1</a>.  Log Tampering</h3>
+
+   The primary threat to audit trails is unauthorized
+   modification.  AAT mitigates this through:
+
+   o  Hash chaining: Any modification to a record invalidates
+      all subsequent prev_hash values, making tampering
+      detectable.
+
+   o  Optional signatures: ECDSA P-256 signatures provide
+      non-repudiation and prevent even the log storage system
+      from undetectably modifying records.
+
+   o  Session hashes: The session_hash in close records provides
+      a single value that can be stored externally (e.g., on a
+      blockchain or with a timestamp authority) to anchor the
+      entire session.
+
+   o  Recording independence: When an independent component
+      writes records (<a href="#section-5">Section 5</a>), the agent cannot suppress or
+      alter its own audit trail.
+
+   Implementations SHOULD store session_hash values in a
+   separate, append-only system to provide an independent
+   verification point.
+
+<h3><a class="selflink" id="section-14.2" href="#section-14.2">14.2</a>.  Log Injection</h3>
+
+   Attackers may attempt to inject false audit records into the
+   trail.  Mitigations include:
+
+   o  Signature verification: When signatures are present, only
+      records signed by the agent&#x27;s key are valid.
+
+   o  Chain continuity: Injected records would break the hash
+      chain unless the attacker can also modify all subsequent
+      records.
+
+   o  Timestamp monotonicity: Injected records with out-of-
+      order timestamps are detectable.
+
+   o  Record size limits: The 256 KB maximum prevents denial-of-
+      service through oversized records.
+
+   o  Nonce uniqueness: Duplicate nonce values within a session
+      indicate injection or replay.
+
+   Implementations MUST validate all records against the schema
+   before accepting them into the audit trail.
+
+<h3><a class="selflink" id="section-14.3" href="#section-14.3">14.3</a>.  Timing Attacks</h3>
+
+   Audit record timestamps may be manipulated if the agent
+   controls its own clock.  Mitigations include:
+
+   o  Using NTP-synchronized clocks with drift monitoring.
+
+   o  Cross-referencing timestamps with external systems (e.g.,
+      tool server response timestamps).
+
+   o  Flagging sessions where timestamps show suspicious
+      patterns (e.g., large jumps, regression).
+
+   o  Using external timestamp anchoring (<a href="#section-3.2">Section 3.2</a>,
+      external_timestamp field) to obtain independent proof
+      of record creation time from a trusted TSA.
+
+   Implementations SHOULD monitor for timestamp anomalies and
+   flag them for human review.
+
+<h3><a class="selflink" id="section-14.4" href="#section-14.4">14.4</a>.  Chain Breaks</h3>
+
+   Chain breaks can occur due to:
+
+   o  System crashes during record writing.
+
+   o  Storage corruption.
+
+   o  Intentional tampering.
+
+   When a chain break is detected, implementations MUST:
+
+   1.  Flag the break with a severity of &quot;critical&quot;.
+
+   2.  Record the break location (which record pair failed
+       verification).
+
+   3.  Preserve both the broken chain and any recovered data.
+
+   4.  If the break is due to crash recovery, insert an error
+       record documenting the gap.
+
+   Chain breaks in high-risk systems MUST trigger an alert to
+   the system operator within 1 hour.
+
+<h3><a class="selflink" id="section-14.5" href="#section-14.5">14.5</a>.  Replay Attacks</h3>
+
+   An attacker may attempt to replay a previously valid audit
+   record or sequence of records.  AAT mitigates replay attacks
+   through several mechanisms:
+
+   o  Nonce uniqueness: When the nonce field (<a href="#section-3.2">Section 3.2</a>) is
+      present, verifiers MAY reject records with duplicate
+      nonce values within the same session.  For L2+
+      deployments, the nonce field SHOULD be present and
+      verifiers SHOULD enforce uniqueness.
+
+   o  Hash chaining: Each record&#x27;s prev_hash binds it to a
+      specific position in the chain.  A replayed record
+      would have an incorrect prev_hash unless the entire
+      chain from that point is also replayed.
+
+   o  Timestamp monotonicity: Replayed records from an earlier
+      time would violate the non-decreasing timestamp
+      requirement.
+
+   o  External timestamp anchoring: When external timestamps
+      are present, replayed records would have a TSA-issued
+      timestamp that does not match the claimed event time.
+
+   Implementations that process records from untrusted sources
+   MUST verify nonce uniqueness within the session scope.
+   Implementations MAY also verify nonce uniqueness across
+   sessions for the same agent to detect cross-session replay
+   attacks.
+
+<h2><a class="selflink" id="section-15" href="#section-15">15</a>.  IANA Considerations</h2>
+
+<h3><a class="selflink" id="section-15.1" href="#section-15.1">15.1</a>.  Action Type Registry</h3>
+
+   This document requests IANA to create the &quot;Agent Audit Trail
+   Action Types&quot; registry.  The registration policy is
+   &quot;Specification Required&quot; per <a href="/doc/html/rfc8126">RFC 8126</a> [<a href="/doc/html/rfc8126" title="">RFC8126</a>].
+
+   Initial registry contents:
+
+   +----------------+---------------------------+-----------+
+   | Value          | Description               | Reference |
+   +----------------+---------------------------+-----------+
+   | tool_call      | Agent invokes a tool      | Sec 7.1   |
+   | tool_response  | Agent receives tool reply  | Sec 7.2   |
+   | decision       | Agent makes a decision    | Sec 7.3   |
+   | delegation     | Agent delegates to agent  | Sec 7.4   |
+   | escalation     | Agent escalates to human  | Sec 7.5   |
+   | error          | Agent encounters error    | Sec 7.6   |
+   | lifecycle      | Agent lifecycle event     | Sec 7.7   |
+   +----------------+---------------------------+-----------+
+
+   New entries MUST include a value (lowercase ASCII string,
+   max 32 characters), description, and reference to a published
+   specification.
+
+<h3><a class="selflink" id="section-15.2" href="#section-15.2">15.2</a>.  Outcome Registry</h3>
+
+   This document requests IANA to create the &quot;Agent Audit Trail
+   Outcomes&quot; registry.  The registration policy is &quot;Specification
+   Required&quot; per <a href="/doc/html/rfc8126">RFC 8126</a>.
+
+   Initial registry contents:
+
+   +------------+-------------------------------+-----------+
+   | Value      | Description                   | Reference |
+   +------------+-------------------------------+-----------+
+   | success    | Action completed as intended  | Sec 3.1   |
+   | failure    | Action failed due to error    | Sec 3.1   |
+   | timeout    | Action exceeded time budget   | Sec 3.1   |
+   | denied     | Action blocked by policy      | Sec 3.1   |
+   | escalated  | Action redirected to human    | Sec 3.1   |
+   +------------+-------------------------------+-----------+
+
+<h2><a class="selflink" id="section-16" href="#section-16">16</a>.  References</h2>
+
+<h3><a class="selflink" id="section-16.1" href="#section-16.1">16.1</a>.  Normative References</h3>
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., &quot;Key words for use in RFCs to Indicate
+              Requirement Levels&quot;, <a href="/doc/html/bcp14">BCP 14</a>, <a href="/doc/html/rfc2119">RFC 2119</a>,
+              DOI 10.17487/RFC2119, March 1997,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;.
+
+   [<a id="ref-RFC3339">RFC3339</a>]  Klyne, G. and C. Newman, &quot;Date and Time on the
+              Internet: Timestamps&quot;, <a href="/doc/html/rfc3339">RFC 3339</a>,
+              DOI 10.17487/RFC3339, July 2002,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc3339">https://www.rfc-editor.org/info/rfc3339</a>&gt;.
+
+   [<a id="ref-RFC3986">RFC3986</a>]  Berners-Lee, T., Fielding, R., and L. Masinter,
+              &quot;Uniform Resource Identifier (URI): Generic Syntax&quot;,
+              STD 66, <a href="/doc/html/rfc3986">RFC 3986</a>, DOI 10.17487/RFC3986,
+              January 2005,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc3986">https://www.rfc-editor.org/info/rfc3986</a>&gt;.
+
+   [<a id="ref-RFC8174">RFC8174</a>]  Leiba, B., &quot;Ambiguity of Uppercase vs Lowercase in
+              <a href="/doc/html/rfc2119">RFC 2119</a> Key Words&quot;, <a href="/doc/html/bcp14">BCP 14</a>, <a href="/doc/html/rfc8174">RFC 8174</a>,
+              DOI 10.17487/RFC8174, May 2017,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;.
+
+   [<a id="ref-RFC8785">RFC8785</a>]  Rundgren, A., Jordan, B., and S. Erdtman, &quot;JSON
+              Canonicalization Scheme (JCS)&quot;, <a href="/doc/html/rfc8785">RFC 8785</a>,
+              DOI 10.17487/RFC8785, June 2020,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc8785">https://www.rfc-editor.org/info/rfc8785</a>&gt;.
+
+   [<a id="ref-RFC9562">RFC9562</a>]  Davis, K., Peabody, B., and P. Leach, &quot;Universally
+              Unique IDentifiers (UUIDs)&quot;, <a href="/doc/html/rfc9562">RFC 9562</a>,
+              DOI 10.17487/RFC9562, May 2024,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc9562">https://www.rfc-editor.org/info/rfc9562</a>&gt;.
+
+   [<a id="ref-FIPS186-5">FIPS186-5</a>]
+              National Institute of Standards and Technology,
+              &quot;Digital Signature Standard (DSS)&quot;, FIPS PUB 186-5,
+              DOI 10.6028/NIST.FIPS.186-5, February 2023.
+
+   [<a id="ref-RFC8126">RFC8126</a>]  Cotton, M., Leiba, B., and T. Narten, &quot;Guidelines
+              for Writing an IANA Considerations Section in RFCs&quot;,
+              <a href="/doc/html/bcp26">BCP 26</a>, <a href="/doc/html/rfc8126">RFC 8126</a>, DOI 10.17487/RFC8126, June 2017,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc8126">https://www.rfc-editor.org/info/rfc8126</a>&gt;.
+
+   [<a id="ref-RFC3161">RFC3161</a>]  Adams, C., Cain, P., Pinkas, D., and R. Zuccherato,
+              &quot;Internet X.509 Public Key Infrastructure Time-Stamp
+              Protocol (TSP)&quot;, <a href="/doc/html/rfc3161">RFC 3161</a>, DOI 10.17487/RFC3161,
+              August 2001,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc3161">https://www.rfc-editor.org/info/rfc3161</a>&gt;.
+
+<h3><a class="selflink" id="section-16.2" href="#section-16.2">16.2</a>.  Informative References</h3>
+
+   [<a id="ref-MCPS">MCPS</a>]     Sharif, R., &quot;MCPS: Cryptographic Security Layer for
+              the Model Context Protocol&quot;,
+              <a href="/doc/html/draft-sharif-mcps-secure-mcp-02">draft-sharif-mcps-secure-mcp-02</a>, March 2026.
+
+   [<a id="ref-EU-AI-ACT">EU-AI-ACT</a>]
+              European Parliament and Council, &quot;Regulation (EU)
+              2024/1689 laying down harmonised rules on artificial
+              intelligence (Artificial Intelligence Act)&quot;,
+              Official Journal of the European Union, L series,
+              2024/1689, August 2024.
+
+   [<a id="ref-RFC5424">RFC5424</a>]  Gerhards, R., &quot;The Syslog Protocol&quot;, <a href="/doc/html/rfc5424">RFC 5424</a>,
+              DOI 10.17487/RFC5424, March 2009,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc5424">https://www.rfc-editor.org/info/rfc5424</a>&gt;.
+
+   [<a id="ref-RFC4180">RFC4180</a>]  Shafranovich, Y., &quot;Common Format and MIME Type for
+              Comma-Separated Values (CSV) Files&quot;, <a href="/doc/html/rfc4180">RFC 4180</a>,
+              DOI 10.17487/RFC4180, October 2005,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc4180">https://www.rfc-editor.org/info/rfc4180</a>&gt;.
+
+   [<a id="ref-RFC4648">RFC4648</a>]  Josefsson, S., &quot;The Base16, Base32, and Base64 Data
+              Encodings&quot;, <a href="/doc/html/rfc4648">RFC 4648</a>, DOI 10.17487/RFC4648,
+              October 2006,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc4648">https://www.rfc-editor.org/info/rfc4648</a>&gt;.
+
+   [<a id="ref-RFC9334">RFC9334</a>]  Birkholz, H., Thaler, D., Richardson, M., Smith,
+              N., and W. Pan, &quot;Remote ATtestation procedureS
+              (RATS) Architecture&quot;, <a href="/doc/html/rfc9334">RFC 9334</a>,
+              DOI 10.17487/RFC9334, January 2023,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc9334">https://www.rfc-editor.org/info/rfc9334</a>&gt;.
+
+   [<a id="ref-ISO42001">ISO42001</a>] International Organization for Standardization,
+              &quot;Information technology -- Artificial intelligence --
+              Management system&quot;, ISO/IEC 42001:2023, December
+              2023.
+
+   [<a id="ref-ISO24970">ISO24970</a>] International Organization for Standardization,
+              &quot;Information technology -- Artificial intelligence --
+              AI system life cycle processes&quot;, ISO/IEC 24970,
+              2023.
+
+   [<a id="ref-prEN18229-1">prEN18229-1</a>]
+              European Committee for Standardization, &quot;Artificial
+              Intelligence -- Transparency -- Part 1: General
+              requirements&quot;, prEN 18229-1, 2024.
+
+   [<a id="ref-PCI-DSS">PCI-DSS</a>]  PCI Security Standards Council, &quot;Payment Card
+              Industry Data Security Standard Version 4.0.1&quot;,
+              June 2024.
+
+   [<a id="ref-SOC2">SOC2</a>]     American Institute of Certified Public Accountants,
+              &quot;SOC 2 -- SOC for Service Organizations: Trust
+              Services Criteria&quot;, 2017.
+
+   [<a id="ref-SEMVER">SEMVER</a>]   Preston-Werner, T., &quot;Semantic Versioning 2.0.0&quot;,
+              &lt;<a href="https://semver.org/">https://semver.org/</a>&gt;.
+
+<h2><a class="selflink" id="appendix-A" href="#appendix-A">Appendix A</a>.  Example Audit Trail</h2>
+
+   The following example shows a complete audit trail for a
+   payment agent session that processes a GBP 500 transfer.
+   The session demonstrates tool calls, decisions, sanctions
+   screening, and successful completion.  prev_hash values are
+   truncated for readability (shown as first 16 hex characters).
+   This example uses the -01 features: record_phase,
+   recording_component, nonce, and pre-execution recording.
+
+   Record 1: Genesis (session start)
+
+   {
+     &quot;record_id&quot;: &quot;a1000000-0000-4000-8000-000000000001&quot;,
+     &quot;timestamp&quot;: &quot;2026-03-29T14:00:00.000Z&quot;,
+     &quot;agent_id&quot;: &quot;urn:agent:payment-bot.acme.example&quot;,
+     &quot;agent_version&quot;: &quot;2.1.0&quot;,
+     &quot;session_id&quot;: &quot;sess-29mar-0001-4000-8000-abcdef123456&quot;,
+     &quot;action_type&quot;: &quot;lifecycle&quot;,
+     &quot;action_detail&quot;: {
+       &quot;event&quot;: &quot;session_start&quot;,
+       &quot;new_state&quot;: &quot;active&quot;,
+       &quot;trigger&quot;: &quot;api_request&quot;,
+       &quot;config_hash&quot;: &quot;b5bb9d8014a0f9b1...&quot;,
+       &quot;recording_mode&quot;: &quot;independent&quot;,
+       &quot;recording_component_id&quot;:
+         &quot;urn:gateway:enforcement.acme.example&quot;,
+       &quot;enabled_tools&quot;: [
+         &quot;payment_transfer&quot;,
+         &quot;sanctions_check&quot;,
+         &quot;balance_query&quot;
+       ]
+     },
+     &quot;outcome&quot;: &quot;success&quot;,
+     &quot;trust_level&quot;: &quot;L2&quot;,
+     &quot;record_phase&quot;: &quot;concurrent&quot;,
+     &quot;parent_record_id&quot;: null,
+     &quot;prev_hash&quot;: null,
+     &quot;recording_component&quot;:
+       &quot;urn:gateway:enforcement.acme.example&quot;,
+     &quot;nonce&quot;: &quot;a3f2b8c9d1e4f6a7b0c3d5e8f1a2b4c7&quot;
+   }
+
+   Record 2: Sanctions screening tool call
+
+   {
+     &quot;record_id&quot;: &quot;a1000000-0000-4000-8000-000000000002&quot;,
+     &quot;timestamp&quot;: &quot;2026-03-29T14:00:00.150Z&quot;,
+     &quot;agent_id&quot;: &quot;urn:agent:payment-bot.acme.example&quot;,
+     &quot;agent_version&quot;: &quot;2.1.0&quot;,
+     &quot;session_id&quot;: &quot;sess-29mar-0001-4000-8000-abcdef123456&quot;,
+     &quot;action_type&quot;: &quot;tool_call&quot;,
+     &quot;action_detail&quot;: {
+       &quot;tool_name&quot;: &quot;sanctions_check&quot;,
+       &quot;tool_server&quot;: &quot;https://screening.acme.example/v2&quot;,
+       &quot;parameters_hash&quot;: &quot;e3b0c44298fc1c14...&quot;,
+       &quot;authorization&quot;: &quot;mutual_tls&quot;
+     },
+     &quot;outcome&quot;: &quot;success&quot;,
+     &quot;trust_level&quot;: &quot;L2&quot;,
+     &quot;record_phase&quot;: &quot;pre_execution&quot;,
+     &quot;parent_record_id&quot;:
+       &quot;a1000000-0000-4000-8000-000000000001&quot;,
+     &quot;prev_hash&quot;: &quot;7d865e959b2466918a...&quot;,
+     &quot;recording_component&quot;:
+       &quot;urn:gateway:enforcement.acme.example&quot;,
+     &quot;nonce&quot;: &quot;b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9&quot;,
+     &quot;input_hash&quot;: &quot;9f86d081884c7d659a...&quot;,
+     &quot;latency_ms&quot;: 145
+   }
+
+   Record 3: Sanctions screening response
+
+   {
+     &quot;record_id&quot;: &quot;a1000000-0000-4000-8000-000000000003&quot;,
+     &quot;timestamp&quot;: &quot;2026-03-29T14:00:00.295Z&quot;,
+     &quot;agent_id&quot;: &quot;urn:agent:payment-bot.acme.example&quot;,
+     &quot;agent_version&quot;: &quot;2.1.0&quot;,
+     &quot;session_id&quot;: &quot;sess-29mar-0001-4000-8000-abcdef123456&quot;,
+     &quot;action_type&quot;: &quot;tool_response&quot;,
+     &quot;action_detail&quot;: {
+       &quot;tool_name&quot;: &quot;sanctions_check&quot;,
+       &quot;response_hash&quot;: &quot;2cf24dba5fb0a301...&quot;,
+       &quot;response_size&quot;: 256,
+       &quot;parent_call_id&quot;:
+         &quot;a1000000-0000-4000-8000-000000000002&quot;
+     },
+     &quot;outcome&quot;: &quot;success&quot;,
+     &quot;trust_level&quot;: &quot;L2&quot;,
+     &quot;record_phase&quot;: &quot;post_execution&quot;,
+     &quot;parent_record_id&quot;:
+       &quot;a1000000-0000-4000-8000-000000000002&quot;,
+     &quot;prev_hash&quot;: &quot;4e07408562bedb8b6...&quot;,
+     &quot;recording_component&quot;:
+       &quot;urn:gateway:enforcement.acme.example&quot;,
+     &quot;nonce&quot;: &quot;c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0&quot;,
+     &quot;sanctions_check&quot;: {
+       &quot;provider&quot;: &quot;acme_screening&quot;,
+       &quot;checked_at&quot;: &quot;2026-03-29T14:00:00.290Z&quot;,
+       &quot;result&quot;: &quot;clear&quot;,
+       &quot;list_version&quot;: &quot;2026-03-29&quot;
+     }
+   }
+
+   Record 4: Pre-execution authorisation decision
+
+   {
+     &quot;record_id&quot;: &quot;a1000000-0000-4000-8000-000000000004&quot;,
+     &quot;timestamp&quot;: &quot;2026-03-29T14:00:00.310Z&quot;,
+     &quot;agent_id&quot;: &quot;urn:agent:payment-bot.acme.example&quot;,
+     &quot;agent_version&quot;: &quot;2.1.0&quot;,
+     &quot;session_id&quot;: &quot;sess-29mar-0001-4000-8000-abcdef123456&quot;,
+     &quot;action_type&quot;: &quot;decision&quot;,
+     &quot;action_detail&quot;: {
+       &quot;decision_type&quot;: &quot;approve&quot;,
+       &quot;reasoning_hash&quot;: &quot;6b86b273ff34fce1...&quot;,
+       &quot;confidence&quot;: 0.97,
+       &quot;alternatives_considered&quot;: 2,
+       &quot;policy_ref&quot;: &quot;payment-policy-v3.2&quot;
+     },
+     &quot;outcome&quot;: &quot;success&quot;,
+     &quot;trust_level&quot;: &quot;L2&quot;,
+     &quot;record_phase&quot;: &quot;pre_execution&quot;,
+     &quot;parent_record_id&quot;:
+       &quot;a1000000-0000-4000-8000-000000000003&quot;,
+     &quot;prev_hash&quot;: &quot;ef2d127de37b942ba...&quot;,
+     &quot;recording_component&quot;:
+       &quot;urn:gateway:enforcement.acme.example&quot;,
+     &quot;nonce&quot;: &quot;d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1&quot;,
+     &quot;risk_score&quot;: 0.12,
+     &quot;model_id&quot;: &quot;claude-sonnet-4-20250514&quot;,
+     &quot;cost_estimate&quot;: {
+       &quot;amount&quot;: 500.00,
+       &quot;currency&quot;: &quot;GBP&quot;
+     }
+   }
+
+   Record 5: Payment execution tool call (post-execution)
+
+   {
+     &quot;record_id&quot;: &quot;a1000000-0000-4000-8000-000000000005&quot;,
+     &quot;timestamp&quot;: &quot;2026-03-29T14:00:00.320Z&quot;,
+     &quot;agent_id&quot;: &quot;urn:agent:payment-bot.acme.example&quot;,
+     &quot;agent_version&quot;: &quot;2.1.0&quot;,
+     &quot;session_id&quot;: &quot;sess-29mar-0001-4000-8000-abcdef123456&quot;,
+     &quot;action_type&quot;: &quot;tool_call&quot;,
+     &quot;action_detail&quot;: {
+       &quot;tool_name&quot;: &quot;payment_transfer&quot;,
+       &quot;tool_server&quot;: &quot;https://payments.acme.example/v1&quot;,
+       &quot;parameters_hash&quot;: &quot;d4735e3a265e16ee...&quot;,
+       &quot;authorization&quot;: &quot;bearer_token&quot;,
+       &quot;authorization_record_id&quot;:
+         &quot;a1000000-0000-4000-8000-000000000004&quot;
+     },
+     &quot;outcome&quot;: &quot;success&quot;,
+     &quot;trust_level&quot;: &quot;L2&quot;,
+     &quot;record_phase&quot;: &quot;post_execution&quot;,
+     &quot;parent_record_id&quot;:
+       &quot;a1000000-0000-4000-8000-000000000004&quot;,
+     &quot;prev_hash&quot;: &quot;e7f6c011776e8db7c...&quot;,
+     &quot;recording_component&quot;:
+       &quot;urn:gateway:enforcement.acme.example&quot;,
+     &quot;nonce&quot;: &quot;e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2&quot;,
+     &quot;latency_ms&quot;: 890,
+     &quot;jurisdiction&quot;: &quot;GB&quot;,
+     &quot;content_fingerprint&quot;: &quot;f0a1b2c3d4e5f6a7...&quot;
+   }
+
+   Record 6: Session close
+
+   {
+     &quot;record_id&quot;: &quot;a1000000-0000-4000-8000-000000000006&quot;,
+     &quot;timestamp&quot;: &quot;2026-03-29T14:00:01.210Z&quot;,
+     &quot;agent_id&quot;: &quot;urn:agent:payment-bot.acme.example&quot;,
+     &quot;agent_version&quot;: &quot;2.1.0&quot;,
+     &quot;session_id&quot;: &quot;sess-29mar-0001-4000-8000-abcdef123456&quot;,
+     &quot;action_type&quot;: &quot;lifecycle&quot;,
+     &quot;action_detail&quot;: {
+       &quot;event&quot;: &quot;session_end&quot;,
+       &quot;previous_state&quot;: &quot;active&quot;,
+       &quot;new_state&quot;: &quot;closed&quot;,
+       &quot;trigger&quot;: &quot;task_complete&quot;,
+       &quot;session_hash&quot;: &quot;9c22ff5f21f0b81b...&quot;,
+       &quot;record_count&quot;: 6,
+       &quot;duration_ms&quot;: 1210
+     },
+     &quot;outcome&quot;: &quot;success&quot;,
+     &quot;trust_level&quot;: &quot;L2&quot;,
+     &quot;record_phase&quot;: &quot;post_execution&quot;,
+     &quot;parent_record_id&quot;:
+       &quot;a1000000-0000-4000-8000-000000000005&quot;,
+     &quot;prev_hash&quot;: &quot;a3a2e67ad1b8d57e2...&quot;,
+     &quot;recording_component&quot;:
+       &quot;urn:gateway:enforcement.acme.example&quot;,
+     &quot;nonce&quot;: &quot;f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3&quot;
+   }
+
+<h2><a class="selflink" id="appendix-B" href="#appendix-B">Appendix B</a>.  EU AI Act Compliance Checklist</h2>
+
+   The following table maps EU AI Act Article 12 sub-requirements
+   to specific AAT features:
+
+   +----------------------------+-------------------------------+
+   | Art 12 Requirement         | AAT Feature                   |
+   +----------------------------+-------------------------------+
+   | 12(1) Automatic recording  | Mandatory audit record format |
+   |                            | (<a href="#section-3">Section 3</a>)                   |
+   +----------------------------+-------------------------------+
+   | 12(1)(a) Recording of      | session_id + ordered chain    |
+   | period of each use         | (<a href="#section-8">Section 8</a>)                   |
+   +----------------------------+-------------------------------+
+   | 12(1)(b) Reference         | agent_id (URI) + agent_version|
+   | database against which     | + model_id (<a href="#section-3">Section 3</a>)        |
+   | input data has been        |                               |
+   | checked                    |                               |
+   +----------------------------+-------------------------------+
+   | 12(1)(c) Input data for    | input_hash field              |
+   | which search has led to    | (<a href="#section-3.2">Section 3.2</a>)                 |
+   | a match                    |                               |
+   +----------------------------+-------------------------------+
+   | 12(1)(d) Identification    | human_override field with     |
+   | of natural persons         | pseudonymous operator_id      |
+   | involved in verification   | (<a href="#section-3.2">Section 3.2</a>)                 |
+   +----------------------------+-------------------------------+
+   | 12(2) Conform to           | This specification            |
+   | recognised standards       |                               |
+   +----------------------------+-------------------------------+
+   | 12(3) Appropriate to       | Retention requirements        |
+   | intended purpose, at       | (<a href="#section-9">Section 9</a>): 12 months for    |
+   | least 6 months             | high-risk, 6 months general   |
+   +----------------------------+-------------------------------+
+   | 12(4) Providers of         | Export formats (<a href="#section-10">Section 10</a>)    |
+   | high-risk AI systems       | enable log provision to       |
+   | that are credit            | financial authorities         |
+   | institutions               |                               |
+   +----------------------------+-------------------------------+
+   | Art 13 Transparency        | action_type taxonomy +        |
+   |                            | decision records (Sec 7.3)    |
+   +----------------------------+-------------------------------+
+   | Art 14 Human oversight     | escalation type (Sec 7.5) +   |
+   |                            | human_override (Sec 3.2)      |
+   +----------------------------+-------------------------------+
+   | Art 12 Enforcement         | Pre-execution recording       |
+   | evidence                   | (<a href="#section-4">Section 4</a>) + recording       |
+   |                            | independence (<a href="#section-5">Section 5</a>)      |
+   +----------------------------+-------------------------------+
+
+<h2><a class="selflink" id="appendix-C" href="#appendix-C">Appendix C</a>.  Implementation Notes</h2>
+
+<h3><a class="selflink" id="appendix-C.1" href="#appendix-C.1">C.1</a>.  Performance Considerations</h3>
+
+   Hash computation adds overhead to each record.  Benchmarks on
+   commodity hardware show:
+
+   o  JCS canonicalization: ~0.1 ms per record (typical size).
+
+   o  SHA-256 hash: ~0.01 ms per record.
+
+   o  ECDSA P-256 signing: ~1-2 ms per record.
+
+   o  Total overhead with signing: ~2 ms per record.
+
+   o  <a href="/doc/html/rfc3161">RFC 3161</a> timestamp request: ~50-200 ms per record
+      (network dependent; batching is RECOMMENDED).
+
+   For high-throughput agents (&gt;1000 actions/second),
+   implementations MAY batch records and compute hashes
+   asynchronously, provided the chain order is preserved.  The
+   timestamp MUST reflect the actual event time, not the time
+   the hash was computed.
+
+   Pre-execution recording (<a href="#section-4">Section 4</a>) adds one additional
+   record per gated action in high-risk deployments.
+   Implementations SHOULD account for this when sizing storage
+   and throughput.
+
+<h3><a class="selflink" id="appendix-C.2" href="#appendix-C.2">C.2</a>.  Storage Estimates</h3>
+
+   A typical audit record (mandatory fields only) is
+   approximately 500-800 bytes when serialized as JSON.  With
+   optional fields, records range from 800-2000 bytes.
+
+   For a high-activity agent producing 10,000 records per day:
+
+   o  Daily storage: ~10-20 MB (JSONL).
+
+   o  Monthly storage: ~300-600 MB.
+
+   o  12-month retention: ~3.6-7.2 GB.
+
+   Implementations SHOULD apply compression (e.g., gzip) to
+   archived sessions.  Typical compression ratios for JSON
+   audit data are 5:1 to 10:1.
+
+<h3><a class="selflink" id="appendix-C.3" href="#appendix-C.3">C.3</a>.  Clock Synchronization</h3>
+
+   Accurate timestamps are critical for audit trail integrity.
+   Implementations MUST:
+
+   o  Use NTP or PTP for clock synchronization.
+
+   o  Monitor clock drift and alert if drift exceeds 100 ms.
+
+   o  Record the clock source in the genesis record&#x27;s
+      action_detail when available.
+
+   In distributed agent systems where multiple agents contribute
+   to a workflow, each agent maintains its own audit trail with
+   its own clock.  Cross-agent timestamp correlation SHOULD use
+   the delegation record timestamps as synchronization points.
+
+   For deployments requiring stronger timestamp guarantees,
+   external timestamp anchoring (<a href="#section-3.2">Section 3.2</a>) using <a href="/doc/html/rfc3161">RFC 3161</a>
+   provides independent TSA-issued proof of record creation
+   time.
+
+<h3><a class="selflink" id="appendix-C.4" href="#appendix-C.4">C.4</a>.  Relationship to MCPS</h3>
+
+   AAT is designed to complement MCPS
+   [<a href="/doc/html/draft-sharif-mcps-secure-mcp">draft-sharif-mcps-secure-mcp</a>].  The relationship is:
+
+   o  MCPS provides cryptographic identity (Agent Passports) and
+      per-message signing for MCP protocol traffic.
+
+   o  AAT provides the audit log format for recording what
+      agents did and why.
+
+   o  The agent_id in AAT records SHOULD match the agent_id in
+      the MCPS Agent Passport.
+
+   o  AAT signatures SHOULD use the same ECDSA P-256 key as the
+      MCPS Agent Passport, providing a single cryptographic
+      identity across both protocol security and audit logging.
+
+   o  MCPS trust levels (L0-L4) are directly referenced in AAT
+      records via the trust_level field.
+
+   Implementations that deploy both MCPS and AAT achieve both
+   real-time protocol security and comprehensive audit logging
+   under a unified cryptographic identity.
+
+<h3><a class="selflink" id="appendix-C.5" href="#appendix-C.5">C.5</a>.  Validator Implementation</h3>
+
+   A conformant AAT validator MUST check:
+
+   1.  Schema validation: All mandatory fields present with
+       correct types, including the record_phase field.
+
+   2.  Chain integrity: prev_hash values match computed hashes.
+
+   3.  Temporal ordering: Timestamps are monotonically
+       non-decreasing.
+
+   4.  Session structure: Genesis record is first, close record
+       is last (if present).
+
+   5.  Referential integrity: parent_record_id values reference
+       existing records.
+
+   6.  Action type conformance: action_detail contains required
+       fields for the declared action_type.
+
+   7.  Record phase conformance: record_phase values comply
+       with the requirements in <a href="#section-4.2">Section 4.2</a> (e.g., denied
+       decisions MUST be pre_execution).
+
+   8.  Nonce uniqueness: If nonce values are present, no
+       duplicates exist within the session.
+
+   A validator SHOULD produce a structured report indicating
+   pass/fail for each check, with the specific record_id where
+   failures occurred.
+
+<h3><a class="selflink" id="appendix-C.6" href="#appendix-C.6">C.6</a>.  Two-Plane Storage</h3>
+
+   For deployments requiring strong audit integrity,
+   implementations SHOULD maintain two storage planes:
+
+   o  Queryable plane: A database or search index optimized
+      for operational queries (e.g., &quot;show all denied actions
+      in the last hour&quot;).  This plane supports filtering,
+      aggregation, and real-time monitoring.
+
+   o  Append-only plane: An immutable log store (e.g., a
+      write-ahead log, object storage with legal hold, or a
+      ledger database) that accepts records but does not permit
+      modification or deletion (except via tombstone records
+      per <a href="#section-9.3">Section 9.3</a>).
+
+   The append-only plane SHOULD be operated by a different
+   principal than the agent operator.  For example, the agent
+   operator may control the queryable plane, while a compliance
+   team or third-party auditor controls the append-only plane.
+
+   Cross-checking between the two planes SHOULD occur on a
+   regular cadence (e.g., hourly or daily).  Discrepancies
+   between the planes indicate tampering or data loss and MUST
+   be flagged as critical integrity events.
+
+   This two-plane architecture ensures that even if the
+   queryable plane is compromised, the append-only plane
+   provides an independent source of truth for regulatory
+   audits and forensic investigations.
+
+<h2><a class="selflink" id="appendix-D" href="#appendix-D">Appendix D</a>.  Changes from -00</h2>
+
+   This section summarizes the changes from
+   <a href="/doc/html/draft-sharif-agent-audit-trail-00">draft-sharif-agent-audit-trail-00</a> to -01.
+
+   o  Added mandatory &quot;record_phase&quot; field to all audit records
+      (<a href="#section-3.1">Section 3.1</a>) with values &quot;pre_execution&quot;,
+      &quot;post_execution&quot;, and &quot;concurrent&quot;.
+
+   o  Added <a href="#section-4">Section 4</a> (Pre-Execution Recording) requiring
+      pre-execution records for denied and escalated decisions,
+      and for state-modifying actions in high-risk systems.
+
+   o  Added <a href="#section-5">Section 5</a> (Recording Independence) specifying when
+      an agent may write its own records (L0/L1) and when an
+      independent component should write records (L2+).
+
+   o  Added optional &quot;recording_component&quot; field (<a href="#section-3.2">Section 3.2</a>)
+      to identify independent recording components.
+
+   o  Added optional &quot;deny_reasons&quot; field (<a href="#section-3.2">Section 3.2</a>) with
+      nine defined reason codes for denied outcomes.
+
+   o  Added optional &quot;nonce&quot; field (<a href="#section-3.2">Section 3.2</a>) for replay
+      protection, RECOMMENDED for L2+ deployments.
+
+   o  Added optional &quot;external_timestamp&quot; field (<a href="#section-3.2">Section 3.2</a>)
+      for <a href="/doc/html/rfc3161">RFC 3161</a> timestamp anchoring, RECOMMENDED for L3+
+      deployments.
+
+   o  Added optional &quot;content_fingerprint&quot; field (<a href="#section-3.2">Section 3.2</a>)
+      for SHA-256 fingerprinting of full content before
+      redaction, supporting GDPR erasure with proof of
+      existence.
+
+   o  Added <a href="#section-14.5">Section 14.5</a> (Replay Attacks) to Security
+      Considerations.
+
+   o  Added <a href="#section-11.4">Section 11.4</a> (ISO/IEC 24970) and <a href="#section-11.5">Section 11.5</a>
+      (prEN 18229-1) to Regulatory Mapping.
+
+   o  Added Section C.6 (Two-Plane Storage) to Implementation
+      Notes.
+
+   o  Added &quot;authorization_record_id&quot; field to decision and
+      tool_call action_detail for linking pre-execution and
+      post-execution records.
+
+   o  Updated examples in <a href="#appendix-A">Appendix A</a> to demonstrate -01
+      features.
+
+   o  Added <a href="/doc/html/rfc3161">RFC 3161</a> to normative references.
+
+   o  Various editorial improvements for clarity.
+
+   Changes from -01 to -02:
+
+   o  Added <a href="#section-13">Section 13</a> (Decision Reproducibility), distinguishing
+      record reproducibility (available for any model) from
+      decision reproducibility (available only for open-weight
+      models executed at temperature 0 in an attested
+      environment), and defining the record fields
+      model_weights_digest, inference_config, output_digest,
+      environment, environment_attestation, and
+      reproducibility_class, plus a verification procedure.
+
+   o  Renumbered Security Considerations (now <a href="#section-14">Section 14</a>), IANA
+      Considerations (now <a href="#section-15">Section 15</a>), and References (now
+      <a href="#section-16">Section 16</a>) to accommodate the new <a href="#section-13">Section 13</a>.
+
+   o  Added <a href="/doc/html/rfc9334">RFC 9334</a> (RATS Architecture) to informative
+      references.
+
+   Changes from -02 to -03:
+
+   o  Added <a href="#section-13.6">Section 13.6</a> (Attestation Closure), requiring the
+      attested set to cover the complete computational closure
+      of the inference function, and defining closed versus open
+      attestations.
+
+   o  Added <a href="#section-13.7">Section 13.7</a> (Minimal-Change Threat Model),
+      enumerating for each closure component the minimal
+      modification that changes the output while all recorded
+      attestations continue to verify, including one empirically
+      demonstrated vector (an unrecorded decoding penalty
+      parameter at temperature 0).
+
+   o  Added record fields tokenizer_digest,
+      chat_template_digest, and engine_build_digest
+      (<a href="#section-13.3">Section 13.3</a>); extended the environment object with
+      num_threads.
+
+   o  Added an attestation-closure condition to <a href="#section-13.2">Section 13.2</a> and
+      extended the verification procedure (<a href="#section-13.4">Section 13.4</a>) to
+      check all closure digests.
+
+   o  Recommended binding runtime attestations to the specific
+      execution rather than the platform (Sections <a href="#section-13.6">13.6</a>, <a href="#section-13.7">13.7</a>).
+
+Acknowledgments
+
+   The author thanks independent implementers who built
+   production code against the -00 revision and provided
+   field-level crosswalks identifying the pre-execution
+   recording gap and other deficiencies addressed in this
+   revision.
+
+Author&#x27;s Address
+
+   Raza Sharif
+   CyberSecAI Ltd
+
+   Email: contact@agentsign.dev
+</pre></div>
+                    </div>
+                
+            </div>
+            <div class="d-print-none col-md-3 bg-light-subtle collapse show" id="sidebar">
+                <div class="position-fixed border-start sidebar overflow-scroll overscroll-none no-scrollbar">
+                    <div class="d-flex flex-column vh-100 pt-2 pt-lg-3 ps-3 pl-md-2 pl-lg-3">
+                        <div>
+                            <a class="btn btn-primary btn-sm" href="/doc/draft-sharif-agent-audit-trail/">Datatracker</a>
+                            <p class="fw-bold pt-2">
+                                
+                                    draft-sharif-agent-audit-trail-03
+                                
+                                <br>
+                                
+
+
+
+
+
+
+
+    <div>This is an older version of an Internet-Draft whose latest revision state is "Active".</div>
+
+                            </p>
+                        </div>
+                        
+                        <ul class="nav nav-tabs nav-fill small me-2" role="tablist">
+                            <li class="nav-item" role="presentation" title="Document information">
+                                <button class="nav-link px-2"
+                                        id="docinfo-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#docinfo-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="docinfo-tab-pane"
+                                        aria-selected="true">
+                                    <i class="bi bi-info-circle"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Info</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation" title="Table of contents">
+                                <button class="nav-link px-2"
+                                        id="toc-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#toc-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="toc-tab-pane"
+                                        aria-selected="false">
+                                    <i class="bi bi-list-ol"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Contents</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation" title="Preferences">
+                                <button class="nav-link px-2"
+                                        id="pref-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#pref-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="pref-tab-pane"
+                                        aria-selected="false">
+                                    <i class="bi bi-gear"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Prefs</span>
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="overflow-auto tab-content pt-2 me-2">
+                            <div class="tab-pane"
+                                 id="docinfo-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="docinfo-tab"
+                                 tabindex="0">
+                                <table class="table table-sm table-borderless">
+                                    
+
+
+
+
+
+
+
+<tbody class="meta align-top ">
+    <tr>
+        <th scope="row">Document</th>
+        <th scope="row">Document type</th>
+        <td class="edit"></td>
+        <td>
+            
+
+
+
+
+
+
+
+    <div>This is an older version of an Internet-Draft whose latest revision state is "Active".</div>
+
+            
+            
+            
+                
+
+
+
+
+    <div class="alert alert-warning small p-2 mt-2" role="alert">
+        This document is an Internet-Draft (I-D).
+        Anyone may submit an I-D to the IETF.
+        This I-D is <strong>not endorsed by the IETF</strong> and has <strong>no formal standing</strong> in the
+        <a href="/doc/rfc2026/">IETF standards process</a>.
+    </div>
+
+
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">Select version</th>
+            <td class="edit"></td>
+            <td>
+                
+
+
+
+    <ul class="revision-list pagination pagination-sm text-center flex-wrap my-0">
+        
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-00"
+                        >
+                            00
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-01"
+                        rel="nofollow">
+                            01
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-02"
+                        rel="nofollow">
+                            02
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item active">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-03"
+                        rel="nofollow">
+                            03
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-04"
+                        rel="nofollow">
+                            04
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-05"
+                        rel="nofollow">
+                            05
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-06"
+                        rel="nofollow">
+                            06
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-07"
+                        rel="nofollow">
+                            07
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-08"
+                        rel="nofollow">
+                            08
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-09"
+                        rel="nofollow">
+                            09
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-10"
+                        rel="nofollow">
+                            10
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-sharif-agent-audit-trail-11"
+                        >
+                            11
+                        </a>
+                    </li>
+                
+            
+            
+        
+    </ul>
+
+            </td>
+        </tr>
+        
+            <tr>
+                <td></td>
+                <th scope="row">Compare versions</th>
+                <td class="edit"></td>
+                <td>
+                    
+
+
+
+<form class="form-horizontal diff-form"
+      action="https://author-tools.ietf.org/iddiff"
+      method="get"
+      target="_blank">
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="From revision"
+                    name="url1">
+                
+                    <option value="draft-sharif-agent-audit-trail-11">
+                        draft-sharif-agent-audit-trail-11
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-10" selected>
+                        draft-sharif-agent-audit-trail-10
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-09">
+                        draft-sharif-agent-audit-trail-09
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-08">
+                        draft-sharif-agent-audit-trail-08
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-07">
+                        draft-sharif-agent-audit-trail-07
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-06">
+                        draft-sharif-agent-audit-trail-06
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-05">
+                        draft-sharif-agent-audit-trail-05
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-04">
+                        draft-sharif-agent-audit-trail-04
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-03">
+                        draft-sharif-agent-audit-trail-03
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-02">
+                        draft-sharif-agent-audit-trail-02
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-01">
+                        draft-sharif-agent-audit-trail-01
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-00">
+                        draft-sharif-agent-audit-trail-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="To revision"
+                    name="url2">
+                
+                    <option value="draft-sharif-agent-audit-trail-11" selected>
+                        draft-sharif-agent-audit-trail-11
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-10">
+                        draft-sharif-agent-audit-trail-10
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-09">
+                        draft-sharif-agent-audit-trail-09
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-08">
+                        draft-sharif-agent-audit-trail-08
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-07">
+                        draft-sharif-agent-audit-trail-07
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-06">
+                        draft-sharif-agent-audit-trail-06
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-05">
+                        draft-sharif-agent-audit-trail-05
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-04">
+                        draft-sharif-agent-audit-trail-04
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-03">
+                        draft-sharif-agent-audit-trail-03
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-02">
+                        draft-sharif-agent-audit-trail-02
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-01">
+                        draft-sharif-agent-audit-trail-01
+                        
+                    </option>
+                
+                    <option value="draft-sharif-agent-audit-trail-00">
+                        draft-sharif-agent-audit-trail-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--html"
+                    name="difftype">
+                Side-by-side
+            </button>
+            
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--hwdiff"
+                    name="difftype">
+                Inline
+            </button>
+
+
+</form>
+
+                </td>
+            </tr>
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">Author</th>
+        <td class="edit">
+            
+        </td>
+        <td>
+            
+            
+                <span ><a 
+           title="Datatracker profile of Raza Sharif"
+            href="/person/raza@cybersecai.co.uk" >Raza Sharif</a> <a 
+               href="mailto:raza%40cybersecai.co.uk"
+               aria-label="Compose email to raza@cybersecai.co.uk"
+               title="Compose email to raza@cybersecai.co.uk">
+                <i class="bi bi-envelope"></i></a></span>
+            
+            
+        </td>
+    </tr>
+    
+    
+        
+        
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            RFC stream
+        </th>
+        <td class="edit">
+            
+        </td>
+        <td class="text-body-secondary">
+            
+                (None)
+            
+        </td>
+    </tr>
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            Other formats
+        </th>
+        <td class="edit">
+        </td>
+        <td>
+            
+                
+    <div class="buttonlist">
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-sharif-agent-audit-trail-03.txt">
+            
+                <i class="bi bi-file-text"></i> txt
+            
+        </a>
+        
+    
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/draft-sharif-agent-audit-trail/03/bibtex/">
+            
+                <i class="bi bi-file-ruled"></i> bibtex
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/bibxml3/draft-sharif-agent-audit-trail-03.xml">
+            
+                <i class="bi bi-file-code"></i> bibxml
+            
+        </a>
+        
+    
+</div>
+
+            
+        </td>
+    </tr>
+    
+    
+        
+    
+</tbody>
+                                </table>
+                                <a class="btn btn-sm btn-warning mb-3"
+                                target="_blank"
+                                href="https://github.com/ietf-tools/datatracker/issues/new/choose">
+                                    Report a datatracker bug
+                                    <i class="bi bi-bug"></i>
+                                </a>
+                            </div>
+                            <div class="tab-pane mb-5"
+                                 id="toc-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="toc-tab"
+                                 tabindex="0">
+                                <nav class="nav nav-pills flex-column small" id="toc-nav">
+                                </nav>
+                            </div>
+                            <div class="tab-pane mb-5 small"
+                                 id="pref-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="pref-tab"
+                                 tabindex="0">
+                                <label class="form-label fw-bold mb-2">Show sidebar by default</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="sidebar" id="on-radio">
+                                    <label class="btn btn-outline-primary" for="on-radio">Yes</label>
+                                    <input type="radio" class="btn-check" name="sidebar" id="off-radio">
+                                    <label class="btn btn-outline-primary" for="off-radio">No</label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">Tab to show by default</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="deftab" id="docinfo-radio">
+                                    <label class="btn btn-outline-primary" for="docinfo-radio">
+                                        <i class="bi bi-info-circle me-1"></i>Info
+                                    </label>
+                                    <input type="radio" class="btn-check" name="deftab" id="toc-radio">
+                                    <label class="btn btn-outline-primary" for="toc-radio">
+                                        <i class="bi bi-list-ol me-1"></i>Contents
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">HTMLization configuration</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="htmlconf" id="txt-radio">
+                                    <label class="btn btn-outline-primary" for="txt-radio" title="This is the traditional HTMLization method.">
+                                        <i class="bi bi-badge-sd me-1"></i>HTMLize the plaintext
+                                    </label>
+                                    <input type="radio" class="btn-check" name="htmlconf" id="html-radio">
+                                    <label class="btn btn-outline-primary" for="html-radio" title="This is the modern HTMLization method.">
+                                        <i class="bi bi-badge-hd me-1"></i>Plaintextify the HTML
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2" for="ptsize">Maximum font size</label>
+                                <input type="range" class="form-range" min="7" max="16" id="ptsize" oninput="ptdemo.value = ptsize.value">
+                                <label class="form-label fw-bold mt-4 mb-2">Page dependencies</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="pagedeps" id="inline-radio">
+                                    <label class="btn btn-outline-primary" for="inline-radio" title="Generate larger, standalone web pages that do not require network access to render.">
+                                        <i class="bi bi-box me-1"></i>Inline
+                                    </label>
+                                    <input type="radio" class="btn-check" name="pagedeps" id="reference-radio">
+                                    <label class="btn btn-outline-primary" for="reference-radio" title="Generate regular web pages that require network access to render.">
+                                        <i class="bi bi-link-45deg me-1"></i>Reference
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">Citation links</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="reflinks" id="refsection-radio">
+                                    <label class="btn btn-outline-primary" for="refsection-radio" title="Citation links go to the reference section.">
+                                        <i class="bi bi-arrow-clockwise"></i> Go to reference section
+                                    </label>
+                                    <input type="radio" class="btn-check" name="reflinks" id="citation-radio">
+                                    <label class="btn btn-outline-primary" for="citation-radio" title="Citation links go directly to the cited document.">
+                                        <i class="bi bi-link-45deg me-1"></i>Go to linked document
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+<script>
+  var _paq = window._paq || [];
+  
+  _paq.push(['disableCookies']);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//analytics.ietf.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', 7]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//analytics.ietf.org/matomo.php?idsite=7" style="border:0;" alt="" /></p></noscript>
+
+    <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5fc215cab201e4a',t:'MTc5NTU2MjI4MA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5fc215cab201e4a',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

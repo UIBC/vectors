@@ -1,0 +1,2302 @@
+﻿
+<!DOCTYPE html>
+
+
+
+
+
+
+
+<html data-bs-theme="auto" lang="en">
+    <head>
+        
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>
+            
+                draft-marques-asqav-compliance-receipts-01
+            
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://static.ietf.org/fonts/inter/import.css" rel="stylesheet">
+        <link href="https://static.ietf.org/fonts/noto-sans-mono/import.css" rel="stylesheet">
+        
+            <link rel="stylesheet" href="https://static.ietf.org/dt/12.83.2/ietf/css/document_html_referenced.css">
+            
+                <link rel="stylesheet" href="https://static.ietf.org/dt/12.83.2/ietf/css/document_html_txt.css">
+            
+            <script type="module" crossorigin="" src="https://static.ietf.org/dt/12.83.2/assets/embedded-72dc5a5f.js"></script>
+<link href="https://static.ietf.org/dt/12.83.2/assets/create-pinia-singleton-4fceef90.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+<link href="https://static.ietf.org/dt/12.83.2/assets/Scrollbar-0888439d.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+            <script src="https://static.ietf.org/dt/12.83.2/ietf/js/document_html.js"></script>
+            <script src="https://static.ietf.org/dt/12.83.2/ietf/js/theme.js"></script>
+        
+        <link rel="alternate" type="application/atom+xml" title="Document changes" href="/feed/document-changes/draft-marques-asqav-compliance-receipts/">
+        <meta name="description"
+            
+                content="Compliance Profile of Signed Action Receipts for AI Agents (Internet-Draft, 2026)"
+            >
+        
+
+<link rel="apple-touch-icon"
+      sizes="180x180"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-180.png">
+<link rel="icon"
+      sizes="32x32"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-32.png">
+<link rel="icon"
+      sizes="16x16"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-mask.svg"
+      color="#ffffff">
+<meta name="msapplication-TileColor"
+      content="#ffffff">
+<meta name="theme-color"
+      content="#ffffff">
+        
+
+
+
+
+<meta property="og:title" content="Compliance Profile of Signed Action Receipts for AI Agents">
+<meta property="og:url" content="https://datatracker.ietf.org/doc/html/draft-marques-asqav-compliance-receipts-01">
+
+
+<link rel="canonical" href="https://datatracker.ietf.org/doc/html/draft-marques-asqav-compliance-receipts-01">
+
+<meta property="og:site_name" content="IETF Datatracker">
+<meta property="og:description" content="This document defines a compliance profile of the signed action receipt format used by AI agents to record machine-readable evidence of access-control decisions. The profile binds receipt fields to the operational record-keeping obligations of Articles 12 and 26 of Regulation (EU) 2024/1689 (the EU AI Act) and to the ICT-related incident management requirements of Article 17 of Regulation (EU) 2022/2554 (DORA). It does not redefine the wire format, the canonicalization rule, or the signing algorithms of the underlying receipt format. It tightens a subset of the OPTIONAL fields to REQUIRED, imposes a retention floor, mandates two-anchor timestamping, and adds two extension fields.">
+<meta property="og:type" content="article">
+
+<meta property="article:section" content="Individual Internet-Draft">
+
+<meta property="article:author" content="João André Gomes Marques">
+
+
+
+        
+        <style>
+            
+            .diff-form .select2-selection__rendered {
+                direction: rtl;
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <noscript><iframe class="status" title="Site status" src="/status/latest"></iframe></noscript>
+<div class="vue-embed" data-component="Status"></div>
+        <div class="btn-toolbar sidebar-toolbar position-fixed top-0 end-0 m-2 m-lg-3 d-print-none">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm me-1 dropdown-toggle d-flex align-items-center"
+                    id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown"
+                    aria-label="Toggle theme">
+                        <i class="theme-icon-active bi bi-circle-half"></i>
+                </button>
+
+                <ul class="dropdown-menu" aria-labelledby="bd-theme">
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center"
+                            data-bs-theme-value="light" aria-pressed="false">
+                            <i class="me-2 opacity-50 theme-icon bi bi-sun-fill"></i>
+                            Light<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center"
+                            data-bs-theme-value="dark" aria-pressed="false">
+                            <i class="me-2 opacity-50 theme-icon bi bi-moon-stars-fill"></i>
+                            Dark<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center active"
+                            data-bs-theme-value="auto" aria-pressed="true">
+                            <i class="me-2 opacity-50 theme-icon bi bi-circle-half"></i>
+                            Auto<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm sidebar-toggle"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#sidebar"
+                    aria-expanded="true"
+                    aria-controls="sidebar"
+                    aria-label="Toggle metadata sidebar"
+                    title="Toggle metadata sidebar">
+            <i class="bi bi-arrow-bar-left sidebar-shown"></i>
+            <i class="bi bi-arrow-bar-right sidebar-collapsed"></i>
+            </button>
+        </div>
+        <nav class="navbar bg-light-subtle px-1 fixed-top d-print-none d-md-none">
+            <a class="nav-link ps-1"
+               href="/doc/draft-marques-asqav-compliance-receipts/">
+                 
+                    draft-marques-asqav-compliance-receipts-01
+                
+                <br class="d-sm-none">
+
+                <span class="ms-sm-3 badge rounded-pill badge-draft">
+                    
+                        Internet-Draft
+                    
+                </span>
+            </a>
+            <button class="navbar-toggler p-1"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#docinfo-collapse"
+                    aria-controls="docinfo-collapse"
+                    aria-expanded="false"
+                    aria-label="Show document information">
+                <span class="navbar-toggler-icon small"></span>
+            </button>
+            <div class="navbar-nav navbar-nav-scroll overscroll-none collapse pt-1" id="docinfo-collapse">
+                <div class="bg-light-subtle p-0">
+                    <table class="table table-sm table-borderless small">
+                        <tbody class="meta align-top">
+                            <tr>
+                                <th scope="row"></th>
+                                <th scope="row">Title</th>
+                                <td class="edit"></td>
+                                <td>Compliance Profile of Signed Action Receipts for AI Agents</td>
+                            </tr>
+                        </tbody>
+                        
+
+
+
+
+
+
+
+<tbody class="meta align-top ">
+    <tr>
+        <th scope="row">Document</th>
+        <th scope="row">Document type</th>
+        <td class="edit"></td>
+        <td>
+            
+
+
+
+
+
+
+
+    <div>This is an older version of an Internet-Draft whose latest revision state is "Active".</div>
+
+            
+            
+            
+                
+
+
+
+
+    <div class="alert alert-warning small p-2 mt-2" role="alert">
+        This document is an Internet-Draft (I-D).
+        Anyone may submit an I-D to the IETF.
+        This I-D is <strong>not endorsed by the IETF</strong> and has <strong>no formal standing</strong> in the
+        <a href="/doc/rfc2026/">IETF standards process</a>.
+    </div>
+
+
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">Select version</th>
+            <td class="edit"></td>
+            <td>
+                
+
+
+
+    <ul class="revision-list pagination pagination-sm text-center flex-wrap my-0">
+        
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-00"
+                        >
+                            00
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item active">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-01"
+                        rel="nofollow">
+                            01
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-02"
+                        rel="nofollow">
+                            02
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-03"
+                        rel="nofollow">
+                            03
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-04"
+                        rel="nofollow">
+                            04
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-05"
+                        rel="nofollow">
+                            05
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-06"
+                        rel="nofollow">
+                            06
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-07"
+                        rel="nofollow">
+                            07
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-08"
+                        rel="nofollow">
+                            08
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-09"
+                        >
+                            09
+                        </a>
+                    </li>
+                
+            
+            
+        
+    </ul>
+
+            </td>
+        </tr>
+        
+            <tr>
+                <td></td>
+                <th scope="row">Compare versions</th>
+                <td class="edit"></td>
+                <td>
+                    
+
+
+
+<form class="form-horizontal diff-form"
+      action="https://author-tools.ietf.org/iddiff"
+      method="get"
+      target="_blank">
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="From revision"
+                    name="url1">
+                
+                    <option value="draft-marques-asqav-compliance-receipts-09">
+                        draft-marques-asqav-compliance-receipts-09
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-08" selected>
+                        draft-marques-asqav-compliance-receipts-08
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-07">
+                        draft-marques-asqav-compliance-receipts-07
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-06">
+                        draft-marques-asqav-compliance-receipts-06
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-05">
+                        draft-marques-asqav-compliance-receipts-05
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-04">
+                        draft-marques-asqav-compliance-receipts-04
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-03">
+                        draft-marques-asqav-compliance-receipts-03
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-02">
+                        draft-marques-asqav-compliance-receipts-02
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-01">
+                        draft-marques-asqav-compliance-receipts-01
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-00">
+                        draft-marques-asqav-compliance-receipts-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="To revision"
+                    name="url2">
+                
+                    <option value="draft-marques-asqav-compliance-receipts-09" selected>
+                        draft-marques-asqav-compliance-receipts-09
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-08">
+                        draft-marques-asqav-compliance-receipts-08
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-07">
+                        draft-marques-asqav-compliance-receipts-07
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-06">
+                        draft-marques-asqav-compliance-receipts-06
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-05">
+                        draft-marques-asqav-compliance-receipts-05
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-04">
+                        draft-marques-asqav-compliance-receipts-04
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-03">
+                        draft-marques-asqav-compliance-receipts-03
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-02">
+                        draft-marques-asqav-compliance-receipts-02
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-01">
+                        draft-marques-asqav-compliance-receipts-01
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-00">
+                        draft-marques-asqav-compliance-receipts-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--html"
+                    name="difftype">
+                Side-by-side
+            </button>
+            
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--hwdiff"
+                    name="difftype">
+                Inline
+            </button>
+
+
+</form>
+
+                </td>
+            </tr>
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">Author</th>
+        <td class="edit">
+            
+        </td>
+        <td>
+            
+            
+                <span ><a 
+           title="Datatracker profile of João André Gomes Marques"
+            href="/person/info@asqav.com" >João André Gomes Marques</a> <a 
+               href="mailto:info%40asqav.com"
+               aria-label="Compose email to info@asqav.com"
+               title="Compose email to info@asqav.com">
+                <i class="bi bi-envelope"></i></a></span>
+            
+            
+        </td>
+    </tr>
+    
+    
+        
+        
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            RFC stream
+        </th>
+        <td class="edit">
+            
+        </td>
+        <td class="text-body-secondary">
+            
+                (None)
+            
+        </td>
+    </tr>
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            Other formats
+        </th>
+        <td class="edit">
+        </td>
+        <td>
+            
+                
+    <div class="buttonlist">
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-marques-asqav-compliance-receipts-01.txt">
+            
+                <i class="bi bi-file-text"></i> txt
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-marques-asqav-compliance-receipts-01.html">
+            
+                <i class="bi bi-file-code"></i> html
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-marques-asqav-compliance-receipts-01.xml">
+            
+                <i class="bi bi-file-code"></i> xml
+            
+        </a>
+        
+    
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/draft-marques-asqav-compliance-receipts/01/bibtex/">
+            
+                <i class="bi bi-file-ruled"></i> bibtex
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/bibxml3/draft-marques-asqav-compliance-receipts-01.xml">
+            
+                <i class="bi bi-file-code"></i> bibxml
+            
+        </a>
+        
+    
+</div>
+
+            
+        </td>
+    </tr>
+    
+    
+        
+    
+</tbody>
+                        <tr>
+                            <th scope="row"></th>
+                            <th scope="row"></th>
+                            <td class="edit"></td>
+                            <td>
+                                <a class="btn btn-sm btn-warning mb-3"
+                                target="_blank"
+                                href="https://github.com/ietf-tools/datatracker/issues/new/choose">
+                                    Report a bug
+                                    <i class="bi bi-bug"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </nav>
+        <div class="row g-0">
+            <div class="col-md-9 d-flex justify-content-center lh-sm"
+                 data-bs-spy="scroll"
+                 data-bs-target="#toc-nav"
+                 data-bs-smooth-scroll="true"
+                 tabindex="0"
+                 id="content">
+                
+                    <div class="rfchtml">
+                        <br class="noprint">
+                        <div class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">Compliance Receipts Profile</td>
+<td class="right">May 2026</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Gomes Marques</td>
+<td class="center">Expires 6 November 2026</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Network Working Group</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-marques-asqav-compliance-receipts-01</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2026-05-05" class="published">5 May 2026</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Informational</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2026-11-06">6 November 2026</time></dd>
+<dt class="label-authors">Author:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">J. A. Gomes Marques</div>
+<div class="org">Asqav</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Compliance Profile of Signed Action Receipts for AI Agents</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document defines a compliance profile of the signed action receipt format used by AI agents to record machine-readable evidence of access-control decisions. The profile binds receipt fields to the operational record-keeping obligations of Articles 12 and 26 of Regulation (EU) 2024/1689 (the EU AI Act) and to the ICT-related incident management requirements of Article 17 of Regulation (EU) 2022/2554 (DORA). It does not redefine the wire format, the canonicalization rule, or the signing algorithms of the underlying receipt format. It tightens a subset of the OPTIONAL fields to REQUIRED, imposes a retention floor, mandates two-anchor timestamping, and adds two extension fields.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 6 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2026 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-profile-not-fork" class="internal xref">Profile, Not Fork</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
+                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-scope" class="internal xref">Scope</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.3">
+                <p id="section-toc.1-1.1.2.3.1" class="keepWithNext"><a href="#section-1.3" class="auto internal xref">1.3</a>.  <a href="#name-why-a-profile-is-required" class="internal xref">Why a Profile is Required</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-relationship-to-acta-receip" class="internal xref">Relationship to ACTA-RECEIPTS</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-receipt-field-profile" class="internal xref">Receipt Field Profile</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-common-payload-fields" class="internal xref">Common Payload Fields</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.1">
+                    <p id="section-toc.1-1.4.2.1.2.1.1"><a href="#section-4.1.1" class="auto internal xref">4.1.1</a>.  <a href="#name-type" class="internal xref">type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.2">
+                    <p id="section-toc.1-1.4.2.1.2.2.1"><a href="#section-4.1.2" class="auto internal xref">4.1.2</a>.  <a href="#name-issued_at" class="internal xref">issued_at</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.3">
+                    <p id="section-toc.1-1.4.2.1.2.3.1"><a href="#section-4.1.3" class="auto internal xref">4.1.3</a>.  <a href="#name-issuer_id" class="internal xref">issuer_id</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.4">
+                    <p id="section-toc.1-1.4.2.1.2.4.1"><a href="#section-4.1.4" class="auto internal xref">4.1.4</a>.  <a href="#name-payload_digest-optional-ups" class="internal xref">payload_digest (OPTIONAL upstream, REQUIRED in this profile)</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.5">
+                    <p id="section-toc.1-1.4.2.1.2.5.1"><a href="#section-4.1.5" class="auto internal xref">4.1.5</a>.  <a href="#name-action_ref-optional-upstrea" class="internal xref">action_ref (OPTIONAL upstream, REQUIRED in this profile)</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.6">
+                    <p id="section-toc.1-1.4.2.1.2.6.1"><a href="#section-4.1.6" class="auto internal xref">4.1.6</a>.  <a href="#name-sandbox_state-optional-upst" class="internal xref">sandbox_state (OPTIONAL upstream, REQUIRED for High-Risk in this profile)</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.7">
+                    <p id="section-toc.1-1.4.2.1.2.7.1"><a href="#section-4.1.7" class="auto internal xref">4.1.7</a>.  <a href="#name-iteration_id-optional-upstr" class="internal xref">iteration_id (OPTIONAL upstream, REQUIRED for multi-step in this profile)</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-decision-receipt-fields-typ" class="internal xref">Decision Receipt Fields (type protectmcp:decision)</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.1">
+                    <p id="section-toc.1-1.4.2.2.2.1.1"><a href="#section-4.2.1" class="auto internal xref">4.2.1</a>.  <a href="#name-reason-optional-upstream-re" class="internal xref">reason (OPTIONAL upstream, REQUIRED for deny/rate_limit in this profile)</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.2">
+                    <p id="section-toc.1-1.4.2.2.2.2.1"><a href="#section-4.2.2" class="auto internal xref">4.2.2</a>.  <a href="#name-policy_digest-optional-upst" class="internal xref">policy_digest (OPTIONAL upstream, REQUIRED in this profile)</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-hash-chain-linkage-optional" class="internal xref">Hash-Chain Linkage (OPTIONAL upstream, REQUIRED in this profile)</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
+                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-anchoring-no-upstream-equiv" class="internal xref">Anchoring (No Upstream Equivalent)</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.5">
+                <p id="section-toc.1-1.4.2.5.1"><a href="#section-4.5" class="auto internal xref">4.5</a>.  <a href="#name-extension-fields" class="internal xref">Extension Fields</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-eu-ai-act-article-12-bindin" class="internal xref">EU AI Act Article 12 Binding</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-article-121-automatic-recor" class="internal xref">Article 12(1), automatic recording of events</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-article-122a-identify-situa" class="internal xref">Article 12(2)(a), identify situations that may present a risk</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-article-122b-facilitate-the" class="internal xref">Article 12(2)(b), facilitate the post-market monitoring</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-article-122c-monitor-the-op" class="internal xref">Article 12(2)(c), monitor the operation</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.5">
+                <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="auto internal xref">5.5</a>.  <a href="#name-retention" class="internal xref">Retention</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-eu-ai-act-article-26-bindin" class="internal xref">EU AI Act Article 26 Binding</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-article-261-in-accordance-w" class="internal xref">Article 26(1), in accordance with the instructions for use</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-article-262-ensure-human-ov" class="internal xref">Article 26(2), ensure human oversight</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-article-265-monitor-the-ope" class="internal xref">Article 26(5), monitor the operation</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4">
+                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-article-266-keep-the-logs-f" class="internal xref">Article 26(6), keep the logs for at least six months</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-dora-article-17-binding" class="internal xref">DORA Article 17 Binding</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-article-171-ict-related-inc" class="internal xref">Article 17(1), ICT-related incident management process</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-article-172-classify-ict-re" class="internal xref">Article 17(2), classify ICT-related incidents</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-article-173-records-of-all-" class="internal xref">Article 17(3), records of all ICT-related incidents</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
+                <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="auto internal xref">7.4</a>.  <a href="#name-retention-2" class="internal xref">Retention</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-audit-pack-composition" class="internal xref">Audit Pack Composition</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-verifier-behaviour" class="internal xref">Verifier Behaviour</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-mandatory-checks" class="internal xref">Mandatory Checks</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-optional-checks" class="internal xref">Optional Checks</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.3">
+                <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="auto internal xref">9.3</a>.  <a href="#name-reporting" class="internal xref">Reporting</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-tamper-resistance" class="internal xref">Tamper Resistance</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-key-compromise" class="internal xref">Key Compromise</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.3">
+                <p id="section-toc.1-1.10.2.3.1"><a href="#section-10.3" class="auto internal xref">10.3</a>.  <a href="#name-retention-and-long-term-ver" class="internal xref">Retention and Long-Term Verifiability</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.4">
+                <p id="section-toc.1-1.10.2.4.1"><a href="#section-10.4" class="auto internal xref">10.4</a>.  <a href="#name-privacy" class="internal xref">Privacy</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.5">
+                <p id="section-toc.1-1.10.2.5.1"><a href="#section-10.5" class="auto internal xref">10.5</a>.  <a href="#name-anchor-trust" class="internal xref">Anchor Trust</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.6">
+                <p id="section-toc.1-1.10.2.6.1"><a href="#section-10.6" class="auto internal xref">10.6</a>.  <a href="#name-replay" class="internal xref">Replay</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.7">
+                <p id="section-toc.1-1.10.2.7.1"><a href="#section-10.7" class="auto internal xref">10.7</a>.  <a href="#name-cross-regime-conflict" class="internal xref">Cross-Regime Conflict</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.8">
+                <p id="section-toc.1-1.10.2.8.1"><a href="#section-10.8" class="auto internal xref">10.8</a>.  <a href="#name-algorithm-agility" class="internal xref">Algorithm Agility</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-compliance-receipt-extensio" class="internal xref">Compliance Receipt Extension Fields Registry</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-compliance-receipt-type-nam" class="internal xref">Compliance Receipt Type Namespaces Registry</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-acknowledgements" class="internal xref">Acknowledgements</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#section-14" class="auto internal xref">14</a>. <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
+            <p id="section-toc.1-1.15.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-worked-example-informative" class="internal xref">Worked Example (Informative)</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
+            <p id="section-toc.1-1.16.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-change-log" class="internal xref">Change Log</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.1">
+                <p id="section-toc.1-1.16.2.1.1"><a href="#appendix-B.1" class="auto internal xref"></a><a href="#name-draft-marques-asqav-complia" class="internal xref">draft-marques-asqav-compliance-receipts-01</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.2">
+                <p id="section-toc.1-1.16.2.2.1"><a href="#appendix-B.2" class="auto internal xref"></a><a href="#name-draft-marques-asqav-complian" class="internal xref">draft-marques-asqav-compliance-receipts-00</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17">
+            <p id="section-toc.1-1.17.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<div id="profile-not-fork">
+<section id="section-1.1">
+        <h3 id="name-profile-not-fork">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-profile-not-fork" class="section-name selfRef">Profile, Not Fork</a>
+        </h3>
+<p id="section-1.1-1"><span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> specifies a generic, signed receipt envelope for recording machine-to-machine access control decisions made by AI agents. Section 2.2 of <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> defines a common payload field set in which all fields except type, issued_at, and issuer_id are OPTIONAL. Section 5.7 of <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> introduces hash chaining (previousReceiptHash) inside an optional Commitment Mode extension. <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> does not define receipt retention, does not require timestamping anchors, and does not bind to any regulatory regime.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-2">The author considered three options for this document.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1.1-3.1">Option A, regulation-mapping informational doc only. Rejected because regulators do not, in practice, accept log records whose semantics are negotiated bilaterally; field-level constraints are needed.<a href="#section-1.1-3.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-1.1-3.2">Option B, fork-and-extend with a new wire format. Rejected because the <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> envelope is sufficient for the bindings in this document; a fork would fragment the small ecosystem.<a href="#section-1.1-3.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-1.1-3.3">Option C, additive profile. Adopted. This document constrains fields that <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> leaves OPTIONAL, fixes their values where regulation requires, and adds two extension fields with reserved names. The profile remains an additive overlay: a Compliance Receipt is also a conformant <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> receipt.<a href="#section-1.1-3.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-1.1-4">This document tracks <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> revisions. Field references in this profile use upstream field names rather than upstream section numbers wherever possible, to reduce the maintenance hazard if upstream re-numbers sections in a future revision.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="scope">
+<section id="section-1.2">
+        <h3 id="name-scope">
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-scope" class="section-name selfRef">Scope</a>
+        </h3>
+<p id="section-1.2-1">This document fills the regulatory binding gap for three obligations: Article 12 (record-keeping) and Article 26 (deployer obligations) of the EU AI Act, and Article 17 (ICT-related incident management) of DORA.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2-2">A receipt that conforms to this profile is also a conformant <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> receipt. A verifier that implements only <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> can still cryptographically validate a profile receipt but cannot attest the additional compliance bindings.<a href="#section-1.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="why-profile">
+<section id="section-1.3">
+        <h3 id="name-why-a-profile-is-required">
+<a href="#section-1.3" class="section-number selfRef">1.3. </a><a href="#name-why-a-profile-is-required" class="section-name selfRef">Why a Profile is Required</a>
+        </h3>
+<p id="section-1.3-1">Regulators and auditors do not accept log records whose semantics are negotiated bilaterally between provider and deployer. The records must be machine-checkable, with field-level constraints that a third party can verify without access to the provider's internal documentation. <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> provides the wire format. This profile provides the field-level constraints, the retention floor, the anchoring requirement, and the regime mapping.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="conventions">
+<section id="section-2">
+      <h2 id="name-conventions-and-definitions">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+      </h2>
+<p id="section-2-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">The following terms are used in this document.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2-3">
+        <dt id="section-2-3.1">Action:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-3.2">An operation performed by an AI agent that is subject to a policy evaluation. Examples include a tool invocation, an external API call, a write to durable storage, and the issuance of an irreversible instruction to another system.<a href="#section-2-3.2" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-3.3">Action Receipt:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-3.4">A signed envelope conforming to <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> that records the policy evaluation result for a single Action.<a href="#section-2-3.4" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-3.5">Compliance Receipt:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-3.6">An Action Receipt that additionally satisfies the requirements of this profile.<a href="#section-2-3.6" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-3.7">Deployer:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-3.8">As defined in Article 3(4) of <span>[<a href="#EU-AI-ACT" class="cite xref">EU-AI-ACT</a>]</span>.<a href="#section-2-3.8" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-3.9">High-Risk AI System:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-3.10">As defined in Article 6 of <span>[<a href="#EU-AI-ACT" class="cite xref">EU-AI-ACT</a>]</span>.<a href="#section-2-3.10" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-3.11">Financial Entity:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-3.12">As defined in Article 2(1) of <span>[<a href="#DORA" class="cite xref">DORA</a>]</span>.<a href="#section-2-3.12" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-3.13">Anchor:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-3.14">An attestation by an independent timestamping or transparency log that a given receipt or batch of receipts existed at a point in time. Anchors covered by this profile are RFC 3161 timestamp tokens <span>[<a href="#RFC3161" class="cite xref">RFC3161</a>]</span> and OpenTimestamps <span>[<a href="#OPENTIMESTAMPS" class="cite xref">OPENTIMESTAMPS</a>]</span> commitments.<a href="#section-2-3.14" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-3.15">Audit Pack:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-3.16">A bundle of Compliance Receipts, the chain commitments that link them, the public verification keys, the trust anchor metadata, and the regime mapping required by Sections 5 through 7 of this document, packaged for delivery to a regulator or auditor.<a href="#section-2-3.16" class="pilcrow">¶</a>
+</dd>
+      <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="relationship">
+<section id="section-3">
+      <h2 id="name-relationship-to-acta-receip">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-relationship-to-acta-receip" class="section-name selfRef">Relationship to ACTA-RECEIPTS</a>
+      </h2>
+<p id="section-3-1">This profile is an additive overlay on <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>. It does not modify the envelope, the canonicalization rule, the signature object, or the algorithm registry of <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">The following normative statements apply.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3-3.1">Implementations of this profile MUST produce receipts that are byte-for-byte verifiable by a conformant <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> verifier.<a href="#section-3-3.1" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-3-3.2">Implementations of this profile MUST NOT introduce new top-level fields in the signed payload that conflict with names reserved by <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>.<a href="#section-3-3.2" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-3-3.3">Implementations of this profile MAY use any signature algorithm permitted by <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>, namely Ed25519 (mandatory-to-implement), ES256, and ML-DSA-65.<a href="#section-3-3.3" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-3-3.4">Where <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> marks a field OPTIONAL and this profile marks the same field REQUIRED, the stricter requirement applies to Compliance Receipts.<a href="#section-3-3.4" class="pilcrow">¶</a>
+</li>
+      </ul>
+<p id="section-3-4">A receipt that fails any MUST clause of this profile is not a Compliance Receipt. It MAY still be a valid <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> receipt.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-5">This profile differentiates from <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> on three axes: mandatory hash-chain linkage (upstream Commitment Mode is OPTIONAL), mandatory dual-anchoring with RFC 3161 and OpenTimestamps (upstream mentions Sigstore Rekor only as informational), and a retention floor tied to specific regulatory articles (upstream is silent on retention).<a href="#section-3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="field-profile">
+<section id="section-4">
+      <h2 id="name-receipt-field-profile">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-receipt-field-profile" class="section-name selfRef">Receipt Field Profile</a>
+      </h2>
+<p id="section-4-1">This section enumerates fields defined by <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> and states the additional requirements that this profile places on them. Field names follow <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> exactly.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">The signed envelope MUST carry a signature projection at top level. Implementations that already use the bare <code>signature</code> key for a base64 signature string MAY emit the projection under <code>signatureObject</code> instead, with the same keys <code>alg</code>, <code>kid</code>, <code>sig</code>. Anchors MUST be projected into a top-level <code>anchors</code> array with a <code>type</code> discriminator and a <code>value</code> field carrying the anchor bytes. Flat-column implementations MUST project on emission and Audit Pack export.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<div id="common-fields">
+<section id="section-4.1">
+        <h3 id="name-common-payload-fields">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-common-payload-fields" class="section-name selfRef">Common Payload Fields</a>
+        </h3>
+<div id="type">
+<section id="section-4.1.1">
+          <h4 id="name-type">
+<a href="#section-4.1.1" class="section-number selfRef">4.1.1. </a><a href="#name-type" class="section-name selfRef">type</a>
+          </h4>
+<p id="section-4.1.1-1">Compliance Receipts MUST set type to a value drawn from the namespace protectmcp:decision, protectmcp:restraint, or protectmcp:lifecycle, or to an extension namespace registered for use with this profile.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="issued-at">
+<section id="section-4.1.2">
+          <h4 id="name-issued_at">
+<a href="#section-4.1.2" class="section-number selfRef">4.1.2. </a><a href="#name-issued_at" class="section-name selfRef">issued_at</a>
+          </h4>
+<p id="section-4.1.2-1">REQUIRED upstream and in this profile. The value MUST be an ISO 8601 timestamp with an explicit timezone. The producing system MUST source the value from a clock synchronized to a recognized time authority and MUST NOT backdate the value. Verifiers MUST reject receipts whose issued_at is more than 300 seconds ahead of the verifier's own clock. Verifiers MUST NOT reject a receipt solely because <code>issued_at</code> lies in the past; past skew is bounded by retention (<a href="#art12-retention" class="auto internal xref">Section 5.5</a>, <a href="#dora-retention" class="auto internal xref">Section 7.4</a>), not freshness. Historical receipts within retention MUST verify on the same path as fresh ones.<a href="#section-4.1.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="issuer-id">
+<section id="section-4.1.3">
+          <h4 id="name-issuer_id">
+<a href="#section-4.1.3" class="section-number selfRef">4.1.3. </a><a href="#name-issuer_id" class="section-name selfRef">issuer_id</a>
+          </h4>
+<p id="section-4.1.3-1">REQUIRED upstream and in this profile. The value MUST identify a legal entity, not a natural person. Where the producing system is operated by a Deployer, the issuer_id MUST resolve, through the trust anchor metadata in the Audit Pack, to a record naming the Deployer.<a href="#section-4.1.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="payload-digest">
+<section id="section-4.1.4">
+          <h4 id="name-payload_digest-optional-ups">
+<a href="#section-4.1.4" class="section-number selfRef">4.1.4. </a><a href="#name-payload_digest-optional-ups" class="section-name selfRef">payload_digest (OPTIONAL upstream, REQUIRED in this profile)</a>
+          </h4>
+<p id="section-4.1.4-1">REQUIRED for Compliance Receipts. The associated payload that this digest covers MUST be retained for the period mandated by the most restrictive applicable regime in Sections 5 through 7 of this document. Implementations MUST NOT discard the underlying payload while a receipt that references it is still within its retention window.<a href="#section-4.1.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="action-ref">
+<section id="section-4.1.5">
+          <h4 id="name-action_ref-optional-upstrea">
+<a href="#section-4.1.5" class="section-number selfRef">4.1.5. </a><a href="#name-action_ref-optional-upstrea" class="section-name selfRef">action_ref (OPTIONAL upstream, REQUIRED in this profile)</a>
+          </h4>
+<p id="section-4.1.5-1">REQUIRED for Compliance Receipts. The value is a SHA-256 hash of the canonical action representation as defined in <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>. This profile uses action_ref as the primary join key for cross-engine reconstruction during an audit.<a href="#section-4.1.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sandbox-state">
+<section id="section-4.1.6">
+          <h4 id="name-sandbox_state-optional-upst">
+<a href="#section-4.1.6" class="section-number selfRef">4.1.6. </a><a href="#name-sandbox_state-optional-upst" class="section-name selfRef">sandbox_state (OPTIONAL upstream, REQUIRED for High-Risk in this profile)</a>
+          </h4>
+<p id="section-4.1.6-1">REQUIRED for receipts produced by High-Risk AI Systems. Upstream defines sandbox_state as an OS-level containment status. This profile constrains the value to one of enabled, disabled, or unavailable. A Deployer that operates a High-Risk AI System and produces a stream of receipts in which sandbox_state is consistently disabled SHOULD treat that stream as a finding under Article 26 and document the rationale in the Audit Pack metadata.<a href="#section-4.1.6-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iteration-id">
+<section id="section-4.1.7">
+          <h4 id="name-iteration_id-optional-upstr">
+<a href="#section-4.1.7" class="section-number selfRef">4.1.7. </a><a href="#name-iteration_id-optional-upstr" class="section-name selfRef">iteration_id (OPTIONAL upstream, REQUIRED for multi-step in this profile)</a>
+          </h4>
+<p id="section-4.1.7-1">REQUIRED for multi-step agent workflows. The value MUST be stable across all receipts emitted within the same logical task or session so that a regulator can reconstruct the full chain of Actions. iteration_id is distinct from the upstream session_id field, which is an opaque transport-layer session identifier. A Compliance Receipt MAY carry both: session_id for transport-level correlation and iteration_id for logical-task correlation.<a href="#section-4.1.7-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="decision-fields">
+<section id="section-4.2">
+        <h3 id="name-decision-receipt-fields-typ">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-decision-receipt-fields-typ" class="section-name selfRef">Decision Receipt Fields (type protectmcp:decision)</a>
+        </h3>
+<p id="section-4.2-1">Wire value MUST be <code>allow</code>, <code>deny</code>, or <code>rate_limit</code>. Implementations using a different internal vocabulary (e.g. <code>permit</code> for allow) MUST normalise on emission and on Audit Pack export.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<div id="reason">
+<section id="section-4.2.1">
+          <h4 id="name-reason-optional-upstream-re">
+<a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-reason-optional-upstream-re" class="section-name selfRef">reason (OPTIONAL upstream, REQUIRED for deny/rate_limit in this profile)</a>
+          </h4>
+<p id="section-4.2.1-1">REQUIRED for Compliance Receipts where decision is deny or rate_limit. The value MUST be a machine-readable reason code drawn from a vocabulary documented in the Deployer's Audit Pack metadata.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="policy-digest">
+<section id="section-4.2.2">
+          <h4 id="name-policy_digest-optional-upst">
+<a href="#section-4.2.2" class="section-number selfRef">4.2.2. </a><a href="#name-policy_digest-optional-upst" class="section-name selfRef">policy_digest (OPTIONAL upstream, REQUIRED in this profile)</a>
+          </h4>
+<p id="section-4.2.2-1">REQUIRED for Compliance Receipts. The value MUST be of the form sha256:&lt;hex&gt; and MUST reference a policy artefact that the Deployer retains for the applicable retention window. Verifiers MUST reject Compliance Receipts whose policy_digest does not resolve in the Audit Pack.<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="hash-chain">
+<section id="section-4.3">
+        <h3 id="name-hash-chain-linkage-optional">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-hash-chain-linkage-optional" class="section-name selfRef">Hash-Chain Linkage (OPTIONAL upstream, REQUIRED in this profile)</a>
+        </h3>
+<p id="section-4.3-1">Upstream Commitment Mode introduces previousReceiptHash as part of an optional extension. This profile makes the linkage REQUIRED. Implementations MUST emit a previousReceiptHash field, populated as specified by <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> (lowercase hex SHA-256 of the JSON Canonicalization Scheme <span>[<a href="#RFC8785" class="cite xref">RFC8785</a>]</span> encoding of the predecessor receipt). The first receipt in a chain MUST set this field to the all-zero SHA-256 value. JSON key is the literal <code>previousReceiptHash</code> (camelCase, case-sensitive); snake_case aliases MUST NOT appear on the wire.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">The chain hash covers the bytes the signature covers (<code>signing_input</code> over <code>payload</code>); <code>signature</code> and <code>anchors</code> are NOT included.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.3-3">Implementations of <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> that do not implement Commitment Mode produce receipts that are not Compliance Receipts under this profile.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="anchoring">
+<section id="section-4.4">
+        <h3 id="name-anchoring-no-upstream-equiv">
+<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-anchoring-no-upstream-equiv" class="section-name selfRef">Anchoring (No Upstream Equivalent)</a>
+        </h3>
+<p id="section-4.4-1"><span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> mentions Sigstore Rekor only as an informational example. This profile imposes a normative dual-anchor requirement.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.4-2">Compliance Receipts MUST be anchored. An anchor is an <span>[<a href="#RFC3161" class="cite xref">RFC3161</a>]</span> timestamp token covering the signed envelope, an OpenTimestamps commitment covering the envelope, or both. Implementations SHOULD emit both forms. The anchor evidence MUST be retained alongside the receipt for the applicable retention window. Verifiers MUST reject Compliance Receipts that lack at least one valid anchor.<a href="#section-4.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.4-3">An anchor MAY be attached after issuance if the receipt is persisted with an unambiguous <code>pending</code> marker and the anchor lands within a documented bound. For <span>[<a href="#OPENTIMESTAMPS" class="cite xref">OPENTIMESTAMPS</a>]</span> the bound is the 7-day calendar-to-block window. <span>[<a href="#RFC3161" class="cite xref">RFC3161</a>]</span> tokens MUST be obtained synchronously. A verifier MUST treat a pending receipt as non-conformant once the bound elapses.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
+<p id="section-4.4-4">The anchor MAY cover an aggregate of receipts (for example, a Merkle root over a batch) rather than each receipt individually, provided that the inclusion proof linking the receipt to the aggregate is retained alongside the receipt and the aggregate anchor.<a href="#section-4.4-4" class="pilcrow">¶</a></p>
+<p id="section-4.4-5">Where the anchor type is <span>[<a href="#RFC3161" class="cite xref">RFC3161</a>]</span>, the full TimeStampResp DER bytes (including TSA cert chain) MUST be retained. Where the anchor type is <span>[<a href="#OPENTIMESTAMPS" class="cite xref">OPENTIMESTAMPS</a>]</span>, the upgrade path from the initial calendar attestation to the Bitcoin block attestation MUST be performed within seven days of issuance, and the upgraded proof MUST be retained alongside the receipt.<a href="#section-4.4-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="extension-fields">
+<section id="section-4.5">
+        <h3 id="name-extension-fields">
+<a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-extension-fields" class="section-name selfRef">Extension Fields</a>
+        </h3>
+<p id="section-4.5-1">This profile defines two extension fields that MAY appear in the signed payload alongside the fields defined by <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>. Neither field is defined upstream.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-4.5-2">
+          <dt id="section-4.5-2.1">risk_class:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.5-2.2">A vocabulary term identifying the risk classification of the Action under the Deployer's risk management documentation. The vocabulary MUST be referenced in the Audit Pack metadata.<a href="#section-4.5-2.2" class="pilcrow">¶</a>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-4.5-2.3">incident_class:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.5-2.4">A vocabulary term identifying the ICT-related incident classification of the Action, drawn from the EBA / ESMA / EIOPA Joint Final Report on the draft RTS and ITS (JC 2024-33), as supplemented by Commission Delegated Regulation (EU) 2024/1772. Implementations MUST publish their flattened mapping in the Audit Pack manifest under <a href="#audit-pack" class="auto internal xref">Section 8</a>.<a href="#section-4.5-2.4" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-4.5-3">Both fields MUST be encoded as JSON strings. Both fields MUST be covered by the signature in the same canonicalization regime as the remainder of the payload. Both fields are OPTIONAL at the syntactic level but MAY be REQUIRED by the regime bindings in Sections 5 through 7 of this document.<a href="#section-4.5-3" class="pilcrow">¶</a></p>
+<p id="section-4.5-4">Implementations MAY define additional extension fields. Such fields MUST NOT collide with names defined by <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> or by this document. Implementations defining extension fields SHOULD register them in the registry described in <a href="#iana" class="auto internal xref">Section 11</a>.<a href="#section-4.5-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="article-12">
+<section id="section-5">
+      <h2 id="name-eu-ai-act-article-12-bindin">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-eu-ai-act-article-12-bindin" class="section-name selfRef">EU AI Act Article 12 Binding</a>
+      </h2>
+<p id="section-5-1">Each subsection cites the operative phrase of Article 12 and binds it to the receipt field that satisfies it.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<div id="art12-1">
+<section id="section-5.1">
+        <h3 id="name-article-121-automatic-recor">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-article-121-automatic-recor" class="section-name selfRef">Article 12(1), automatic recording of events</a>
+        </h3>
+<p id="section-5.1-1">A Compliance Receipt MUST be produced for every Action that the High-Risk AI System performs against an external resource. Receipt generation MAY be disabled only through a configuration change recorded as a protectmcp:lifecycle Compliance Receipt.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="art12-2a">
+<section id="section-5.2">
+        <h3 id="name-article-122a-identify-situa">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-article-122a-identify-situa" class="section-name selfRef">Article 12(2)(a), identify situations that may present a risk</a>
+        </h3>
+<p id="section-5.2-1">The combination of type, decision, reason, and policy_digest MUST be sufficient for an auditor to identify, by query alone, receipts that correspond to risk situations enumerated in the Deployer's risk management documentation. Where the Deployer classifies an Action as risk-bearing, the receipt MUST carry a risk_class extension field.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="art12-2b">
+<section id="section-5.3">
+        <h3 id="name-article-122b-facilitate-the">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-article-122b-facilitate-the" class="section-name selfRef">Article 12(2)(b), facilitate the post-market monitoring</a>
+        </h3>
+<p id="section-5.3-1">The hash-chain linkage required by <a href="#hash-chain" class="auto internal xref">Section 4.3</a> satisfies post-market monitoring traceability. The chain head MUST be made available to the Provider and to the competent authority on request.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="art12-2c">
+<section id="section-5.4">
+        <h3 id="name-article-122c-monitor-the-op">
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-article-122c-monitor-the-op" class="section-name selfRef">Article 12(2)(c), monitor the operation</a>
+        </h3>
+<p id="section-5.4-1">Any change to the policy artefact referenced by policy_digest SHALL produce a new digest. A change in policy_digest between two otherwise-comparable Actions MAY be examined by the Deployer or by a regulator as a candidate substantial-modification event under Article 43, and MUST be retained at least as long as the longest receipt in the chain that references either digest.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="art12-retention">
+<section id="section-5.5">
+        <h3 id="name-retention">
+<a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-retention" class="section-name selfRef">Retention</a>
+        </h3>
+<p id="section-5.5-1">Article 12 retention follows the Article 26(6) floor of 180 days unless national law sets a longer period. Where the Deployer is also a Financial Entity, the DORA floor in <a href="#dora-17" class="auto internal xref">Section 7</a> applies.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="article-26">
+<section id="section-6">
+      <h2 id="name-eu-ai-act-article-26-bindin">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-eu-ai-act-article-26-bindin" class="section-name selfRef">EU AI Act Article 26 Binding</a>
+      </h2>
+<div id="art26-1">
+<section id="section-6.1">
+        <h3 id="name-article-261-in-accordance-w">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-article-261-in-accordance-w" class="section-name selfRef">Article 26(1), in accordance with the instructions for use</a>
+        </h3>
+<p id="section-6.1-1"><code>policy_digest</code> MUST resolve through <a href="#audit-pack" class="auto internal xref">Section 8</a> to a retained artefact (machine check). The Deployer SHOULD demonstrate consistency with the Provider's instructions for use (process check). Inability to perform the machine check is presumed non-compliance.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="art26-2">
+<section id="section-6.2">
+        <h3 id="name-article-262-ensure-human-ov">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-article-262-ensure-human-ov" class="section-name selfRef">Article 26(2), ensure human oversight</a>
+        </h3>
+<p id="section-6.2-1">For any Action whose decision is allow and whose agent_tier is unknown or absent, the Deployer MUST ensure that the receipt is either reviewed by a designated natural person within the period required by national law, or that a follow-on protectmcp:lifecycle Compliance Receipt records the absence of such review with reason. Both records MUST themselves be Compliance Receipts.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="art26-5">
+<section id="section-6.3">
+        <h3 id="name-article-265-monitor-the-ope">
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-article-265-monitor-the-ope" class="section-name selfRef">Article 26(5), monitor the operation</a>
+        </h3>
+<p id="section-6.3-1">A Deployer MUST be able to produce an Audit Pack covering any contiguous time window since the High-Risk AI System became operational.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="art26-6">
+<section id="section-6.4">
+        <h3 id="name-article-266-keep-the-logs-f">
+<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-article-266-keep-the-logs-f" class="section-name selfRef">Article 26(6), keep the logs for at least six months</a>
+        </h3>
+<p id="section-6.4-1">Compliance Receipts under this binding MUST be retained for at least 180 days unless Union or national law sets a longer period.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="dora-17">
+<section id="section-7">
+      <h2 id="name-dora-article-17-binding">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-dora-article-17-binding" class="section-name selfRef">DORA Article 17 Binding</a>
+      </h2>
+<div id="dora-17-1">
+<section id="section-7.1">
+        <h3 id="name-article-171-ict-related-inc">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-article-171-ict-related-inc" class="section-name selfRef">Article 17(1), ICT-related incident management process</a>
+        </h3>
+<p id="section-7.1-1">A Compliance Receipt produced inside a Financial Entity's ICT environment MAY serve as the canonical record of an Action that triggered an ICT-related incident. action_ref MUST be carried into the Financial Entity's incident workflow as the primary correlation key.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="dora-17-2">
+<section id="section-7.2">
+        <h3 id="name-article-172-classify-ict-re">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-article-172-classify-ict-re" class="section-name selfRef">Article 17(2), classify ICT-related incidents</a>
+        </h3>
+<p id="section-7.2-1">For Actions classified as part of an ICT-related incident, the producing system MUST emit incident_class whose value is drawn from the classification vocabulary in the DORA implementing technical standards.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="dora-17-3">
+<section id="section-7.3">
+        <h3 id="name-article-173-records-of-all-">
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-article-173-records-of-all-" class="section-name selfRef">Article 17(3), records of all ICT-related incidents</a>
+        </h3>
+<p id="section-7.3-1">The hash chain required by <a href="#hash-chain" class="auto internal xref">Section 4.3</a> satisfies tamper-evident logging. The Financial Entity MUST be able to produce, on request, the chain segment covering the period of an incident, together with the anchor evidence that fixes the chain to wall-clock time.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="dora-retention">
+<section id="section-7.4">
+        <h3 id="name-retention-2">
+<a href="#section-7.4" class="section-number selfRef">7.4. </a><a href="#name-retention-2" class="section-name selfRef">Retention</a>
+        </h3>
+<p id="section-7.4-1">Compliance Receipts under this binding MUST be retained for the period required by applicable Union or national law, with 1825 days from the date of the underlying Action serving as a common floor consistent with the related ICT record-keeping provisions of <span>[<a href="#DORA" class="cite xref">DORA</a>]</span>. Anchor evidence MUST be retained for the same period. Verification keys whose lifetime expires within the retention window MUST have their public components retained so that historical signatures remain verifiable.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="audit-pack">
+<section id="section-8">
+      <h2 id="name-audit-pack-composition">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-audit-pack-composition" class="section-name selfRef">Audit Pack Composition</a>
+      </h2>
+<p id="section-8-1">This section is informative. It describes the contents of an Audit Pack as introduced in <a href="#conventions" class="auto internal xref">Section 2</a>.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">An Audit Pack contains the following items.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-8-3.1">The set of Compliance Receipts covered by the requested time window, in the canonical envelope form defined by <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>.<a href="#section-8-3.1" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-8-3.2">The chain commitments that link the receipts: for each receipt, the value of previousReceiptHash and the recomputed digest of the predecessor envelope.<a href="#section-8-3.2" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-8-3.3">The anchor evidence: <span>[<a href="#RFC3161" class="cite xref">RFC3161</a>]</span> tokens, OpenTimestamps proofs, or both. Each anchor item MUST be associated, by hash, with the receipt or aggregate it covers.<a href="#section-8-3.3" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-8-3.4">The trust anchor metadata that identifies the Deployer or Financial Entity associated with each issuer_id value.<a href="#section-8-3.4" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-8-3.5">The verification key material for every kid value present, in a form that does not require online retrieval.<a href="#section-8-3.5" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-8-3.6">Vocabularies referenced by <code>decision.reason</code>, <code>risk_class</code>, <code>incident_class</code>, and extension fields, embedded as JSON arrays with a stable identifier. The Audit Pack MUST expose a digest-resolution facility that, given a <code>policy_digest</code>, returns the retained artefact.<a href="#section-8-3.6" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-8-3.7">A regime mapping document that names which receipts the producer asserts as evidence under Article 12, Article 26, or DORA Article 17.<a href="#section-8-3.7" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-8-3.8">The chain heads valid at the start and end of the time window, signed by the Deployer or Financial Entity.<a href="#section-8-3.8" class="pilcrow">¶</a>
+</li>
+      </ul>
+<p id="section-8-4">An Audit Pack MUST itself be signed per the <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> algorithm registry. The manifest MUST include <code>bundle_digest</code>, <code>bundle_signature</code>, <code>bundle_public_key</code>, and <code>algorithm_registry_version</code>.<a href="#section-8-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="verifier">
+<section id="section-9">
+      <h2 id="name-verifier-behaviour">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-verifier-behaviour" class="section-name selfRef">Verifier Behaviour</a>
+      </h2>
+<p id="section-9-1">A verifier conformant to this profile is referred to as a Compliance Verifier.<a href="#section-9-1" class="pilcrow">¶</a></p>
+<div id="mandatory-checks">
+<section id="section-9.1">
+        <h3 id="name-mandatory-checks">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-mandatory-checks" class="section-name selfRef">Mandatory Checks</a>
+        </h3>
+<p id="section-9.1-1">A Compliance Verifier MUST perform all of the following checks before treating a receipt as a Compliance Receipt.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-9.1-2.1">Verify the signature using the algorithm declared in signature.alg, in accordance with <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>.<a href="#section-9.1-2.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-9.1-2.2">Resolve the verification key through one of the trust anchor mechanisms required by <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>. The verifier MUST NOT trust a verification key embedded in the receipt envelope.<a href="#section-9.1-2.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-9.1-2.3">Verify that all fields marked REQUIRED by <a href="#field-profile" class="auto internal xref">Section 4</a> are present and well-formed.<a href="#section-9.1-2.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-9.1-2.4">Verify the hash-chain linkage by recomputing the digest of the immediately preceding envelope and comparing it to previousReceiptHash.<a href="#section-9.1-2.4" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-9.1-2.5">Verify at least one anchor: an <span>[<a href="#RFC3161" class="cite xref">RFC3161</a>]</span> token, an <span>[<a href="#OPENTIMESTAMPS" class="cite xref">OPENTIMESTAMPS</a>]</span> commitment, or both. The anchor MUST cover the signed envelope as it appears in the receipt. The verifier MUST cryptographically re-verify the anchor against the signed envelope; presence of anchor metadata without a successful cryptographic check MUST NOT yield "valid".<a href="#section-9.1-2.5" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-9.1-2.6">Verify the future-skew bound on <code>issued_at</code> per <a href="#issued-at" class="auto internal xref">Section 4.1.2</a>. Past skew MUST NOT cause non-conformance when the receipt is within retention.<a href="#section-9.1-2.6" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-9.1-2.7">Verify that <code>policy_digest</code> resolves through <a href="#audit-pack" class="auto internal xref">Section 8</a>. A digest of the nonced policy-attestation form MUST NOT be treated as <code>policy_digest</code>. The verifier MUST recompute SHA-256(JCS(artefact)) and compare.<a href="#section-9.1-2.7" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-9.1-3">A receipt that fails any of these checks MUST be reported as non-conformant.<a href="#section-9.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="optional-checks">
+<section id="section-9.2">
+        <h3 id="name-optional-checks">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-optional-checks" class="section-name selfRef">Optional Checks</a>
+        </h3>
+<p id="section-9.2-1">A Compliance Verifier MAY additionally perform any of the following.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-9.2-2.1">Cross-check the issuer_id against an external registry of Deployers or Financial Entities.<a href="#section-9.2-2.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-9.2-2.2">Resolve the policy artefact referenced by policy_digest and compare it to a Provider-supplied reference policy.<a href="#section-9.2-2.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-9.2-2.3">Recompute the chain head and compare it to a Deployer-published value.<a href="#section-9.2-2.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-9.2-2.4">Validate incident_class and risk_class extension values against the vocabularies referenced in the Audit Pack.<a href="#section-9.2-2.4" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+<div id="reporting">
+<section id="section-9.3">
+        <h3 id="name-reporting">
+<a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-reporting" class="section-name selfRef">Reporting</a>
+        </h3>
+<p id="section-9.3-1">A Compliance Verifier SHOULD produce a structured report that identifies, for each receipt verified, which regime bindings (Article 12, Article 26, DORA Article 17) it satisfies. The report SHOULD itself be signed using the same algorithm registry as <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>.<a href="#section-9.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="security">
+<section id="section-10">
+      <h2 id="name-security-considerations">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-10-1">This profile inherits all of the security considerations of <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>. The following considerations are specific to the compliance binding.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<div id="tamper">
+<section id="section-10.1">
+        <h3 id="name-tamper-resistance">
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-tamper-resistance" class="section-name selfRef">Tamper Resistance</a>
+        </h3>
+<p id="section-10.1-1">The hash-chain linkage required by <a href="#hash-chain" class="auto internal xref">Section 4.3</a> provides tamper-evidence at the chain level. An adversary who removes a receipt from the middle of the chain MUST recompute and re-sign every subsequent envelope. The anchor evidence required by <a href="#anchoring" class="auto internal xref">Section 4.4</a> binds segments of the chain to wall-clock time, raising the cost of a re-signing attack.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
+<p id="section-10.1-2">Implementations SHOULD anchor at intervals no longer than 24 hours. Implementations operating under DORA Article 17 SHOULD anchor at intervals no longer than one hour.<a href="#section-10.1-2" class="pilcrow">¶</a></p>
+<p id="section-10.1-3">A deployment that uses only the signature, without chain linkage and anchoring, can be rolled back by an insider with control of the signing key for the period between the deletion and the next anchor. The MUST clauses of <a href="#hash-chain" class="auto internal xref">Section 4.3</a> and <a href="#anchoring" class="auto internal xref">Section 4.4</a> close that window.<a href="#section-10.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="key-compromise">
+<section id="section-10.2">
+        <h3 id="name-key-compromise">
+<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-key-compromise" class="section-name selfRef">Key Compromise</a>
+        </h3>
+<p id="section-10.2-1">A Compliance Receipt is only as trustworthy as the key that signed it. On suspected compromise of an issuer key, the Deployer MUST publish a revocation notice that names the key, the time of suspected compromise, and the chain head at that time. Receipts signed by the compromised key after the named time MUST NOT be treated as Compliance Receipts.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
+<p id="section-10.2-2">Verifiers MUST consult revocation metadata supplied with the Audit Pack and MUST reject Compliance Receipts whose signing key was revoked at or before issued_at.<a href="#section-10.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="long-term">
+<section id="section-10.3">
+        <h3 id="name-retention-and-long-term-ver">
+<a href="#section-10.3" class="section-number selfRef">10.3. </a><a href="#name-retention-and-long-term-ver" class="section-name selfRef">Retention and Long-Term Verifiability</a>
+        </h3>
+<p id="section-10.3-1">The 1825-day retention floor in <a href="#dora-17" class="auto internal xref">Section 7</a> exceeds the typical lifetime of an Ed25519 or ECDSA signing key. Implementations SHOULD use ML-DSA-65 (per <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>) for receipts that are expected to be verified after the cryptographic lifetime of classical signature schemes ends. Implementations MUST retain public key material for the entire retention window.<a href="#section-10.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="privacy">
+<section id="section-10.4">
+        <h3 id="name-privacy">
+<a href="#section-10.4" class="section-number selfRef">10.4. </a><a href="#name-privacy" class="section-name selfRef">Privacy</a>
+        </h3>
+<p id="section-10.4-1"><span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> prohibits the inclusion of raw prompts, tool arguments, and credentials in the signed payload. This profile extends that prohibition to the extension fields defined in this document. The risk_class and incident_class values MUST be drawn from controlled vocabularies and MUST NOT carry free-text personal data.<a href="#section-10.4-1" class="pilcrow">¶</a></p>
+<p id="section-10.4-2">Where the underlying Action references a data subject, the payload_digest field MUST cover the data; the data itself MUST be held in a separate store that respects the data subject's rights under applicable law. A request for erasure that is granted under applicable data protection law MUST be reflected by deletion of the referenced payload, not by deletion of the receipt; the receipt remains as evidence that an Action occurred and was governed by a named policy at a named time.<a href="#section-10.4-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="anchor-trust">
+<section id="section-10.5">
+        <h3 id="name-anchor-trust">
+<a href="#section-10.5" class="section-number selfRef">10.5. </a><a href="#name-anchor-trust" class="section-name selfRef">Anchor Trust</a>
+        </h3>
+<p id="section-10.5-1">The trust assumptions of an anchor depend on the anchor type. <span>[<a href="#RFC3161" class="cite xref">RFC3161</a>]</span> timestamp tokens depend on the trust placed in the named Time Stamping Authority. OpenTimestamps commitments depend on the inclusion of the commitment in a public Bitcoin block. A Compliance Verifier SHOULD treat the simultaneous presence of both anchor types as stronger evidence than the presence of only one.<a href="#section-10.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="replay">
+<section id="section-10.6">
+        <h3 id="name-replay">
+<a href="#section-10.6" class="section-number selfRef">10.6. </a><a href="#name-replay" class="section-name selfRef">Replay</a>
+        </h3>
+<p id="section-10.6-1">A Compliance Receipt is bound to a single Action via action_ref. Replay of a Compliance Receipt against a different Action is detectable by action_ref mismatch. The 300-second issued_at skew bound stated in <a href="#issued-at" class="auto internal xref">Section 4.1.2</a> limits the window in which a freshly-replayed receipt can be presented as recent.<a href="#section-10.6-1" class="pilcrow">¶</a></p>
+<p id="section-10.6-2">A Compliance Verifier MUST treat two receipts that share the same action_ref and the same issuer_id as a duplicate-emission event and SHOULD investigate.<a href="#section-10.6-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="cross-regime">
+<section id="section-10.7">
+        <h3 id="name-cross-regime-conflict">
+<a href="#section-10.7" class="section-number selfRef">10.7. </a><a href="#name-cross-regime-conflict" class="section-name selfRef">Cross-Regime Conflict</a>
+        </h3>
+<p id="section-10.7-1">Where the same Action is in scope of more than one regime addressed by this document, the producing system MUST satisfy the union of the applicable requirements. Where a SHOULD clause in one regime conflicts with a MUST clause in another, the MUST clause prevails. Where two MUST clauses conflict, the producing system MUST refuse to issue the receipt and MUST log the refusal as a protectmcp:lifecycle Compliance Receipt.<a href="#section-10.7-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="algorithm-agility">
+<section id="section-10.8">
+        <h3 id="name-algorithm-agility">
+<a href="#section-10.8" class="section-number selfRef">10.8. </a><a href="#name-algorithm-agility" class="section-name selfRef">Algorithm Agility</a>
+        </h3>
+<p id="section-10.8-1">This profile inherits its algorithm registry from <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>. Implementations MUST treat the verification of a historical receipt according to the algorithm registry that was in force at issued_at, not the registry in force at the time of verification, provided that the signing key was not revoked.<a href="#section-10.8-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="iana">
+<section id="section-11">
+      <h2 id="name-iana-considerations">
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-11-1">This document requests two new IANA registries to support stable, machine-checkable extensions to the Compliance Receipt format.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<div id="iana-extension-fields">
+<section id="section-11.1">
+        <h3 id="name-compliance-receipt-extensio">
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-compliance-receipt-extensio" class="section-name selfRef">Compliance Receipt Extension Fields Registry</a>
+        </h3>
+<p id="section-11.1-1">IANA is requested to create a new registry titled "Compliance Receipt Extension Fields" under a new "Compliance Receipts" registry group.<a href="#section-11.1-1" class="pilcrow">¶</a></p>
+<p id="section-11.1-2">Each entry contains:<a href="#section-11.1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-11.1-3.1">Field Name: a JSON object key, lowercase ASCII letters, digits, and underscore.<a href="#section-11.1-3.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-11.1-3.2">Description: a one-line summary of the field's purpose.<a href="#section-11.1-3.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-11.1-3.3">Reference: the document that defines the field's semantics.<a href="#section-11.1-3.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-11.1-3.4">Vocabulary: a URL or registry pointer for the controlled vocabulary that field values are drawn from, or "free-form" if none.<a href="#section-11.1-3.4" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-11.1-4">The registration policy is Specification Required, per <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. The Designated Expert(s) SHOULD verify that the field name does not collide with any field defined by <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>, that the Reference is a stable, dereferenceable specification, and that the Vocabulary is documented sufficiently for an independent verifier to validate values.<a href="#section-11.1-4" class="pilcrow">¶</a></p>
+<p id="section-11.1-5">Initial registry contents:<a href="#section-11.1-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-11.1-6.1">risk_class - Risk classification term under the Deployer's risk management documentation - This document - Vocabulary referenced in Audit Pack metadata.<a href="#section-11.1-6.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-11.1-6.2">incident_class - ICT-related incident classification term per DORA implementing technical standards - This document - DORA implementing technical standards.<a href="#section-11.1-6.2" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+<div id="iana-type-namespaces">
+<section id="section-11.2">
+        <h3 id="name-compliance-receipt-type-nam">
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-compliance-receipt-type-nam" class="section-name selfRef">Compliance Receipt Type Namespaces Registry</a>
+        </h3>
+<p id="section-11.2-1">IANA is requested to create a new registry titled "Compliance Receipt Type Namespaces" under the same "Compliance Receipts" registry group.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
+<p id="section-11.2-2">Each entry contains:<a href="#section-11.2-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-11.2-3.1">Namespace: a colon-separated identifier prefix used as a value of the type field, lowercase ASCII letters, digits, hyphen, underscore, and colon.<a href="#section-11.2-3.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-11.2-3.2">Description: a one-line summary of the receipt category.<a href="#section-11.2-3.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-11.2-3.3">Reference: the document that defines the namespace.<a href="#section-11.2-3.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-11.2-4">The registration policy is Specification Required, per <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. The Designated Expert(s) SHOULD verify that the namespace does not collide with any namespace already registered or any namespace reserved by <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>, and that the Reference is a stable specification.<a href="#section-11.2-4" class="pilcrow">¶</a></p>
+<p id="section-11.2-5">Initial registry contents:<a href="#section-11.2-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-11.2-6.1">protectmcp:decision - A receipt recording a policy evaluation outcome (allow, deny, rate_limit) for an MCP-mediated tool call - This document.<a href="#section-11.2-6.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-11.2-6.2">protectmcp:restraint - A receipt recording the application or release of a restraint on an agent (e.g., quota, rate limit, sandbox tightening) - This document.<a href="#section-11.2-6.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-11.2-6.3">protectmcp:lifecycle - A receipt recording an agent or system lifecycle event (e.g., configuration change, key rotation, oversight review) - This document.<a href="#section-11.2-6.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="acks">
+<section id="section-12">
+      <h2 id="name-acknowledgements">
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
+      </h2>
+<p id="section-12-1">The author thanks T. Farley for <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span>, on which this profile is built. This profile would not exist without the field catalogue and envelope structure that the upstream draft defines. The author also thanks the Asqav community for review of early drafts.<a href="#section-12-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<section id="section-13">
+      <h2 id="name-normative-references">
+<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+      </h2>
+<dl class="references">
+<dt id="RFC2119">[RFC2119]</dt>
+      <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+      <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3161">[RFC3161]</dt>
+      <dd>
+<span class="refAuthor">Adams, C.</span>, <span class="refAuthor">Cain, P.</span>, <span class="refAuthor">Pinkas, D.</span>, and <span class="refAuthor">R. Zuccherato</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Time-Stamp Protocol (TSP)"</span>, <span class="seriesInfo">RFC 3161</span>, <span class="seriesInfo">DOI 10.17487/RFC3161</span>, <time datetime="2001-08" class="refDate">August 2001</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3161">https://www.rfc-editor.org/info/rfc3161</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8126">[RFC8126]</dt>
+      <dd>
+<span class="refAuthor">Cotton, M.</span>, <span class="refAuthor">Leiba, B.</span>, and <span class="refAuthor">T. Narten</span>, <span class="refTitle">"Guidelines for Writing an IANA Considerations Section in RFCs"</span>, <span class="seriesInfo">BCP 26</span>, <span class="seriesInfo">RFC 8126</span>, <span class="seriesInfo">DOI 10.17487/RFC8126</span>, <time datetime="2017-06" class="refDate">June 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8126">https://www.rfc-editor.org/info/rfc8126</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="OPENTIMESTAMPS">[OPENTIMESTAMPS]</dt>
+      <dd>
+<span class="refAuthor">OpenTimestamps</span>, <span class="refTitle">"OpenTimestamps Protocol"</span>, <time datetime="2016" class="refDate">2016</time>, <span>&lt;<a href="https://opentimestamps.org/">https://opentimestamps.org/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="ACTA-RECEIPTS">[ACTA-RECEIPTS]</dt>
+      <dd>
+<span class="refAuthor">Farley, T.</span>, <span class="refTitle">"Signed Action Receipts for AI Agents"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-farley-acta-signed-receipts-01</span>, <time datetime="2026-04-25" class="refDate">25 April 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-farley-acta-signed-receipts/">https://datatracker.ietf.org/doc/draft-farley-acta-signed-receipts/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8785">[RFC8785]</dt>
+    <dd>
+<span class="refAuthor">Rundgren, A.</span>, <span class="refAuthor">Jordan, B.</span>, and <span class="refAuthor">S. Erdtman</span>, <span class="refTitle">"JSON Canonicalization Scheme (JCS)"</span>, <span class="seriesInfo">RFC 8785</span>, <span class="seriesInfo">DOI 10.17487/RFC8785</span>, <time datetime="2020-06" class="refDate">June 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8785">https://www.rfc-editor.org/info/rfc8785</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+<section id="section-14">
+      <h2 id="name-informative-references">
+<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+      </h2>
+<dl class="references">
+<dt id="EU-AI-ACT">[EU-AI-ACT]</dt>
+      <dd>
+<span class="refAuthor">European Parliament and Council</span>, <span class="refTitle">"Regulation (EU) 2024/1689 (Artificial Intelligence Act)"</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">https://eur-lex.europa.eu/eli/reg/2024/1689/oj</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="DORA">[DORA]</dt>
+    <dd>
+<span class="refAuthor">European Parliament and Council</span>, <span class="refTitle">"Regulation (EU) 2022/2554 (DORA)"</span>, <time datetime="2022" class="refDate">2022</time>, <span>&lt;<a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">https://eur-lex.europa.eu/eli/reg/2022/2554/oj</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+<div id="example">
+<section id="appendix-A">
+      <h2 id="name-worked-example-informative">
+<a href="#name-worked-example-informative" class="section-name selfRef">Worked Example (Informative)</a>
+      </h2>
+<p id="appendix-A-1">This appendix illustrates a Compliance Receipt that satisfies the Article 26 binding for a tool invocation by a High-Risk AI System deployed by a Financial Entity. Field values are abbreviated for readability and are not cryptographically valid.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<div class="lang-json sourcecode" id="appendix-A-2">
+<pre>
+{
+  "type": "protectmcp:decision",
+  "issued_at": "2026-05-04T09:14:22.118Z",
+  "issuer_id": "did:web:example-bank.eu",
+  "action_ref": "sha256:c1f3a09a4d2e7f6b8c5a91e3d7b04f2a1c8e6f5d3b9a7c2e4f8d6b1a3c5e7f9d",
+  "iteration_id": "task-2026-05-04-01a3",
+  "tool_name": "ledger.post_entry",
+  "decision": "allow",
+  "reason": "policy:within_limits",
+  "policy_digest": "sha256:7b214e8c3d9f4a2b1e6c8f5a3d7b9e2c4f6a8d1b3e5c7f9a2d4b6e8c1f3a5d7b",
+  "agent_tier": "evidenced",
+  "required_tier": "evidenced",
+  "sandbox_state": "enabled",
+  "payload_digest": "sha256:0a44d2c8e3f5b7a9d1c4e6f8b2a5d7c9e1f3b5a7d9c2e4f6b8a1d3c5e7f9b2a4",
+  "previousReceiptHash": "f80c11a3b5d7e9c2f4a6b8d1e3c5f7a9b2d4e6c8f1a3b5d7e9c2f4a6b8d1e3c5",
+  "risk_class": "deployer:financial:medium",
+  "incident_class": null,
+  "signatureObject": {
+    "alg": "Ed25519",
+    "kid": "issuer:1B5qkP",
+    "sig": "..."
+  },
+  "anchors": [
+    {
+      "type": "rfc3161",
+      "tsa": "tsa.example.eu",
+      "serial": "01a3f8...",
+      "value": "..."
+    },
+    {
+      "type": "opentimestamps",
+      "status": "valid",
+      "value": "..."
+    }
+  ]
+}
+</pre><a href="#appendix-A-2" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A-3">The above receipt satisfies the Article 26 binding because:<a href="#appendix-A-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-4.1">issuer_id resolves to a named Deployer in the Audit Pack;<a href="#appendix-A-4.1" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="appendix-A-4.2">policy_digest resolves to a retained policy artefact;<a href="#appendix-A-4.2" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="appendix-A-4.3">sandbox_state is enabled, the High-Risk system constraint;<a href="#appendix-A-4.3" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="appendix-A-4.4">previousReceiptHash links the receipt into the chain;<a href="#appendix-A-4.4" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="appendix-A-4.5">both an <span>[<a href="#RFC3161" class="cite xref">RFC3161</a>]</span> anchor and an <span>[<a href="#OPENTIMESTAMPS" class="cite xref">OPENTIMESTAMPS</a>]</span> anchor are present.<a href="#appendix-A-4.5" class="pilcrow">¶</a>
+</li>
+      </ul>
+<p id="appendix-A-5">A Compliance Verifier processing this receipt under the DORA Article 17 binding would additionally check that the receipt is retained for the 1825-day window and that the incident_class field, where applicable, is drawn from the implementing technical standards vocabulary.<a href="#appendix-A-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="changelog">
+<section id="appendix-B">
+      <h2 id="name-change-log">
+<a href="#name-change-log" class="section-name selfRef">Change Log</a>
+      </h2>
+<div id="cl-01">
+<section id="appendix-B.1">
+        <h3 id="name-draft-marques-asqav-complia">
+<a href="#name-draft-marques-asqav-complia" class="section-name selfRef">draft-marques-asqav-compliance-receipts-01</a>
+        </h3>
+<p id="appendix-B.1-1">Wire-shape alignment (decision/allow vocabulary; camelCase previousReceiptHash; signature object; anchors array). Asymmetric forward-only skew. Two-phase anchoring with bounded pending window. Audit Pack manifest fields promoted to MUST. DORA citation corrected to JC 2024-33 + Reg (EU) 2024/1772. Retention floors expressed in days (180 / 1825).<a href="#appendix-B.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="cl-00">
+<section id="appendix-B.2">
+        <h3 id="name-draft-marques-asqav-complian">
+<a href="#name-draft-marques-asqav-complian" class="section-name selfRef">draft-marques-asqav-compliance-receipts-00</a>
+        </h3>
+<p id="appendix-B.2-1">Initial version. Defines a profile of <span>[<a href="#ACTA-RECEIPTS" class="cite xref">ACTA-RECEIPTS</a>]</span> that binds receipt fields to EU AI Act Article 12, EU AI Act Article 26, and DORA Article 17.<a href="#appendix-B.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-C">
+      <h2 id="name-authors-address">
+<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Joao Andre Gomes Marques</span></div>
+<div dir="auto" class="left"><span class="org">Asqav</span></div>
+<div dir="auto" class="left"><span class="country-name">Portugal</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:joaoagm90@gmail.com" class="email">joaoagm90@gmail.com</a>
+</div>
+</address>
+</section>
+</div>
+</div>
+
+                    </div>
+                
+            </div>
+            <div class="d-print-none col-md-3 bg-light-subtle collapse show" id="sidebar">
+                <div class="position-fixed border-start sidebar overflow-scroll overscroll-none no-scrollbar">
+                    <div class="d-flex flex-column vh-100 pt-2 pt-lg-3 ps-3 pl-md-2 pl-lg-3">
+                        <div>
+                            <a class="btn btn-primary btn-sm" href="/doc/draft-marques-asqav-compliance-receipts/">Datatracker</a>
+                            <p class="fw-bold pt-2">
+                                
+                                    draft-marques-asqav-compliance-receipts-01
+                                
+                                <br>
+                                
+
+
+
+
+
+
+
+    <div>This is an older version of an Internet-Draft whose latest revision state is "Active".</div>
+
+                            </p>
+                        </div>
+                        
+                        <ul class="nav nav-tabs nav-fill small me-2" role="tablist">
+                            <li class="nav-item" role="presentation" title="Document information">
+                                <button class="nav-link px-2"
+                                        id="docinfo-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#docinfo-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="docinfo-tab-pane"
+                                        aria-selected="true">
+                                    <i class="bi bi-info-circle"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Info</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation" title="Table of contents">
+                                <button class="nav-link px-2"
+                                        id="toc-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#toc-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="toc-tab-pane"
+                                        aria-selected="false">
+                                    <i class="bi bi-list-ol"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Contents</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation" title="Preferences">
+                                <button class="nav-link px-2"
+                                        id="pref-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#pref-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="pref-tab-pane"
+                                        aria-selected="false">
+                                    <i class="bi bi-gear"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Prefs</span>
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="overflow-auto tab-content pt-2 me-2">
+                            <div class="tab-pane"
+                                 id="docinfo-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="docinfo-tab"
+                                 tabindex="0">
+                                <table class="table table-sm table-borderless">
+                                    
+
+
+
+
+
+
+
+<tbody class="meta align-top ">
+    <tr>
+        <th scope="row">Document</th>
+        <th scope="row">Document type</th>
+        <td class="edit"></td>
+        <td>
+            
+
+
+
+
+
+
+
+    <div>This is an older version of an Internet-Draft whose latest revision state is "Active".</div>
+
+            
+            
+            
+                
+
+
+
+
+    <div class="alert alert-warning small p-2 mt-2" role="alert">
+        This document is an Internet-Draft (I-D).
+        Anyone may submit an I-D to the IETF.
+        This I-D is <strong>not endorsed by the IETF</strong> and has <strong>no formal standing</strong> in the
+        <a href="/doc/rfc2026/">IETF standards process</a>.
+    </div>
+
+
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">Select version</th>
+            <td class="edit"></td>
+            <td>
+                
+
+
+
+    <ul class="revision-list pagination pagination-sm text-center flex-wrap my-0">
+        
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-00"
+                        >
+                            00
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item active">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-01"
+                        rel="nofollow">
+                            01
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-02"
+                        rel="nofollow">
+                            02
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-03"
+                        rel="nofollow">
+                            03
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-04"
+                        rel="nofollow">
+                            04
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-05"
+                        rel="nofollow">
+                            05
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-06"
+                        rel="nofollow">
+                            06
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-07"
+                        rel="nofollow">
+                            07
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-08"
+                        rel="nofollow">
+                            08
+                        </a>
+                    </li>
+                
+            
+                 
+                    <li class="page-item ">
+                        <a class="page-link"
+                        href="/doc/html/draft-marques-asqav-compliance-receipts-09"
+                        >
+                            09
+                        </a>
+                    </li>
+                
+            
+            
+        
+    </ul>
+
+            </td>
+        </tr>
+        
+            <tr>
+                <td></td>
+                <th scope="row">Compare versions</th>
+                <td class="edit"></td>
+                <td>
+                    
+
+
+
+<form class="form-horizontal diff-form"
+      action="https://author-tools.ietf.org/iddiff"
+      method="get"
+      target="_blank">
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="From revision"
+                    name="url1">
+                
+                    <option value="draft-marques-asqav-compliance-receipts-09">
+                        draft-marques-asqav-compliance-receipts-09
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-08" selected>
+                        draft-marques-asqav-compliance-receipts-08
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-07">
+                        draft-marques-asqav-compliance-receipts-07
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-06">
+                        draft-marques-asqav-compliance-receipts-06
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-05">
+                        draft-marques-asqav-compliance-receipts-05
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-04">
+                        draft-marques-asqav-compliance-receipts-04
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-03">
+                        draft-marques-asqav-compliance-receipts-03
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-02">
+                        draft-marques-asqav-compliance-receipts-02
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-01">
+                        draft-marques-asqav-compliance-receipts-01
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-00">
+                        draft-marques-asqav-compliance-receipts-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="To revision"
+                    name="url2">
+                
+                    <option value="draft-marques-asqav-compliance-receipts-09" selected>
+                        draft-marques-asqav-compliance-receipts-09
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-08">
+                        draft-marques-asqav-compliance-receipts-08
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-07">
+                        draft-marques-asqav-compliance-receipts-07
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-06">
+                        draft-marques-asqav-compliance-receipts-06
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-05">
+                        draft-marques-asqav-compliance-receipts-05
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-04">
+                        draft-marques-asqav-compliance-receipts-04
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-03">
+                        draft-marques-asqav-compliance-receipts-03
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-02">
+                        draft-marques-asqav-compliance-receipts-02
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-01">
+                        draft-marques-asqav-compliance-receipts-01
+                        
+                    </option>
+                
+                    <option value="draft-marques-asqav-compliance-receipts-00">
+                        draft-marques-asqav-compliance-receipts-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--html"
+                    name="difftype">
+                Side-by-side
+            </button>
+            
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--hwdiff"
+                    name="difftype">
+                Inline
+            </button>
+
+
+</form>
+
+                </td>
+            </tr>
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">Author</th>
+        <td class="edit">
+            
+        </td>
+        <td>
+            
+            
+                <span ><a 
+           title="Datatracker profile of João André Gomes Marques"
+            href="/person/info@asqav.com" >João André Gomes Marques</a> <a 
+               href="mailto:info%40asqav.com"
+               aria-label="Compose email to info@asqav.com"
+               title="Compose email to info@asqav.com">
+                <i class="bi bi-envelope"></i></a></span>
+            
+            
+        </td>
+    </tr>
+    
+    
+        
+        
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            RFC stream
+        </th>
+        <td class="edit">
+            
+        </td>
+        <td class="text-body-secondary">
+            
+                (None)
+            
+        </td>
+    </tr>
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            Other formats
+        </th>
+        <td class="edit">
+        </td>
+        <td>
+            
+                
+    <div class="buttonlist">
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-marques-asqav-compliance-receipts-01.txt">
+            
+                <i class="bi bi-file-text"></i> txt
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-marques-asqav-compliance-receipts-01.html">
+            
+                <i class="bi bi-file-code"></i> html
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-marques-asqav-compliance-receipts-01.xml">
+            
+                <i class="bi bi-file-code"></i> xml
+            
+        </a>
+        
+    
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/draft-marques-asqav-compliance-receipts/01/bibtex/">
+            
+                <i class="bi bi-file-ruled"></i> bibtex
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/bibxml3/draft-marques-asqav-compliance-receipts-01.xml">
+            
+                <i class="bi bi-file-code"></i> bibxml
+            
+        </a>
+        
+    
+</div>
+
+            
+        </td>
+    </tr>
+    
+    
+        
+    
+</tbody>
+                                </table>
+                                <a class="btn btn-sm btn-warning mb-3"
+                                target="_blank"
+                                href="https://github.com/ietf-tools/datatracker/issues/new/choose">
+                                    Report a datatracker bug
+                                    <i class="bi bi-bug"></i>
+                                </a>
+                            </div>
+                            <div class="tab-pane mb-5"
+                                 id="toc-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="toc-tab"
+                                 tabindex="0">
+                                <nav class="nav nav-pills flex-column small" id="toc-nav">
+                                </nav>
+                            </div>
+                            <div class="tab-pane mb-5 small"
+                                 id="pref-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="pref-tab"
+                                 tabindex="0">
+                                <label class="form-label fw-bold mb-2">Show sidebar by default</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="sidebar" id="on-radio">
+                                    <label class="btn btn-outline-primary" for="on-radio">Yes</label>
+                                    <input type="radio" class="btn-check" name="sidebar" id="off-radio">
+                                    <label class="btn btn-outline-primary" for="off-radio">No</label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">Tab to show by default</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="deftab" id="docinfo-radio">
+                                    <label class="btn btn-outline-primary" for="docinfo-radio">
+                                        <i class="bi bi-info-circle me-1"></i>Info
+                                    </label>
+                                    <input type="radio" class="btn-check" name="deftab" id="toc-radio">
+                                    <label class="btn btn-outline-primary" for="toc-radio">
+                                        <i class="bi bi-list-ol me-1"></i>Contents
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">HTMLization configuration</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="htmlconf" id="txt-radio">
+                                    <label class="btn btn-outline-primary" for="txt-radio" title="This is the traditional HTMLization method.">
+                                        <i class="bi bi-badge-sd me-1"></i>HTMLize the plaintext
+                                    </label>
+                                    <input type="radio" class="btn-check" name="htmlconf" id="html-radio">
+                                    <label class="btn btn-outline-primary" for="html-radio" title="This is the modern HTMLization method.">
+                                        <i class="bi bi-badge-hd me-1"></i>Plaintextify the HTML
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2" for="ptsize">Maximum font size</label>
+                                <input type="range" class="form-range" min="7" max="16" id="ptsize" oninput="ptdemo.value = ptsize.value">
+                                <label class="form-label fw-bold mt-4 mb-2">Page dependencies</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="pagedeps" id="inline-radio">
+                                    <label class="btn btn-outline-primary" for="inline-radio" title="Generate larger, standalone web pages that do not require network access to render.">
+                                        <i class="bi bi-box me-1"></i>Inline
+                                    </label>
+                                    <input type="radio" class="btn-check" name="pagedeps" id="reference-radio">
+                                    <label class="btn btn-outline-primary" for="reference-radio" title="Generate regular web pages that require network access to render.">
+                                        <i class="bi bi-link-45deg me-1"></i>Reference
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">Citation links</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="reflinks" id="refsection-radio">
+                                    <label class="btn btn-outline-primary" for="refsection-radio" title="Citation links go to the reference section.">
+                                        <i class="bi bi-arrow-clockwise"></i> Go to reference section
+                                    </label>
+                                    <input type="radio" class="btn-check" name="reflinks" id="citation-radio">
+                                    <label class="btn btn-outline-primary" for="citation-radio" title="Citation links go directly to the cited document.">
+                                        <i class="bi bi-link-45deg me-1"></i>Go to linked document
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+<script>
+  var _paq = window._paq || [];
+  
+  _paq.push(['disableCookies']);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//analytics.ietf.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', 7]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//analytics.ietf.org/matomo.php?idsite=7" style="border:0;" alt="" /></p></noscript>
+
+    <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5fc2166081265c7',t:'MTc5NTU2MjI4MQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5fc2166081265c7',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

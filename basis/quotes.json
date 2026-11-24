@@ -1,0 +1,49 @@
+{
+  "contract": "uibc-basis-quotes/1",
+  "note": "One verbatim sentence per `direct` check, with the text digest. The sentence must occur in the cached copy of the document its citation names; the cache digest is in basis/sources.json. Together they let a reader re-check a quotation offline.",
+  "fetched_on": "2026-11-25",
+  "citation_corrections": {
+    "draft-marques-asqav-compliance-receipts-01 §4.2.4": {
+      "actual": "4.2.2",
+      "note": "draft-marques-asqav-compliance-receipts-01 has no section 4.2.4; the rule that a policy_digest must resolve in the Audit Pack is §4.2.2 (policy_digest). The verifier's citation string says 4.2.4, so the quote gate reports it and this entry records what the document actually says.",
+      "upstream": "uibc_core/basis.py, S18 citation"
+    }
+  },
+  "quotes": [
+    {
+      "check": "S2",
+      "source": "draft-noa-scitt-ai-agent-receipt-00",
+      "where": "§6 Identity binding",
+      "text": "When a manifest is present, a receipt or checkpoint whose (agent.id, sig.kid) pairing is not authorized MUST be rejected as UNTRUSTED.",
+      "sha256": "a96ca6d4757b867a5ff72039d45aa9880c71adba3c253c8ba21a755980c909e4"
+    },
+    {
+      "check": "S10",
+      "source": "draft-sharif-agent-audit-trail-03 §13.6",
+      "where": "§13.6 Attestation Closure",
+      "text": "An attestation is CLOSED when every component of the closure is covered by a recorded digest or by a recorded, pinned configuration value; it is OPEN when any component is not.",
+      "sha256": "2fa9da0dc5da237ed006320809e752582fe1cce17b06e16428e4b13cf51d704b"
+    },
+    {
+      "check": "S16",
+      "source": "RFC 3161",
+      "where": "§2.1 Requirements of the TSA, items 1-2",
+      "text": "The TSA is REQUIRED: 1. to use a trustworthy source of time. 2. to include a trustworthy time value for each time-stamp token.",
+      "sha256": "cb31f0b3e7f1eddea8e5dcd07d64201ce7b36c3449a1b6df2c9558a91349a75b"
+    },
+    {
+      "check": "S17",
+      "source": "draft-marques-asqav-compliance-receipts-01",
+      "where": "hash-chain linkage",
+      "text": "Verify the hash-chain linkage by recomputing the digest of the immediately preceding envelope and comparing it to previousReceiptHash.",
+      "sha256": "d732246004c59ef68511fc1e62fc941aaf1b6146fecf086116aef608f735b574"
+    },
+    {
+      "check": "S18",
+      "source": "draft-marques-asqav-compliance-receipts-01 §4.2.4",
+      "where": "§4.2.2 policy_digest",
+      "text": "Verifiers MUST reject Compliance Receipts whose policy_digest does not resolve in the Audit Pack.",
+      "sha256": "0b2bbe9330b5d91edbda4cacc5d887f71b49766a73083bd059d1d85f40b049a4"
+    }
+  ]
+}

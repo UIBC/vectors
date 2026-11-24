@@ -67,6 +67,10 @@ GATES = [
     # actually tests. This gate keeps the published split equal to the
     # verifier's own basis fields, citation by citation.
     ("basis split", ["tools/basis_map.py", "--check"], "BASIS OK"),
+    # A direct claim is only as good as the sentence behind it. This gate matches
+    # each quoted sentence against the cached copy of the document it cites, so a
+    # paraphrase cannot pass as a quotation.
+    ("basis quotes", ["tools/check_quotes.py", "--check"], "QUOTES OK"),
 ]
 
 
