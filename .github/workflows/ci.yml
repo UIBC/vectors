@@ -43,3 +43,26 @@ jobs:
             echo "--- $f"
             python tools/check_receipt.py "$f"
           done
+
+  gate-summary:
+    # One required check with a stable name, instead of five check names that
+    # change whenever the matrix changes. A branch rule that pins
+    # "gate (windows-latest, 3.11)" silently stops protecting anything the
+    # moment that leg is renamed or dropped, and nothing announces it. This job
+    # is the only context the default-branch ruleset requires.
+    needs: [gate, hygiene]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: fail if any required leg did not succeed
+        env:
+          GATE: ${{ needs.gate.result }}
+          HYGIENE: ${{ needs.hygiene.result }}
+        run: |
+          echo "gate:    $GATE"
+          echo "hygiene: $HYGIENE"
+          if [ "$GATE" != "success" ] || [ "$HYGIENE" != "success" ]; then
+            echo "::error::a required leg did not succeed"
+            exit 1
+          fi
+          echo "all required legs green"
