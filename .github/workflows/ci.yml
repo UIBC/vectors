@@ -49,6 +49,10 @@ jobs:
             echo "--- $f"
             python tools/check_receipt.py "$f"
           done
+      - name: submissions (a stranger's run is judged by the corpus, not by the PR author)
+        run: python tools/check_submission.py
+      - name: submission validator self-test (six doctored submissions must be refused)
+        run: python tools/check_submission.py --selftest
 
   gate-summary:
     # One required check with a stable name, instead of five check names that
@@ -72,3 +76,4 @@ jobs:
             exit 1
           fi
           echo "all required legs green"
+
