@@ -5,7 +5,7 @@
   "citation_corrections": {
     "draft-marques-asqav-compliance-receipts-01 §4.2.4": {
       "actual": "4.2.2",
-      "note": "draft-marques-asqav-compliance-receipts-01 has no section 4.2.4; the rule that a policy_digest must resolve in the Audit Pack is §4.2.2 (policy_digest). The verifier's citation string says 4.2.4, so the quote gate reports it and this entry records what the document actually says.",
+      "note": "The verifier's citation string names a section this draft does not have; the quoted sentence is the rule, and it sits in §4.2.2 (policy_digest).",
       "upstream": "uibc_core/basis.py, S18 citation"
     }
   },

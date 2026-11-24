@@ -25,4 +25,4 @@ still means quoting a draft.
 
 ## Recorded citation corrections
 
-- **draft-marques-asqav-compliance-receipts-01 §4.2.4** — the document has no such section; the rule is §4.2.2. draft-marques-asqav-compliance-receipts-01 has no section 4.2.4; the rule that a policy_digest must resolve in the Audit Pack is §4.2.2 (policy_digest). The verifier's citation string says 4.2.4, so the quote gate reports it and this entry records what the document actually says. Upstream: `uibc_core/basis.py, S18 citation`.
+- **draft-marques-asqav-compliance-receipts-01 §4.2.4** — the document has no such section; the rule is §4.2.2. The verifier's citation string names a section this draft does not have; the quoted sentence is the rule, and it sits in §4.2.2 (policy_digest). Upstream: `uibc_core/basis.py, S18 citation`.
