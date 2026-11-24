@@ -23,3 +23,23 @@ jobs:
       - run: python -m pip install --disable-pip-version-check "uibc-core==0.5.0"
       - name: matrix gate (six rows)
         run: python tools/run_vectors.py
+
+  hygiene:
+    # Two questions that the matrix gate cannot answer, because both can be
+    # false while all six rows still match. One runner is enough: neither
+    # question is platform-dependent, and neither needs uibc-core installed.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: key hygiene (no seed outside keys/, fixtures pinned by digest)
+        run: python tools/check_key_hygiene.py
+      - name: receipt ledger (every committed receipt must still describe the committed bytes)
+        run: |
+          set -e
+          for f in receipts/*.json; do
+            echo "--- $f"
+            python tools/check_receipt.py "$f"
+          done
