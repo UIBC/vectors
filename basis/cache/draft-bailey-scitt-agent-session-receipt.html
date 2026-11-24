@@ -1,0 +1,1121 @@
+﻿
+<!DOCTYPE html>
+
+
+
+
+
+
+
+<html data-bs-theme="auto" lang="en">
+    <head>
+        
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>
+            
+                draft-bailey-scitt-agent-session-receipt-00
+            
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://static.ietf.org/fonts/inter/import.css" rel="stylesheet">
+        <link href="https://static.ietf.org/fonts/noto-sans-mono/import.css" rel="stylesheet">
+        
+            <link rel="stylesheet" href="https://static.ietf.org/dt/12.83.2/ietf/css/document_html_referenced.css">
+            
+            <script type="module" crossorigin="" src="https://static.ietf.org/dt/12.83.2/assets/embedded-72dc5a5f.js"></script>
+<link href="https://static.ietf.org/dt/12.83.2/assets/create-pinia-singleton-4fceef90.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+<link href="https://static.ietf.org/dt/12.83.2/assets/Scrollbar-0888439d.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+            <script src="https://static.ietf.org/dt/12.83.2/ietf/js/document_html.js"></script>
+            <script src="https://static.ietf.org/dt/12.83.2/ietf/js/theme.js"></script>
+        
+        <link rel="alternate" type="application/atom+xml" title="Document changes" href="/feed/document-changes/draft-bailey-scitt-agent-session-receipt/">
+        <meta name="description"
+            
+                content="Causal Provenance Receipts for Agent Sessions: A SCITT Profile (Internet-Draft, 2026)"
+            >
+        
+
+<link rel="apple-touch-icon"
+      sizes="180x180"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-180.png">
+<link rel="icon"
+      sizes="32x32"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-32.png">
+<link rel="icon"
+      sizes="16x16"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon"
+      href="https://static.ietf.org/dt/12.83.2/ietf/images/ietf-logo-nor-mask.svg"
+      color="#ffffff">
+<meta name="msapplication-TileColor"
+      content="#ffffff">
+<meta name="theme-color"
+      content="#ffffff">
+        
+
+
+
+
+<meta property="og:title" content="Causal Provenance Receipts for Agent Sessions: A SCITT Profile">
+<meta property="og:url" content="https://datatracker.ietf.org/doc/html/draft-bailey-scitt-agent-session-receipt">
+
+
+<link rel="canonical" href="https://datatracker.ietf.org/doc/html/draft-bailey-scitt-agent-session-receipt">
+
+<meta property="og:site_name" content="IETF Datatracker">
+<meta property="og:description" content="This document defines a Supply Chain Integrity, Transparency, and Trust (SCITT) payload profile for agent session provenance: signed records that bind an autonomous agent session&#x27;s lifecycle (start, governed tool dispatch, state transitions, termination, and settlement) to offline-verifiable cryptographic evidence, with an explicit head commitment that detects local hash-chain truncation and whole-store rollback. It reuses the SCITT architecture and COSE receipt envelope: the Causal Provenance Receipt (CPR) bundle is the signed statement payload, and registration with a Transparency Service is optional and explicitly disclosed. This profile addresses the session-lifecycle and resumption-evidence grain rather than isolated per-action telemetry, while preserving bounded verifier semantics: a verifier checks cryptographic signatures, canonical digests, chain links, and external anchors; it does not prove that unallegeable physical events occurred.">
+<meta property="og:type" content="article">
+
+<meta property="article:section" content="Individual Internet-Draft">
+
+<meta property="article:author" content="Lucas Bailey">
+
+
+
+        
+        <style>
+            
+            .diff-form .select2-selection__rendered {
+                direction: rtl;
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <noscript><iframe class="status" title="Site status" src="/status/latest"></iframe></noscript>
+<div class="vue-embed" data-component="Status"></div>
+        <div class="btn-toolbar sidebar-toolbar position-fixed top-0 end-0 m-2 m-lg-3 d-print-none">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm me-1 dropdown-toggle d-flex align-items-center"
+                    id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown"
+                    aria-label="Toggle theme">
+                        <i class="theme-icon-active bi bi-circle-half"></i>
+                </button>
+
+                <ul class="dropdown-menu" aria-labelledby="bd-theme">
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center"
+                            data-bs-theme-value="light" aria-pressed="false">
+                            <i class="me-2 opacity-50 theme-icon bi bi-sun-fill"></i>
+                            Light<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center"
+                            data-bs-theme-value="dark" aria-pressed="false">
+                            <i class="me-2 opacity-50 theme-icon bi bi-moon-stars-fill"></i>
+                            Dark<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center active"
+                            data-bs-theme-value="auto" aria-pressed="true">
+                            <i class="me-2 opacity-50 theme-icon bi bi-circle-half"></i>
+                            Auto<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm sidebar-toggle"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#sidebar"
+                    aria-expanded="true"
+                    aria-controls="sidebar"
+                    aria-label="Toggle metadata sidebar"
+                    title="Toggle metadata sidebar">
+            <i class="bi bi-arrow-bar-left sidebar-shown"></i>
+            <i class="bi bi-arrow-bar-right sidebar-collapsed"></i>
+            </button>
+        </div>
+        <nav class="navbar bg-light-subtle px-1 fixed-top d-print-none d-md-none">
+            <a class="nav-link ps-1"
+               href="/doc/draft-bailey-scitt-agent-session-receipt/">
+                 
+                    draft-bailey-scitt-agent-session-receipt-00
+                
+                <br class="d-sm-none">
+
+                <span class="ms-sm-3 badge rounded-pill badge-draft">
+                    
+                        None
+                    
+                </span>
+            </a>
+            <button class="navbar-toggler p-1"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#docinfo-collapse"
+                    aria-controls="docinfo-collapse"
+                    aria-expanded="false"
+                    aria-label="Show document information">
+                <span class="navbar-toggler-icon small"></span>
+            </button>
+            <div class="navbar-nav navbar-nav-scroll overscroll-none collapse pt-1" id="docinfo-collapse">
+                <div class="bg-light-subtle p-0">
+                    <table class="table table-sm table-borderless small">
+                        <tbody class="meta align-top">
+                            <tr>
+                                <th scope="row"></th>
+                                <th scope="row">Title</th>
+                                <td class="edit"></td>
+                                <td>Causal Provenance Receipts for Agent Sessions: A SCITT Profile</td>
+                            </tr>
+                        </tbody>
+                        
+
+
+
+
+
+
+
+<tbody class="meta align-top ">
+    <tr>
+        <th scope="row">Document</th>
+        <th scope="row">Document type</th>
+        <td class="edit"></td>
+        <td>
+            
+
+
+
+
+
+
+
+    <span class="text-success">Active Internet-Draft</span>
+    (individual)
+    
+
+            
+            
+            
+                
+
+
+
+
+    <div class="alert alert-warning small p-2 mt-2" role="alert">
+        This document is an Internet-Draft (I-D).
+        Anyone may submit an I-D to the IETF.
+        This I-D is <strong>not endorsed by the IETF</strong> and has <strong>no formal standing</strong> in the
+        <a href="/doc/rfc2026/">IETF standards process</a>.
+    </div>
+
+
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">Select version</th>
+            <td class="edit"></td>
+            <td>
+                
+
+
+
+    <ul class="revision-list pagination pagination-sm text-center flex-wrap my-0">
+        
+            
+                 
+                    <li class="page-item active">
+                        <a class="page-link"
+                        href="/doc/html/draft-bailey-scitt-agent-session-receipt-00"
+                        >
+                            00
+                        </a>
+                    </li>
+                
+            
+            
+        
+    </ul>
+
+            </td>
+        </tr>
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">Author</th>
+        <td class="edit">
+            
+        </td>
+        <td>
+            
+            
+                <span ><a 
+           title="Datatracker profile of Lucas Bailey"
+            href="/person/lucas@whitemagic.dev" >Lucas Bailey</a> <a 
+               href="mailto:lucas%40whitemagic.dev"
+               aria-label="Compose email to lucas@whitemagic.dev"
+               title="Compose email to lucas@whitemagic.dev">
+                <i class="bi bi-envelope"></i></a></span>
+            
+            
+                <br>
+                <a class="btn btn-primary btn-sm mt-1" href="mailto:draft-bailey-scitt-agent-session-receipt@ietf.org?subject=draft-bailey-scitt-agent-session-receipt" title="Send email to the document authors">Email authors</a>
+            
+        </td>
+    </tr>
+    
+    
+        
+        
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            RFC stream
+        </th>
+        <td class="edit">
+            
+        </td>
+        <td class="text-body-secondary">
+            
+                (None)
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">
+                Intended RFC status
+            </th>
+            <td class="edit">
+                
+            </td>
+            <td>
+                
+                    <span class="text-body-secondary">
+                        (None)
+                    </span>
+                
+            </td>
+        </tr>
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            Other formats
+        </th>
+        <td class="edit">
+        </td>
+        <td>
+            
+                
+    <div class="buttonlist">
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-bailey-scitt-agent-session-receipt-00.txt">
+            
+                <i class="bi bi-file-text"></i> txt
+            
+        </a>
+        
+    
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/draft-bailey-scitt-agent-session-receipt/00/bibtex/">
+            
+                <i class="bi bi-file-ruled"></i> bibtex
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/bibxml3/draft-bailey-scitt-agent-session-receipt-00.xml">
+            
+                <i class="bi bi-file-code"></i> bibxml
+            
+        </a>
+        
+    
+</div>
+
+            
+        </td>
+    </tr>
+    
+    
+        
+    
+</tbody>
+                        <tr>
+                            <th scope="row"></th>
+                            <th scope="row"></th>
+                            <td class="edit"></td>
+                            <td>
+                                <a class="btn btn-sm btn-warning mb-3"
+                                target="_blank"
+                                href="https://github.com/ietf-tools/datatracker/issues/new/choose">
+                                    Report a bug
+                                    <i class="bi bi-bug"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </nav>
+        <div class="row g-0">
+            <div class="col-md-9 d-flex justify-content-center lh-sm"
+                 data-bs-spy="scroll"
+                 data-bs-target="#toc-nav"
+                 data-bs-smooth-scroll="true"
+                 tabindex="0"
+                 id="content">
+                
+                    <div class="rfcmarkup">
+                        <br class="noprint">
+                        <!-- [html-validate-disable-block attr-quotes, void-style, element-permitted-content, heading-level -- FIXME: rfcmarkup/rfc2html generates HTML with issues] -->
+                        <div class="rfcmarkup"><pre>SCITT Working Group                                            L. Bailey
+Internet-Draft                                           WhiteMagic Labs
+Intended status: Informational                          25 October 2026
+Expires: 28 April 2027
+
+
+       <h1>Causal Provenance Receipts for Agent Sessions: A SCITT Profile</h1>
+               <h1>draft-bailey-scitt-agent-session-receipt-00</h1>
+
+Abstract
+
+   This document defines a Supply Chain Integrity, Transparency, and
+   Trust (SCITT) payload profile for agent session provenance: signed
+   records that bind an autonomous agent session&#x27;s lifecycle (start,
+   governed tool dispatch, state transitions, termination, and
+   settlement) to offline-verifiable cryptographic evidence, with an
+   explicit head commitment that detects local hash-chain truncation and
+   whole-store rollback.  It reuses the SCITT architecture and COSE
+   receipt envelope: the Causal Provenance Receipt (CPR) bundle is the
+   signed statement payload, and registration with a Transparency
+   Service is optional and explicitly disclosed.  This profile addresses
+   the session-lifecycle and resumption-evidence grain rather than
+   isolated per-action telemetry, while preserving bounded verifier
+   semantics: a verifier checks cryptographic signatures, canonical
+   digests, chain links, and external anchors; it does not prove that
+   unallegeable physical events occurred.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of <a href="/doc/html/bcp78">BCP 78</a> and <a href="/doc/html/bcp79">BCP 79</a>.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at <a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a>.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as &quot;work in progress.&quot;
+
+   This Internet-Draft will expire on 28 April 2027.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="/doc/html/bcp78">BCP 78</a> and the IETF Trust&#x27;s Legal
+   Provisions Relating to IETF Documents
+   (<a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Revised BSD License text as described in <a href="#section-4">Section 4</a>.e of the
+   Trust Legal Provisions and are provided without warranty as described
+   in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Terminology
+   3.  Position in the Agent-Evidence Landscape
+   4.  Payload Format and Required Members
+   5.  Verdict Vocabulary and Error Classes
+   6.  Head Commitment and External Anchoring
+   7.  SCITT Registration Profile (Offline-First)
+   8.  Consumer Profiles
+   9.  Implementation Status
+   10. Security Considerations
+   11. IANA Considerations
+   12. References
+     12.1.  Normative References
+     12.2.  Informative References
+   Author&#x27;s Address
+
+<h2><a class="selflink" id="section-1" href="#section-1">1</a>.  Introduction</h2>
+
+   Autonomous AI agents execute work across sessions that span context-
+   window resets, process restarts, sandboxed tool executions, and
+   cross-agent handoffs.  While individual per-action telemetry formats
+   attest that a single tool call or action capsule was signed, a
+   relying party or resuming agent faces a distinct lifecycle question:
+
+   *  Is the session state being resumed the complete, un-truncated
+      continuation of the prior session, or has the underlying store
+      been rolled back, spliced, or selectively pruned at rest?
+
+   Causal Provenance Receipts (CPR; wire specification identifiers
+   &quot;continuity-receipt/0.1&quot; through &quot;continuity-receipt/0.6&quot;) define a
+   hash-chained, canonically serialized receipt bundle format with an
+   explicit head commitment (&quot;chain_head&quot;) designed for offline
+   verification before session resumption or cross-party settlement.
+
+   This document specifies how CPR session receipts and bundles map onto
+   the SCITT architecture [<a href="/doc/html/rfc9943" title="&quot;An Architecture for Trustworthy and Transparent Digital Supply Chains&quot;">RFC9943</a>] and COSE receipt profiles [<a href="/doc/html/rfc9942" title="&quot;CBOR Object Signing and Encryption (COSE) Receipts&quot;">RFC9942</a>]
+   without modifying either base standard.
+
+<h2><a class="selflink" id="section-2" href="#section-2">2</a>.  Conventions and Terminology</h2>
+
+   The key words &quot;MUST&quot;, &quot;MUST NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;,
+   &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;, &quot;NOT RECOMMENDED&quot;, &quot;MAY&quot;, and
+   &quot;OPTIONAL&quot; in this document are to be interpreted as described in
+   <a href="/doc/html/bcp14">BCP 14</a> [<a href="/doc/html/rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] [<a href="/doc/html/rfc8174" title="&quot;Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words&quot;">RFC8174</a>] when, and only when, they appear in all
+   capitals, as shown here.
+
+   Causal Provenance Receipt (CPR):
+      A signed, JCS-canonicalized receipt or hash-chained receipt bundle
+      using wire format identifiers &quot;continuity-receipt/0.x&quot;.  The name
+      &quot;Causal Provenance Receipt&quot; disambiguates this agent-session
+      format from stateful-asset recovery proposals in SCITT.
+
+   Session Bundle:
+      An ordered sequence of receipts (&quot;task.decision&quot;,
+      &quot;authority.grant&quot;, &quot;task.execution&quot;, &quot;delivery.attestation&quot;,
+      &quot;task.termination&quot;, &quot;settlement&quot;) sharing a &quot;task_id&quot; and linked
+      by SHA-256 predecessor digests (&quot;prev&quot;).
+
+   Head Commitment (&quot;chain_head&quot;):
+      A commitment object binding the final sequence number (&quot;seq&quot;),
+      final receipt identifier (&quot;receipt_id&quot;), and canonical receipt
+      digest (&quot;digest&quot;) of a session or memory store export, enabling
+      detection of tail truncation and snapshot rollback when paired
+      with an off-store anchor or SCITT Transparency Service
+      registration.
+
+<h2><a class="selflink" id="section-3" href="#section-3">3</a>.  Position in the Agent-Evidence Landscape</h2>
+
+   Several individual submissions in SCITT and adjacent groups address
+   agent telemetry at different grains:
+
+   *  Per-action and workflow timelines (such as AER-1 and Agent Action
+      Capsules) attest individual tool invocations or action capsules.
+      This profile operates at the session-lifecycle and resumption-head
+      grain and can reference per-action digests as child artifacts.
+
+   *  Payload binding specifications using COSE_Sign1 over <a href="/doc/html/rfc8785">RFC 8785</a> JSON
+      Canonicalization Scheme (JCS) share the same canonicalization
+      primitive and compose directly with <a href="#section-4">Section 4</a> of this document.
+
+   *  Operation-continuity and succession drafts address executor
+      replacement or authority handoff events; such records MAY be
+      carried as authority inputs within a CPR session bundle, whereas
+      this profile defines the end-to-end session chain and final-state
+      head commitment.
+
+<h2><a class="selflink" id="section-4" href="#section-4">4</a>.  Payload Format and Required Members</h2>
+
+   A CPR payload is a UTF-8 JSON object canonicalized according to the
+   JSON Canonicalization Scheme (JCS) [<a href="/doc/html/rfc8785" title="&quot;JSON Canonicalization Scheme (JCS)&quot;">RFC8785</a>], rejecting duplicate
+   object member names, non-finite numbers, and unpaired UTF-16
+   surrogates.
+
+   At the bundle level, a conforming payload MUST contain:
+
+   *  &quot;spec&quot;: String identifying the wire specification version (for
+      example, &quot;continuity-receipt/0.5&quot; or &quot;continuity-receipt/0.6&quot;).
+
+   *  &quot;task_id&quot;: Non-empty string identifying the governed session or
+      task.
+
+   *  &quot;receipts&quot;: Non-empty array of ordered receipt objects.  Each
+      receipt object MUST carry &quot;seq&quot; (0-based contiguous integer),
+      &quot;type&quot; (lifecycle step identifier), &quot;issued_at&quot; (<a href="/doc/html/rfc3339">RFC 3339</a> UTC
+      timestamp), &quot;prev&quot; (null on &quot;seq&quot; 0; &quot;sha256:&lt;64-hex&gt;&quot; of the
+      canonical unsigned bytes of receipt &quot;seq - 1&quot; thereafter), and
+      &quot;sig&quot; (&quot;alg&quot;, &quot;key&quot;, &quot;value&quot;).
+
+   *  &quot;chain_head&quot; (REQUIRED for the head-committed consumer profile in
+      <a href="#section-8">Section 8</a>): Object binding &quot;seq&quot; (final receipt index),
+      &quot;receipt_id&quot; (final receipt identifier), &quot;digest&quot;
+      (&quot;sha256:&lt;64-hex&gt;&quot; of the final receipt), and optional external
+      anchor or SCITT registration receipt references.
+
+   When wrapped as a SCITT Signed Statement [<a href="/doc/html/rfc9943" title="&quot;An Architecture for Trustworthy and Transparent Digital Supply Chains&quot;">RFC9943</a>] encoded in CBOR
+   [<a href="/doc/html/rfc8949" title="&quot;Concise Binary Object Representation (CBOR)&quot;">RFC8949</a>], the JCS-canonical bytes of the CPR bundle (or individual
+   session/state-transition receipt) form the COSE_Sign1 payload, with
+   the issuer&#x27;s verification key identified in the protected header.
+
+<h2><a class="selflink" id="section-5" href="#section-5">5</a>.  Verdict Vocabulary and Error Classes</h2>
+
+   A conforming verifier evaluates a bundle deterministically and emits
+   one of four closed verdicts:
+
+   1.  &quot;TRUSTED&quot;: All signatures, JCS digests, sequence links, redaction
+       commitments, and required head/anchor bindings are valid.
+
+   2.  &quot;PROVISIONAL&quot;: Cryptographic integrity holds, but an optional or
+       time-pending external anchor or registration proof is not yet
+       finalized.
+
+   3.  &quot;INSUFFICIENT_EVIDENCE&quot;: Required lifecycle steps, disclosures,
+       or anchor proofs are absent (missing evidence, distinct from
+       contradictory evidence).
+
+   4.  &quot;UNTRUSTED&quot;: Any signature, digest, predecessor link, or head
+       commitment is invalid or contradictory.
+
+   Verifiers MUST distinguish missing evidence (&quot;INSUFFICIENT_EVIDENCE&quot;)
+   from contradictory or tampered evidence (&quot;UNTRUSTED&quot;).
+
+<h2><a class="selflink" id="section-6" href="#section-6">6</a>.  Head Commitment and External Anchoring</h2>
+
+   An adversary with write access to an agent&#x27;s local storage directory
+   who holds no signing keys cannot forge a new record signature, but
+   can delete trailing records (tail truncation) or restore the entire
+   directory from an earlier genuine snapshot (whole-store rollback)
+   such that every remaining signature and internal hash link still
+   verifies.
+
+   Closing tail truncation and whole-store rollback requires comparing
+   the store&#x27;s current head against a &quot;chain_head&quot; or set commitment
+   anchored outside the mutable store (via a SCITT Transparency Service
+   receipt [<a href="/doc/html/rfc9942" title="&quot;CBOR Object Signing and Encryption (COSE) Receipts&quot;">RFC9942</a>], an OpenTimestamps calendar proof, or an
+   independent witness log).  Verifiers evaluating anchored chains MUST
+   enforce the following check order and report the first failure:
+
+   1.  Record signature validity (&quot;signature_invalid&quot;);
+   2.  Anchor or registration signature validity
+       (&quot;anchor_signature_invalid&quot;);
+   3.  Chain/context identifier binding (&quot;record_from_other_chain&quot;);
+   4.  Predecessor hash-chain continuity (&quot;chain_link_broken&quot;);
+   5.  Presence of the anchored head index (&quot;anchored_head_missing&quot;);
+   6.  Equality of the anchored head digest (&quot;anchored_head_mismatch&quot;).
+
+<h2><a class="selflink" id="section-7" href="#section-7">7</a>.  SCITT Registration Profile (Offline-First)</h2>
+
+   The base profile is offline-first: verifiers MUST be able to evaluate
+   bundles without network access using the embedded signatures and
+   detached anchor proofs.  When a bundle or &quot;chain_head&quot; is registered
+   with a SCITT Transparency Service, the returned COSE receipt
+   [<a href="/doc/html/rfc9942" title="&quot;CBOR Object Signing and Encryption (COSE) Receipts&quot;">RFC9942</a>] is attached under the bundle&#x27;s &quot;anchors&quot; array using the
+   SCITT profile extension &quot;type&quot;: &quot;scitt.cose_receipt&quot; (or &quot;custom&quot; in
+   strict 0.5 validators).
+
+<h2><a class="selflink" id="section-8" href="#section-8">8</a>.  Consumer Profiles</h2>
+
+   Relying parties select among three normative consumer profiles:
+
+   *  Head-Committed Resumption Profile: Requires &quot;chain_head&quot; and
+      off-store anchor verification on the read path prior to loading
+      agent memory or resuming a session.
+
+   *  Authority-Bound Profile: Requires an &quot;authority.grant&quot; receipt
+      preceding execution receipts.  Note that &quot;authority.grant&quot; is a
+      signed assertion by its issuer; relying parties MUST evaluate
+      whether the issuer is authorized for the target resource.
+
+   *  Regulated-Retention Profile: Requires complete disclosure or
+      digest-committed selective redaction alongside an external
+      timestamp anchor.
+
+<h2><a class="selflink" id="section-9" href="#section-9">9</a>.  Implementation Status</h2>
+
+   Note to RFC Editor: Please remove this section before publication, as
+   well as the reference to [<a href="/doc/html/rfc7942" title="&quot;Improving Awareness of Running Code: The Implementation Status Section&quot;">RFC7942</a>].
+
+   This section records the status of known implementations of the
+   protocol defined by this specification, per [<a href="/doc/html/rfc7942" title="&quot;Improving Awareness of Running Code: The Implementation Status Section&quot;">RFC7942</a>]:
+
+   *  Reference Repository: &quot;lbailey94/continuity-receipt&quot; (Apache-2.0,
+      <a href="https://github.com/lbailey94/continuity-receipt">https://github.com/lbailey94/continuity-receipt</a>).
+
+   *  Independent Language Verifiers: Three complete verifier
+      implementations exist in Python (&quot;continuity-receipt&quot; 0.5.1 on
+      PyPI), Rust (&quot;continuity-receipt&quot; 0.5.1 on crates.io), and
+      JavaScript (&quot;continuity-receipt&quot; 0.1.1 on npm), validated across
+      80 canonical JSON vector fixtures (including 27 verification-
+      receipt vectors) with 100% differential verdict parity across all
+      three engines on the shared conformance corpus.
+
+   *  External Anchored-Chain Conformance: Evaluated against the 14-case
+      &quot;anchored-record-chain/v1&quot; corpus (&quot;probityai/agent-evidence-
+      vectors&quot;), achieving 14/14 conformance with 0 disagreements on the
+      external verifier rail.
+
+   *  Storage-Edit Integrity Evaluation: Evaluated against the ten
+      storage-level edit classes (T1-T10) of the Agent Memory Integrity
+      (&quot;agmi&quot;) suite [<a href="#ref-BMWG-AMI" title="&quot;Benchmarking Methodology for Agent Memory Integrity&quot;">BMWG-AMI</a>] on the read path, rejecting 8/10 edits
+      with a same-disk commitment and 10/10 edits (including T9 whole-
+      store snapshot rollback and T10 erasure resurrection) when an
+      erasure-aware commitment is anchored off-store.
+
+   *  Public Conformance Referee: A stateless conformance referee is
+      operated at &quot;https://api.whitemagic.dev/conformance&quot; grading
+      submitted verifier outputs against the pinned bundle,
+      verification-receipt, and hostile-input corpora.
+
+<h2><a class="selflink" id="section-10" href="#section-10">10</a>. Security Considerations</h2>
+
+   *  Attestation vs. Ground Truth: A valid signature proves that the
+      holder of the private key signed the canonical statement; it does
+      not prove that the described computation was uncompromised or that
+      the signer held real-world authority.
+
+   *  Truncation Window: Records appended after the most recent off-
+      store anchor are protected by internal hash links against middle
+      deletion or reordering, but remain vulnerable to tail truncation
+      until the next anchor is published.
+
+   *  Post-Quantum Transition: A candidate hybrid signature profile
+      (&quot;0.6-pq&quot;) combining Ed25519 with ML-DSA-44/65 (FIPS 204) and
+      SLH-DSA-SHA2-128s (FIPS 205) over identical JCS canonical bytes is
+      specified in the companion repository to prevent downgrade attacks
+      under &quot;pq-required&quot; relying-party policies.
+
+<h2><a class="selflink" id="section-11" href="#section-11">11</a>. IANA Considerations</h2>
+
+   This document makes no immediate IANA requests in revision -00.
+   Future revisions intend to request registration of the media type
+   &quot;application/agent-session-receipt+json&quot; (and corresponding COSE
+   content-format identifier) in coordination with related SCITT agent
+   payload specifications.
+
+<h2><a class="selflink" id="section-12" href="#section-12">12</a>. References</h2>
+
+<h3><a class="selflink" id="section-12.1" href="#section-12.1">12.1</a>.  Normative References</h3>
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., &quot;Key words for use in RFCs to Indicate
+              Requirement Levels&quot;, <a href="/doc/html/bcp14">BCP 14</a>, <a href="/doc/html/rfc2119">RFC 2119</a>,
+              DOI 10.17487/RFC2119, March 1997,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;.
+
+   [<a id="ref-RFC8174">RFC8174</a>]  Leiba, B., &quot;Ambiguity of Uppercase vs Lowercase in <a href="/doc/html/rfc2119">RFC</a>
+              <a href="/doc/html/rfc2119">2119</a> Key Words&quot;, <a href="/doc/html/bcp14">BCP 14</a>, <a href="/doc/html/rfc8174">RFC 8174</a>, DOI 10.17487/RFC8174,
+              May 2017, &lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;.
+
+   [<a id="ref-RFC8785">RFC8785</a>]  Rundgren, A., Jordan, B., and S. Erdtman, &quot;JSON
+              Canonicalization Scheme (JCS)&quot;, <a href="/doc/html/rfc8785">RFC 8785</a>,
+              DOI 10.17487/RFC8785, June 2020,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc8785">https://www.rfc-editor.org/info/rfc8785</a>&gt;.
+
+   [<a id="ref-RFC8949">RFC8949</a>]  Bormann, C. and P. Hoffman, &quot;Concise Binary Object
+              Representation (CBOR)&quot;, STD 94, <a href="/doc/html/rfc8949">RFC 8949</a>,
+              DOI 10.17487/RFC8949, December 2020,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc8949">https://www.rfc-editor.org/info/rfc8949</a>&gt;.
+
+   [<a id="ref-RFC9942">RFC9942</a>]  Steele, O., Birkholz, H., Delignat-Lavaud, A., and C.
+              Fournet, &quot;CBOR Object Signing and Encryption (COSE)
+              Receipts&quot;, <a href="/doc/html/rfc9942">RFC 9942</a>, June 2026,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc9942">https://www.rfc-editor.org/info/rfc9942</a>&gt;.
+
+   [<a id="ref-RFC9943">RFC9943</a>]  Birkholz, H., Delignat-Lavaud, A., Fournet, C., Deshpande,
+              Y., and S. Lasker, &quot;An Architecture for Trustworthy and
+              Transparent Digital Supply Chains&quot;, <a href="/doc/html/rfc9943">RFC 9943</a>, June 2026,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc9943">https://www.rfc-editor.org/info/rfc9943</a>&gt;.
+
+<h3><a class="selflink" id="section-12.2" href="#section-12.2">12.2</a>.  Informative References</h3>
+
+   [<a id="ref-RFC7942">RFC7942</a>]  Sheffer, Y. and A. Farrel, &quot;Improving Awareness of Running
+              Code: The Implementation Status Section&quot;, <a href="/doc/html/bcp205">BCP 205</a>,
+              <a href="/doc/html/rfc7942">RFC 7942</a>, DOI 10.17487/RFC7942, July 2016,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc7942">https://www.rfc-editor.org/info/rfc7942</a>&gt;.
+
+   [<a id="ref-BMWG-AMI">BMWG-AMI</a>] Khandelwal, Y., &quot;Benchmarking Methodology for Agent Memory
+              Integrity&quot;, Work in Progress, Internet-Draft, <a href="/doc/html/draft-khandelwal-bmwg-agent-memory-integrity-01">draft-</a>
+              <a href="/doc/html/draft-khandelwal-bmwg-agent-memory-integrity-01">khandelwal-bmwg-agent-memory-integrity-01</a>, October 2026.
+
+Author&#x27;s Address
+
+   Lucas Bailey
+   WhiteMagic Labs
+   Email: lucas@whitemagic.dev
+   URI:   <a href="https://www.whitemagic.dev">https://www.whitemagic.dev</a>
+</pre></div>
+                    </div>
+                
+            </div>
+            <div class="d-print-none col-md-3 bg-light-subtle collapse show" id="sidebar">
+                <div class="position-fixed border-start sidebar overflow-scroll overscroll-none no-scrollbar">
+                    <div class="d-flex flex-column vh-100 pt-2 pt-lg-3 ps-3 pl-md-2 pl-lg-3">
+                        <div>
+                            <a class="btn btn-primary btn-sm" href="/doc/draft-bailey-scitt-agent-session-receipt/">Datatracker</a>
+                            <p class="fw-bold pt-2">
+                                
+                                    draft-bailey-scitt-agent-session-receipt-00
+                                
+                                <br>
+                                
+
+
+
+
+
+
+
+    <span class="text-success">Active Internet-Draft</span>
+    (individual)
+    
+
+                            </p>
+                        </div>
+                        
+                        <ul class="nav nav-tabs nav-fill small me-2" role="tablist">
+                            <li class="nav-item" role="presentation" title="Document information">
+                                <button class="nav-link px-2"
+                                        id="docinfo-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#docinfo-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="docinfo-tab-pane"
+                                        aria-selected="true">
+                                    <i class="bi bi-info-circle"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Info</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation" title="Table of contents">
+                                <button class="nav-link px-2"
+                                        id="toc-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#toc-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="toc-tab-pane"
+                                        aria-selected="false">
+                                    <i class="bi bi-list-ol"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Contents</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation" title="Preferences">
+                                <button class="nav-link px-2"
+                                        id="pref-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#pref-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="pref-tab-pane"
+                                        aria-selected="false">
+                                    <i class="bi bi-gear"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Prefs</span>
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="overflow-auto tab-content pt-2 me-2">
+                            <div class="tab-pane"
+                                 id="docinfo-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="docinfo-tab"
+                                 tabindex="0">
+                                <table class="table table-sm table-borderless">
+                                    
+
+
+
+
+
+
+
+<tbody class="meta align-top ">
+    <tr>
+        <th scope="row">Document</th>
+        <th scope="row">Document type</th>
+        <td class="edit"></td>
+        <td>
+            
+
+
+
+
+
+
+
+    <span class="text-success">Active Internet-Draft</span>
+    (individual)
+    
+
+            
+            
+            
+                
+
+
+
+
+    <div class="alert alert-warning small p-2 mt-2" role="alert">
+        This document is an Internet-Draft (I-D).
+        Anyone may submit an I-D to the IETF.
+        This I-D is <strong>not endorsed by the IETF</strong> and has <strong>no formal standing</strong> in the
+        <a href="/doc/rfc2026/">IETF standards process</a>.
+    </div>
+
+
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">Select version</th>
+            <td class="edit"></td>
+            <td>
+                
+
+
+
+    <ul class="revision-list pagination pagination-sm text-center flex-wrap my-0">
+        
+            
+                 
+                    <li class="page-item active">
+                        <a class="page-link"
+                        href="/doc/html/draft-bailey-scitt-agent-session-receipt-00"
+                        >
+                            00
+                        </a>
+                    </li>
+                
+            
+            
+        
+    </ul>
+
+            </td>
+        </tr>
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">Author</th>
+        <td class="edit">
+            
+        </td>
+        <td>
+            
+            
+                <span ><a 
+           title="Datatracker profile of Lucas Bailey"
+            href="/person/lucas@whitemagic.dev" >Lucas Bailey</a> <a 
+               href="mailto:lucas%40whitemagic.dev"
+               aria-label="Compose email to lucas@whitemagic.dev"
+               title="Compose email to lucas@whitemagic.dev">
+                <i class="bi bi-envelope"></i></a></span>
+            
+            
+                <br>
+                <a class="btn btn-primary btn-sm mt-1" href="mailto:draft-bailey-scitt-agent-session-receipt@ietf.org?subject=draft-bailey-scitt-agent-session-receipt" title="Send email to the document authors">Email authors</a>
+            
+        </td>
+    </tr>
+    
+    
+        
+        
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            RFC stream
+        </th>
+        <td class="edit">
+            
+        </td>
+        <td class="text-body-secondary">
+            
+                (None)
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">
+                Intended RFC status
+            </th>
+            <td class="edit">
+                
+            </td>
+            <td>
+                
+                    <span class="text-body-secondary">
+                        (None)
+                    </span>
+                
+            </td>
+        </tr>
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            Other formats
+        </th>
+        <td class="edit">
+        </td>
+        <td>
+            
+                
+    <div class="buttonlist">
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-bailey-scitt-agent-session-receipt-00.txt">
+            
+                <i class="bi bi-file-text"></i> txt
+            
+        </a>
+        
+    
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/draft-bailey-scitt-agent-session-receipt/00/bibtex/">
+            
+                <i class="bi bi-file-ruled"></i> bibtex
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/bibxml3/draft-bailey-scitt-agent-session-receipt-00.xml">
+            
+                <i class="bi bi-file-code"></i> bibxml
+            
+        </a>
+        
+    
+</div>
+
+            
+        </td>
+    </tr>
+    
+    
+        
+    
+</tbody>
+                                </table>
+                                <a class="btn btn-sm btn-warning mb-3"
+                                target="_blank"
+                                href="https://github.com/ietf-tools/datatracker/issues/new/choose">
+                                    Report a datatracker bug
+                                    <i class="bi bi-bug"></i>
+                                </a>
+                            </div>
+                            <div class="tab-pane mb-5"
+                                 id="toc-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="toc-tab"
+                                 tabindex="0">
+                                <nav class="nav nav-pills flex-column small" id="toc-nav">
+                                </nav>
+                            </div>
+                            <div class="tab-pane mb-5 small"
+                                 id="pref-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="pref-tab"
+                                 tabindex="0">
+                                <label class="form-label fw-bold mb-2">Show sidebar by default</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="sidebar" id="on-radio">
+                                    <label class="btn btn-outline-primary" for="on-radio">Yes</label>
+                                    <input type="radio" class="btn-check" name="sidebar" id="off-radio">
+                                    <label class="btn btn-outline-primary" for="off-radio">No</label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">Tab to show by default</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="deftab" id="docinfo-radio">
+                                    <label class="btn btn-outline-primary" for="docinfo-radio">
+                                        <i class="bi bi-info-circle me-1"></i>Info
+                                    </label>
+                                    <input type="radio" class="btn-check" name="deftab" id="toc-radio">
+                                    <label class="btn btn-outline-primary" for="toc-radio">
+                                        <i class="bi bi-list-ol me-1"></i>Contents
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">HTMLization configuration</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="htmlconf" id="txt-radio">
+                                    <label class="btn btn-outline-primary" for="txt-radio" title="This is the traditional HTMLization method.">
+                                        <i class="bi bi-badge-sd me-1"></i>HTMLize the plaintext
+                                    </label>
+                                    <input type="radio" class="btn-check" name="htmlconf" id="html-radio">
+                                    <label class="btn btn-outline-primary" for="html-radio" title="This is the modern HTMLization method.">
+                                        <i class="bi bi-badge-hd me-1"></i>Plaintextify the HTML
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2" for="ptsize">Maximum font size</label>
+                                <input type="range" class="form-range" min="7" max="16" id="ptsize" oninput="ptdemo.value = ptsize.value">
+                                <label class="form-label fw-bold mt-4 mb-2">Page dependencies</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="pagedeps" id="inline-radio">
+                                    <label class="btn btn-outline-primary" for="inline-radio" title="Generate larger, standalone web pages that do not require network access to render.">
+                                        <i class="bi bi-box me-1"></i>Inline
+                                    </label>
+                                    <input type="radio" class="btn-check" name="pagedeps" id="reference-radio">
+                                    <label class="btn btn-outline-primary" for="reference-radio" title="Generate regular web pages that require network access to render.">
+                                        <i class="bi bi-link-45deg me-1"></i>Reference
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">Citation links</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="reflinks" id="refsection-radio">
+                                    <label class="btn btn-outline-primary" for="refsection-radio" title="Citation links go to the reference section.">
+                                        <i class="bi bi-arrow-clockwise"></i> Go to reference section
+                                    </label>
+                                    <input type="radio" class="btn-check" name="reflinks" id="citation-radio">
+                                    <label class="btn btn-outline-primary" for="citation-radio" title="Citation links go directly to the cited document.">
+                                        <i class="bi bi-link-45deg me-1"></i>Go to linked document
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+<script>
+  var _paq = window._paq || [];
+  
+  _paq.push(['disableCookies']);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//analytics.ietf.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', 7]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//analytics.ietf.org/matomo.php?idsite=7" style="border:0;" alt="" /></p></noscript>
+
+    <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5fc2171c8339037',t:'MTc5NTU2MjI4Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5fc2171c8339037',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

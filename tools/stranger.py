@@ -67,6 +67,15 @@ GATES = [
     # actually tests. This gate keeps the published split equal to the
     # verifier's own basis fields, citation by citation.
     ("basis split", ["tools/basis_map.py", "--check"], "BASIS OK"),
+    # A direct claim is only as good as the sentence behind it. This gate matches
+    # each quoted sentence against the cached copy of the document it cites, so a
+    # paraphrase cannot pass as a quotation.
+    ("basis quotes", ["tools/check_quotes.py", "--check"], "QUOTES OK"),
+    # The `none` column is an answer to "who required this?" - not to "did you
+    # look?". This gate keeps a search record behind every `none` row, and a
+    # drafted proposal behind every `none` we think should stop being one.
+    ("basis none", ["tools/check_none.py"], "NONE OK"),
+    ("basis none self-test", ["tools/check_none.py", "--selftest"], "NONE SELFTEST OK"),
 ]
 
 

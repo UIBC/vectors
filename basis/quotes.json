@@ -1,0 +1,112 @@
+{
+  "contract": "uibc-basis-quotes/1",
+  "note": "One verbatim sentence per `direct` check, with the text digest. The sentence must occur in the cached copy of the document its citation names; the cache digest is in basis/sources.json. Together they let a reader re-check a quotation offline.",
+  "fetched_on": "2026-11-25",
+  "citation_corrections": {
+    "draft-marques-asqav-compliance-receipts-01 §4.2.4": {
+      "actual": "4.2.2",
+      "note": "The verifier's citation string names a section this draft does not have; the quoted sentence is the rule, and it sits in §4.2.2 (policy_digest).",
+      "upstream": "uibc_core/basis.py, S18 citation"
+    }
+  },
+  "quotes": [
+    {
+      "check": "S2",
+      "source": "draft-noa-scitt-ai-agent-receipt-00",
+      "where": "§6 Identity binding",
+      "text": "When a manifest is present, a receipt or checkpoint whose (agent.id, sig.kid) pairing is not authorized MUST be rejected as UNTRUSTED.",
+      "sha256": "a96ca6d4757b867a5ff72039d45aa9880c71adba3c253c8ba21a755980c909e4"
+    },
+    {
+      "check": "S10",
+      "source": "draft-sharif-agent-audit-trail-03 §13.6",
+      "where": "§13.6 Attestation Closure",
+      "text": "An attestation is CLOSED when every component of the closure is covered by a recorded digest or by a recorded, pinned configuration value; it is OPEN when any component is not.",
+      "sha256": "2fa9da0dc5da237ed006320809e752582fe1cce17b06e16428e4b13cf51d704b"
+    },
+    {
+      "check": "S16",
+      "source": "RFC 3161",
+      "where": "§2.1 Requirements of the TSA, items 1-2",
+      "text": "The TSA is REQUIRED: 1. to use a trustworthy source of time. 2. to include a trustworthy time value for each time-stamp token.",
+      "sha256": "cb31f0b3e7f1eddea8e5dcd07d64201ce7b36c3449a1b6df2c9558a91349a75b"
+    },
+    {
+      "check": "S17",
+      "source": "draft-marques-asqav-compliance-receipts-01",
+      "where": "hash-chain linkage",
+      "text": "Verify the hash-chain linkage by recomputing the digest of the immediately preceding envelope and comparing it to previousReceiptHash.",
+      "sha256": "d732246004c59ef68511fc1e62fc941aaf1b6146fecf086116aef608f735b574"
+    },
+    {
+      "check": "S18",
+      "source": "draft-marques-asqav-compliance-receipts-01 §4.2.4",
+      "where": "§4.2.2 policy_digest",
+      "text": "Verifiers MUST reject Compliance Receipts whose policy_digest does not resolve in the Audit Pack.",
+      "sha256": "0b2bbe9330b5d91edbda4cacc5d887f71b49766a73083bd059d1d85f40b049a4"
+    },
+    {
+      "check": "S3",
+      "source": "draft-maintainer-1f916-agent-record-01",
+      "where": "key lifecycle (mechanism borrowed: the event set)",
+      "text": "Key lifecycle events (bind, rotate, revoke) MUST themselves be recorded as log events.",
+      "sha256": "391b3d96841d51764b41467584d04b2363898feaf41880e78052aaec6e4dc078"
+    },
+    {
+      "check": "S5",
+      "source": "RFC 6962",
+      "where": "§2.1 Merkle Hash Trees (mechanism borrowed: the root)",
+      "text": "The input to the Merkle Tree Hash is a list of data entries; these entries will be hashed to form the leaves of the Merkle Hash Tree.",
+      "sha256": "a8ed90792418e88e73bfb3d88a099096cd140dc87d0ba267b07e20a77215aebe"
+    },
+    {
+      "check": "S6",
+      "source": "RFC 8032",
+      "where": "§1 (mechanism borrowed: Ed25519)",
+      "text": "The algorithm is instantiated with recommended parameters for the edwards25519 and edwards448 curves.",
+      "sha256": "b6a077a1acf6d2a09430916b7b3cf529bd692095634a4870969632498276a61c"
+    },
+    {
+      "check": "S8",
+      "source": "draft-maintainer-1f916-agent-record-01",
+      "where": "§2 terminology (mechanism borrowed: the checkpoint)",
+      "text": "Checkpoint: A signed Merkle tree head over a log's sealed events.",
+      "sha256": "9667c3636fe10fb21fbd7ee0074b2a5dc5328c53ce4960ca0a0af77304fbcf3d"
+    },
+    {
+      "check": "S9",
+      "source": "draft-bailey-scitt-agent-session-receipt",
+      "where": "§2 terminology (mechanism borrowed: the head observed off-store)",
+      "text": "Head Commitment (\"chain_head\"): A commitment object binding the final sequence number (\"seq\"), final receipt identifier (\"receipt_id\"), and canonical receipt digest (\"digest\") of a session or memory store export, enabling detection of tail truncation and snapshot rollback when paired with an off-store anchor or SCITT Transparency Service registration.",
+      "sha256": "1231b3c6f735eb9246db40aea12ae53924ccf78a86a1cba5449e28bd8ee7f869"
+    },
+    {
+      "check": "S11",
+      "source": "RFC 8785",
+      "where": "§1 (mechanism borrowed: JCS)",
+      "text": "This specification defines how to create a canonical representation of JSON data by building on the strict serialization methods for JSON primitives defined by ECMAScript, constraining JSON data to the Internet JSON (I-JSON) subset, and by using deterministic property sorting.",
+      "sha256": "4f045a21d3bdccc606c5f1f8f087122fc899c97433a7e502d10585feafb5cf68"
+    },
+    {
+      "check": "S13",
+      "source": "RFC 6962",
+      "where": "§2.1.1 Merkle Audit Paths (mechanism borrowed: the proof)",
+      "text": "A Merkle audit path for a leaf in a Merkle Hash Tree is the shortest list of additional nodes in the Merkle Tree required to compute the Merkle Tree Hash for that tree.",
+      "sha256": "43dd2747a5a15f5321139690c93fb9f289a51555bdea77805426c716bd1afee7"
+    },
+    {
+      "check": "S14",
+      "source": "RFC 4648 §4",
+      "where": "§3.2 (mechanism borrowed: padding)",
+      "text": "The base64 and base32 alphabets use padding, as described below in sections 4 and 6, but the base16 alphabet does not need it; see section 8.",
+      "sha256": "a4c255d643c92971d7cda811f2748b1a064d92a3c22ca2fed48cdb5fffdef515"
+    },
+    {
+      "check": "S19",
+      "source": "draft-bailey-scitt-agent-session-receipt",
+      "where": "§3 (mechanism borrowed: the head compared against something outside)",
+      "text": "Closing tail truncation and whole-store rollback requires comparing the store's current head against a \"chain_head\" or set commitment anchored outside the mutable store (via a SCITT Transparency Service receipt [ RFC9942], an OpenTimestamps calendar proof, or an independent witness log).",
+      "sha256": "205751ee3cbd81c2144d690da26e40b9af27c2a1cb2fa7dc18337959c6e0c2e8"
+    }
+  ]
+}
