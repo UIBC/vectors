@@ -3,6 +3,34 @@
 A submission is judged by `tools/check_submission.py`, not by whoever reads the
 pull request first. Add one directory here; CI runs the same script.
 
+You do not have to assemble the directory by hand:
+
+```
+python tools/make_submission.py --id <legal-entity>-<impl>-<date> \
+    --legal-entity "Example Devices GmbH" --implementation example-verifier \
+    --language Rust --repository https://github.com/example/verifier \
+    --contact security@example.com --date 2026-11-25 \
+    --competence "Test laboratory: TÜV Example, ISO/IEC 17025 accredited, cert 12345"
+python tools/check_submission.py
+```
+
+The generator runs the matrix gate itself and copies its stdout into `run.log`
+verbatim; it refuses to write anything when that gate fails, because a
+submission built from a run that disagrees with the corpus is a record of
+nothing. It does not decide independence or competence for you — a generator
+that filled those in would be the disease, not the cure.
+
+The first row here was written by hand once, and that was the last time:
+
+```
+python tools/make_submission.py --id uibc-self-20261124 --reproduce
+SUBMISSION REPRODUCED - the committed files are byte-identical to a fresh run of this corpus.
+```
+
+`--reproduce` rebuilds the submission from the corpus as committed and compares
+bytes. A hand-edited verdict, a stale log, a corpus that moved under a
+committed row — all three show up as `SUBMISSION STALE`, and CI runs it.
+
 ```
 submissions/<legal-entity>-<impl>-<date>/
 ├── product.json     who is accountable, what was run, and how independent it is

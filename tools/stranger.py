@@ -44,6 +44,11 @@ GATES = [
     ("gate self-test", ["tools/check_submission.py", "--selftest"], "SELFTEST OK"),
     ("report self-test", ["tools/check_report.py", "--selftest"], "REPORT SELFTEST OK"),
     ("key hygiene", ["tools/check_key_hygiene.py"], "KEY HYGIENE OK"),
+    # The row in submissions/ is derived from a run, not typed. If it were typed,
+    # the gate would happily accept a description of a corpus that has moved.
+    ("submission reproduced",
+     ["tools/make_submission.py", "--id", "uibc-self-20261124", "--reproduce"],
+     "SUBMISSION REPRODUCED"),
 ]
 
 

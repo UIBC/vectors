@@ -70,6 +70,8 @@ jobs:
         run: python tools/check_submission.py
       - name: submission validator self-test (doctored submissions must be refused, one honest one accepted)
         run: python tools/check_submission.py --selftest
+      - name: the shipped row is derived from a run, not typed into a file
+        run: python tools/make_submission.py --id uibc-self-20261124 --reproduce
 
   crossversion:
     # The eight rows above are the answer of a verifier AT the declared floor

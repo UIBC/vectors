@@ -25,11 +25,11 @@
     "S18",
     "S19"
   ],
-  "contact": "https://github.com/UIBC",
-  "independence": "same-maintainer",
   "scope": {
     "not_covered": []
   },
+  "contact": "https://github.com/UIBC",
+  "independence": "same-maintainer",
   "competence_basis": "none - no personnel qualification, laboratory accreditation or third-party witness accompanies this record",
   "witness": null,
   "submitted_at": "2026-11-24",
