@@ -80,8 +80,9 @@ def run_row(python, case, extra):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--also", action="append", default=[],
-                    help="another python executable with uibc-core installed")
+    ap.add_argument("--also", action="append", default=[], help="another python executable with uibc-core installed")
+    ap.add_argument("--min-verifiers", type=int, default=2, metavar="N",
+                    help="refuse to report OK on fewer interpreters than this (default 2)")
     a = ap.parse_args()
 
     pythons = [sys.executable] + a.also
@@ -90,6 +91,17 @@ def main():
     if not found:
         print("CROSSVERSION: no python with uibc-core importable - nothing to compare")
         return 2
+
+    # One verifier cannot exercise a version floor: every row is answered by
+    # the same release that declared the floor, so the comparison is vacuous.
+    # This used to print OK for a single interpreter, which is the exact
+    # failure mode this project refuses elsewhere - a green that certifies
+    # nothing. It now says so instead.
+    if len(found) < a.min_verifiers:
+        print(f"CROSSVERSION DEGENERATE - {len(found)} verifier(s), need at least "
+              f"{a.min_verifiers}; the floor was not exercised. Install a second release "
+              f"and pass it with --also <python>.")
+        return 3
 
     problems = []
     table = []
@@ -139,4 +151,5 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+
 
