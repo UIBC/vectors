@@ -1,0 +1,111 @@
+{
+  "contract": "uibc-basis-none/1",
+  "note": "For every check the verifier classifies as `none`, what we looked for before saying we invented it. A check with no external basis is not a defect, but an unexamined `none` is: it means we stopped looking and called the result our design. Each entry records the searches, the nearest neighbour found, and why it did not cover the rule.",
+  "reviewed_on": "2026-11-25",
+  "checks": [
+    {
+      "check": "S1",
+      "name": "package structure",
+      "status": "no-external-text-found",
+      "searches": [
+        {
+          "query": "SCITT agent receipt package file layout manifest requirement",
+          "on": "2026-11-25",
+          "result": "The drafts in basis/sources.json specify receipt payload fields, not a package's file layout. Nothing found stating which files a receipt package must contain."
+        }
+      ],
+      "nearest": {
+        "doc": "draft-noa-scitt-ai-agent-receipt-00",
+        "url": "https://datatracker.ietf.org/doc/html/draft-noa-scitt-ai-agent-receipt-00",
+        "why_not": "It constrains the protected header and payload, not a directory of files."
+      },
+      "note": "Our rule (declared files present, no extras) stays ours."
+    },
+    {
+      "check": "S4",
+      "name": "evidence integrity",
+      "status": "no-external-text-found",
+      "searches": [
+        {
+          "query": "content hash tamper evidence requirement receipt package",
+          "on": "2026-11-25",
+          "result": "Hashing content is universal practice; no external text requires it of an agent-evidence package in the way we frame it, and the symlink fence is plainly ours."
+        }
+      ],
+      "nearest": {
+        "doc": "draft-sharif-agent-audit-trail-03",
+        "url": "https://datatracker.ietf.org/doc/html/draft-sharif-agent-audit-trail-03",
+        "why_not": "It requires digests of closure components, which is S10, not of package files."
+      },
+      "note": "Half the rule is common practice, half is our hardening; neither is a published requirement."
+    },
+    {
+      "check": "S7",
+      "name": "evidence index metadata",
+      "status": "proposal-drafted",
+      "proposal": "basis/proposals/p-001-index-metadata.md",
+      "searches": [
+        {
+          "query": "C2PA hard binding manifest metadata digest exclude",
+          "on": "2026-11-25",
+          "result": "C2PA requires a hard binding from manifest to asset content, and at most one of them. That binds content to manifest; it does not require that a package's index metadata carry a digest of its own, separate from the content hashes it lists."
+        },
+        {
+          "query": "agent receipt index digest metadata not covered by content hash",
+          "on": "2026-11-25",
+          "result": "No hit in the drafts we have cached; the closest statements are about closure components (S10) and chain links (S17), both of which are about different objects."
+        }
+      ],
+      "nearest": {
+        "doc": "C2PA hard binding (via streaming-video-technology-alliance CML results page)",
+        "url": "https://streaming-video-technology-alliance.github.io/common-media-library/documents/_svta_cml-c2pa.Results_and_Error_Codes.html",
+        "why_not": "A hard binding binds an asset's bytes to a manifest. Our gap is a manifest's own metadata, which no content hash covers, so editing it leaves every check green. Different direction, different object."
+      },
+      "note": "This is the D-002 defect turned into a proposal: the sentence that survived an edit is the sentence nobody hashed."
+    },
+    {
+      "check": "S12",
+      "name": "timestamp and identifier strictness",
+      "status": "external-basis-found",
+      "proposed_class": "related",
+      "searches": [
+        {
+          "query": "SCITT receipt MUST sequence_number monotonic reject replay",
+          "on": "2026-11-25",
+          "result": "draft-chang-delta1-settlement-00 §7.1 requires run_id nonces that the validator MUST reject on reuse, and §7.2 requires a strictly increasing sequence_number per validator instance."
+        },
+        {
+          "query": "agent session receipt seq issued_at field requirements",
+          "on": "2026-11-25",
+          "result": "draft-bailey-scitt-agent-session-receipt requires each receipt to carry seq (0-based contiguous) and issued_at (RFC 3339 UTC)."
+        }
+      ],
+      "nearest": {
+        "doc": "draft-chang-delta1-settlement-00",
+        "url": "https://www.ietf.org/archive/id/draft-chang-delta1-settlement-00.html",
+        "why_not": "The documents constrain the fields' meaning; they do not tell a verifier to reject impossible values on sight. That refusal is ours - which is exactly what `related` means."
+      },
+      "note": "We had been saying 'nothing requires this' while the two field-level requirements sat in drafts we already cite elsewhere in basis. Reclassifying S12 to `related` needs a verifier change, tracked upstream.",
+      "upstream": "uibc_core/basis.py, S12 entry"
+    },
+    {
+      "check": "S15",
+      "name": "anchor event resolution",
+      "status": "proposal-drafted",
+      "proposal": "basis/proposals/p-002-anchor-event-resolution.md",
+      "searches": [
+        {
+          "query": "OpenTimestamps anchor event resolution verifier requirement",
+          "on": "2026-11-25",
+          "result": "No external text we found tells a verifier how to resolve an anchor event or recompute a root after resolution; the closest material describes calendars and proofs, not the verification step."
+        }
+      ],
+      "nearest": {
+        "doc": "draft-fassbender-scitt-time-anchor-05",
+        "url": "https://www.ietf.org/archive/id/draft-fassbender-scitt-time-anchor-05.txt",
+        "why_not": "It motivates time anchors; it does not specify resolution semantics for a verifier."
+      },
+      "note": "A resolution rule every implementation must invent separately is a good candidate for a shared one."
+    }
+  ]
+}
