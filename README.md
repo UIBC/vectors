@@ -1,15 +1,17 @@
 # UIBC conformance vectors
 
-Four executable cases that show what a UIBC verdict is allowed to mean, and where it stops. Every row below is produced by `tools/make_vectors.py` and checked by `tools/run_vectors.py` against a hand-written expectation table.
+Six executable packages and eight rows that show what a UIBC verdict is allowed to mean, and where it stops. Every row is produced by `tools/make_vectors.py` / `tools/make_adverse.py` and checked by `tools/run_vectors.py` against a hand-written expectation table.
 
 ```bash
 pip install uibc-core==0.5.0
-python tools/run_vectors.py        # exits 0 only when all six rows hold
+python tools/run_vectors.py        # exits 0 only when all eight rows hold
+python tools/run_adversarial.py    # 9 must-reject cases + 3 documented gaps
+python tools/check_frozen.py       # fixture bytes vs FIXTURES.sha256
 ```
 
 No network, no credentials, no owner key: the seals are Ed25519, and the public key travels inside each package.
 
-## The six rows
+## The eight rows
 
 | Case | Mode | Expected | What it shows |
 |---|---|---|---|
@@ -19,12 +21,23 @@ No network, no credentials, no owner key: the seals are Ed25519, and the public 
 | `deleted` | open | FAIL | removing an evidence file is caught (S4) |
 | `keyswap` | open | **PASS** | a full forgery, re-sealed by another key, verifies against itself |
 | `keyswap` | pinned to owner key | FAIL | pinning is the only thing that catches it |
+| `unsigned` | open | INCONCLUSIVE | no seal: consistent, unattested — never PASS |
+| `unknown-upgrade` | open | INCONCLUSIVE | a manifest that *declares* PASS cannot upgrade a verdict |
 
 The fifth row is not a defect report, it is the boundary: **unpinned verification proves internal consistency, not authorship**. Anyone quoting a UIBC PASS without saying whether the key was pinned is quoting half a result.
 
+The last two rows are that boundary seen from the other side. A verifier that answers PASS for an unsigned package cannot tell "signed" from "declared", and a package that declares its own PASS has produced no evidence at all.
+
+## Adversarial supplement (separate from the frozen matrix)
+
+`tools/run_adversarial.py` builds twelve doctored packages at run time and requires them not to verify: duplicate JSON member, raw control character, undeclared root file, index path escape, byte appended after sealing, timestamp rollback, sequence gap, unsigned, self-declared PASS, and three index-metadata rewrites.
+
+The last three are a genuine finding, not a passing test. **D-002**: the S7 index-metadata digest covers `path`, `content_hash`, `type` and `note`, but not `evidence_id`, `media_type` or `created_at` — those three can be rewritten while the verdict stays PASS. They are printed as `[DEFECT]`, the run stays green only while the defect still reproduces, and `--strict` fails until it is fixed. A gap that quietly stops reproducing turns the run red, so the ledger cannot rot.
+
 ## Files
 
-- `vectors/` — the four packages (committed, small, plain JSON + text)
+- `vectors/` — the six packages (committed, small, plain JSON + text)
+- `FIXTURES.sha256` — one digest per committed fixture file; `check_frozen.py` compares
 - `keys/` — TEST-ONLY Ed25519 seeds and their public keys. The seeds are public on purpose so `keyswap` can be rebuilt by anyone. Never reuse them.
 - `tools/make_vectors.py` — regenerates all four cases through the public CLI
 - `tools/run_vectors.py` — the gate; six rows, exit 1 on any deviation

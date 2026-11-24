@@ -11,6 +11,8 @@ Gate: `tools/run_vectors.py` — exit 1 on any deviation from the rows below.
 | deleted | open | FAIL | S4 evidence integrity | `evidence/files/report.txt` removed; the index still declares it. |
 | keyswap | open | PASS | — | Attacker-built package, sealed with the attacker key: internally consistent, so it verifies against itself. |
 | keyswap | `--pubkey keys/owner.key.pub` | FAIL | S6 seal signature | The seal's key does not match the pinned owner key. |
+| unsigned | open | INCONCLUSIVE | S6 seal signature | No seal: internally consistent, provenance unattested. A verifier that says PASS here cannot tell signed from unsigned. |
+| unknown-upgrade | open | INCONCLUSIVE | S6 seal signature | The manifest declares `status: PASS` and there is no seal. Self-declaration is not evidence and must not upgrade a verdict. |
 
 ## Why row 5 is written as PASS
 
@@ -31,7 +33,37 @@ Committed bytes, however, must be stable, because receipts hash them. The fixtur
 
 - No third-party implementation has been run against these vectors. The only verifier exercised here is the reference one.
 - No reordering or rollback vector yet; rollback needs an external monotonic anchor (`--expect-head`) and cannot be shown inside one package.
+- **D-002, verified 2026-11-24**: the S7 index-metadata digest covers `path`, `content_hash`, `type` and `note`, but **not** `evidence_id`, `media_type` or `created_at`. Rewriting any of those three in `evidence/index.json` leaves the verdict at **PASS**. Consequence: evidence can be backdated and its identifier swapped without detection. Reproduce with `python tools/run_adversarial.py` (rows `index-metadata-drift`, `evidence-id-drift`, `media-type-drift`); `--strict` fails until it is fixed. Filed against `uibc-core` 0.5.0.
 - **Upstream defect (Windows)**: `uibc-core` 0.5.0 prints Chinese `basis.note` strings and crashes with
   `UnicodeEncodeError: 'charmap' codec` on a cp1252 console. Run 1 of this repo's CI went
   **red on both Windows jobs** for exactly this reason. Our workflow sets `PYTHONIOENCODING=utf-8`,
   which is a runner-side workaround, not a fix to the package. Reported upstream: pending.
+
+## Frozen fixtures
+
+`FIXTURES.sha256` records one SHA-256 per committed fixture file across the six packages. `python tools/check_frozen.py` recomputes them; CI runs it on every push. Adding or changing a fixture therefore requires an explicit `--write` and a visible diff, which is the point: a vector set that changes silently is not a vector set.
+
+## Claim checking
+
+`tools/check_report.py` applies four rules to any verifier report before it is quoted: PASS over a FAIL/INCONCLUSIVE check (R1), `assurance=attested` without S6 PASS (R2), `trust_level=anchored|witnessed` without S6 PASS (R3), and a package whose `manifest.status` claims PASS while the verdict is not (R4). `--selftest` builds four doctored reports and one honest one; the four must be rejected.
+
+## Adversarial supplement
+
+Twelve doctored packages, built at run time from `vectors/clean`, never committed (so the freeze above is untouched):
+
+| Case | Expected | Defect |
+|---|---|---|
+| dup-json-member | FAIL | S11 |
+| control-char | FAIL | S11 |
+| extra-root-file | FAIL | S1 |
+| index-path-escape | FAIL | S1/S4 |
+| hash-flip | FAIL | S4 |
+| ts-rollback | FAIL | S3 |
+| seq-gap | FAIL | S3 |
+| unsigned | INCONCLUSIVE | S6 |
+| status-upgrade | INCONCLUSIVE | declaration ≠ evidence |
+| index-metadata-drift | **PASS today** | D-002 |
+| evidence-id-drift | **PASS today** | D-002 |
+| media-type-drift | **PASS today** | D-002 |
+
+Nine must be rejected. Three reproduce D-002 and are reported as defects, not counted as passes.
