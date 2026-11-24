@@ -3,20 +3,14 @@
   "corpus_digest": "bb7709e3ae9b6e574ca1ee9c88c863c3954de617d905933587763bd84969afaa",
   "counts": {
     "specified": 19,
-    "exercised": 10,
-    "discriminating": 4,
-    "unreached": 9
+    "matrix_reached": 10,
+    "any_case_reached": 17,
+    "deciding": 15,
+    "unreached": 2
   },
   "unreached": [
-    "S9",
-    "S10",
-    "S13",
-    "S14",
-    "S15",
     "S16",
-    "S17",
-    "S18",
-    "S19"
+    "S18"
   ],
   "checks": [
     {
@@ -24,15 +18,17 @@
       "name": "package structure",
       "basis": "none",
       "citation": "",
-      "cases": 8,
-      "non_pass": 0
+      "matrix_cases": 8,
+      "adversarial_cases": 18,
+      "non_pass": 1
     },
     {
       "id": "S2",
       "name": "identity consistency",
       "basis": "direct",
       "citation": "draft-noa-scitt-ai-agent-receipt-00",
-      "cases": 8,
+      "matrix_cases": 8,
+      "adversarial_cases": 18,
       "non_pass": 0
     },
     {
@@ -40,64 +36,135 @@
       "name": "lifecycle state machine + semantics",
       "basis": "related",
       "citation": "draft-maintainer-1f916-agent-record-01",
-      "cases": 8,
-      "non_pass": 0
+      "matrix_cases": 8,
+      "adversarial_cases": 18,
+      "non_pass": 2
     },
     {
       "id": "S4",
       "name": "evidence integrity",
       "basis": "none",
       "citation": "",
-      "cases": 8,
-      "non_pass": 2
+      "matrix_cases": 8,
+      "adversarial_cases": 18,
+      "non_pass": 4
     },
     {
       "id": "S5",
       "name": "evidence root",
       "basis": "related",
       "citation": "RFC 6962",
-      "cases": 8,
-      "non_pass": 2
+      "matrix_cases": 8,
+      "adversarial_cases": 18,
+      "non_pass": 4
     },
     {
       "id": "S6",
       "name": "seal signature",
       "basis": "related",
       "citation": "RFC 8032",
-      "cases": 8,
-      "non_pass": 3
+      "matrix_cases": 8,
+      "adversarial_cases": 18,
+      "non_pass": 9
     },
     {
       "id": "S7",
       "name": "evidence index metadata",
       "basis": "none",
       "citation": "",
-      "cases": 8,
-      "non_pass": 0
+      "matrix_cases": 8,
+      "adversarial_cases": 18,
+      "non_pass": 1
     },
     {
       "id": "S8",
       "name": "package checkpoint head",
       "basis": "related",
       "citation": "draft-maintainer-1f916-agent-record-01",
-      "cases": 8,
-      "non_pass": 2
+      "matrix_cases": 8,
+      "adversarial_cases": 18,
+      "non_pass": 6
+    },
+    {
+      "id": "S9",
+      "name": "head pinned out-of-band",
+      "basis": "related",
+      "citation": "draft-bailey-scitt-agent-session-receipt",
+      "matrix_cases": 0,
+      "adversarial_cases": 1,
+      "non_pass": 1
+    },
+    {
+      "id": "S10",
+      "name": "attestation closure declared",
+      "basis": "direct",
+      "citation": "draft-sharif-agent-audit-trail-03 §13.6",
+      "matrix_cases": 0,
+      "adversarial_cases": 1,
+      "non_pass": 1
     },
     {
       "id": "S11",
       "name": "strict serialization",
       "basis": "related",
       "citation": "RFC 8785",
-      "cases": 8,
-      "non_pass": 0
+      "matrix_cases": 8,
+      "adversarial_cases": 19,
+      "non_pass": 2
     },
     {
       "id": "S12",
       "name": "timestamp and identifier strictness",
       "basis": "none",
       "citation": "",
-      "cases": 8,
+      "matrix_cases": 8,
+      "adversarial_cases": 18,
       "non_pass": 0
+    },
+    {
+      "id": "S13",
+      "name": "merkle inclusion proofs",
+      "basis": "related",
+      "citation": "RFC 6962",
+      "matrix_cases": 0,
+      "adversarial_cases": 1,
+      "non_pass": 1
+    },
+    {
+      "id": "S14",
+      "name": "strict base64",
+      "basis": "related",
+      "citation": "RFC 4648 §4",
+      "matrix_cases": 0,
+      "adversarial_cases": 1,
+      "non_pass": 1
+    },
+    {
+      "id": "S15",
+      "name": "anchor event resolution",
+      "basis": "none",
+      "citation": "",
+      "matrix_cases": 0,
+      "adversarial_cases": 1,
+      "non_pass": 1
+    },
+    {
+      "id": "S17",
+      "name": "linear receipt chain",
+      "basis": "direct",
+      "citation": "draft-marques-asqav-compliance-receipts-01",
+      "matrix_cases": 0,
+      "adversarial_cases": 1,
+      "non_pass": 1
+    },
+    {
+      "id": "S19",
+      "name": "freshness state",
+      "basis": "related",
+      "citation": "draft-bailey-scitt-agent-session-receipt",
+      "matrix_cases": 0,
+      "adversarial_cases": 1,
+      "non_pass": 1
     }
   ],
   "rows": [
@@ -148,6 +215,291 @@
       "mode": "open",
       "result": "INCONCLUSIVE",
       "checks": 10
+    }
+  ],
+  "adversarial": [
+    {
+      "case": "dup-json-member",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "control-char",
+      "checks": [
+        "S11"
+      ]
+    },
+    {
+      "case": "extra-root-file",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "index-path-escape",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "hash-flip",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "ts-rollback",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "seq-gap",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "unsigned",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "status-upgrade",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "head-pin-wrong",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S8",
+        "S9",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "closure-incomplete",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S10",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "base64-improper",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S14",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "merkle-bad-proof",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S13",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "chain-broken",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S17",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "anchor-unresolved",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S15",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "state-unreadable",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S8",
+        "S19",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "index-metadata-drift",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "evidence-id-drift",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "media-type-drift",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S7",
+        "S8",
+        "S5",
+        "S6"
+      ]
     }
   ]
 }

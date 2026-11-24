@@ -15,9 +15,17 @@ Two groups:
                that disappears makes the run red until someone moves the case
                and updates the ledger - so the list cannot rot.
 
-Pass criterion: every MUST-REJECT row is rejected, and every KNOWN-GAP row still
-behaves exactly as the ledger says. --strict additionally requires KNOWN-GAP rows
-to be rejected, so a fix can be proven.
+Each must-reject case also names the check it is supposed to trip, and the case
+fails if that check does not come back non-PASS. Without that, a doctored
+package rejected for an unrelated reason counts as "OK", and the corpus would
+be testing the verdict rather than the rule - which is how a case can pass
+while the check it exists for never runs. Cases that trip several checks state
+the one they exist for; the others are visible in the same output.
+
+Pass criterion: every MUST-REJECT row is rejected, every declared check is
+observed to be non-PASS, and every KNOWN-GAP row still behaves exactly as the
+ledger says. --strict additionally requires KNOWN-GAP rows to be rejected, so a
+fix can be proven.
 """
 
 import argparse
@@ -136,6 +144,67 @@ def mutate_index_media_type(d):
     _write(d, os.path.join("evidence", "index.json"), idx)
 
 
+def mutate_nothing(d):
+    """A case whose mutation is the argument, not the bytes.
+
+    S9 asks whether the package matches a head the caller pinned out of band,
+    so a package must be paired with a wrong pin to make the rule speak. The
+    package itself is left exactly as it is; a mutation here would make the
+    case ambiguous about which half it was testing.
+    """
+
+
+def mutate_closure_incomplete(d):
+    """Declare five of the six attestation-closure components, not six."""
+    from uibc_core.verify import CLOSURE_FIELDS
+    fields = sorted(CLOSURE_FIELDS)
+    man = _read(d, "manifest.json")
+    man["closure"] = {k: "a" * 64 for k in fields[:-1]}
+    _write(d, "manifest.json", man)
+
+
+def mutate_bad_base64(d):
+    """Mark a field as base64 and hand it something no decoder should accept."""
+    man = _read(d, "manifest.json")
+    man["note_b64"] = "not base64: !!!"
+    _write(d, "manifest.json", man)
+
+
+def mutate_merkle_bad(d):
+    """Ship a Merkle proof whose root does not recompute."""
+    doc = {"algorithm": "rfc6962-sha256", "size": 1, "root": "00" * 32,
+           "proofs": [{"index": 0, "path": "files/report.txt", "proof": ["00" * 32]}]}
+    _write(d, os.path.join("evidence", "merkle.json"), doc)
+
+
+def mutate_state_corrupt(d):
+    """A high-water mark that exists but cannot be read.
+
+    A missing state file is a first observation (S19 INCONCLUSIVE, and the
+    observation is recorded). A state file that exists and does not parse is
+    something else: the verifier cannot know whether a rollback already
+    happened, so it must not answer as if this were the first run.
+    """
+    with open(os.path.join(d, "..", "state.json"), "w", encoding="utf-8") as fh:
+        fh.write("{ this is not json ")
+
+
+def mutate_chain_broken(d):
+    """A receipt chain whose successor does not name its predecessor."""
+    doc = {"algorithm": "uibc-chain/1",
+           "receipts": [{"receipt_id": "r1", "previousReceiptHash": "00" * 32},
+                        {"receipt_id": "r2", "previousReceiptHash": "11" * 32}]}
+    _write(d, os.path.join("evidence", "chain.json"), doc)
+
+
+def mutate_anchor_unresolved(d):
+    """An anchor set that names an event nobody can resolve against this tree."""
+    doc = {"algorithm": "uibc-anchors/1",
+           "anchors": [{"id": "a1", "type": "bitcoin", "root": "00" * 32,
+                        "block_height": 1}]}
+    _write(d, os.path.join("evidence", "anchors.json"), doc)
+
+
 CASES = [
     ("dup-json-member", mutate_dup_member, "S11 duplicate member name"),
     ("control-char", mutate_control_char, "S11 raw control character"),
@@ -146,28 +215,78 @@ CASES = [
     ("seq-gap", mutate_seq_gap, "S3 sequence not contiguous"),
     ("unsigned", mutate_unsigned, "S6 no seal -> INCONCLUSIVE, never PASS"),
     ("status-upgrade", mutate_status_upgrade, "self-declared PASS cannot upgrade"),
+    # checks the frozen matrix never reached (COVERAGE.md, 2026-11-25). Each of
+    # these runs a rule the eight rows do not exercise at all, so "19 checks"
+    # stops being a count of code paths and starts being a count of rules that
+    # were seen to decide something.
+    ("head-pin-wrong", mutate_nothing, "S9 wrong out-of-band pin -> rollback visible"),
+    ("closure-incomplete", mutate_closure_incomplete, "S10 closure missing a component"),
+    ("base64-improper", mutate_bad_base64, "S14 declared base64 that is not canonical"),
+    ("merkle-bad-proof", mutate_merkle_bad, "S13 inclusion proof does not recompute"),
+    ("chain-broken", mutate_chain_broken, "S17 successor does not name its predecessor"),
+    ("anchor-unresolved", mutate_anchor_unresolved, "S15 anchor root resolves to nothing"),
+    ("state-unreadable", mutate_state_corrupt, "S19 unreadable high-water mark is a FAIL"),
     # documented gaps: these three are NOT caught today
     ("index-metadata-drift", mutate_index_created_at, "created_at rewritten"),
     ("evidence-id-drift", mutate_index_evidence_id, "evidence_id rewritten"),
     ("media-type-drift", mutate_index_media_type, "media_type rewritten"),
 ]
 
+# the check each must-reject case exists for; the case fails if that id never
+# comes back non-PASS. Cases not listed here are judged on the verdict alone,
+# which is the weaker criterion and is kept only where the case predates this.
+EXPECT_CHECK = {
+    "dup-json-member": "S11",
+    "control-char": "S11",
+    "extra-root-file": "S1",
+    "hash-flip": "S4",
+    "ts-rollback": "S3",
+    "seq-gap": "S3",
+    "unsigned": "S6",
+    "head-pin-wrong": "S9",
+    "closure-incomplete": "S10",
+    "base64-improper": "S14",
+    "merkle-bad-proof": "S13",
+    "chain-broken": "S17",
+    "anchor-unresolved": "S15",
+    "state-unreadable": "S19",
+}
 
-def verify(path):
+
+def extra_args(case, package_dir):
+    """Arguments a case needs beyond the package path."""
+    if case == "head-pin-wrong":
+        # a pin that cannot be this package's checkpoint: 64 zeros behind the
+        # sha256: prefix the manifest uses
+        return ["--expect-head", "sha256:" + "0" * 64]
+    if case == "state-unreadable":
+        # the file this case's mutation corrupts, next to the package
+        return ["--state-file", os.path.join(package_dir, "..", "state.json")]
+    return []
+
+
+def check_results(doc):
+    out = {}
+    for c in doc.get("checks", []) or []:
+        out[c.get("id")] = c.get("result")
+    return out
+
+
+def verify(path, extra=()):
     env = dict(os.environ)
     env["PYTHONIOENCODING"] = "utf-8"
-    p = subprocess.run([sys.executable, "-m", "uibc_core.cli", "verify", path],
+    p = subprocess.run([sys.executable, "-m", "uibc_core.cli", "verify", path, *extra],
                        capture_output=True, text=True, encoding="utf-8",
                        errors="replace", env=env)
-    result = None
+    doc = {}
     try:
-        result = json.loads(p.stdout).get("result")
+        doc = json.loads(p.stdout)
     except Exception:
         for line in p.stdout.splitlines():
             if '"result"' in line:
-                result = line.split('"')[3]
+                doc = {"result": line.split('"')[3], "checks": []}
                 break
-    return p.returncode, result
+    return p.returncode, doc.get("result"), doc
 
 
 def tree_digest(d):
@@ -194,7 +313,9 @@ def main():
             d = os.path.join(tmp, name)
             shutil.copytree(CLEAN, d)
             fn(d)
-            rc, result = verify(d)
+            args = extra_args(name, d)
+            rc, result, doc = verify(d, args)
+            seen = check_results(doc)
             dig = tree_digest(d)
             if name in KNOWN_GAPS:
                 gaps_seen += 1
@@ -207,11 +328,24 @@ def main():
                 if not documented:
                     problems.append((name, rc, result, "gap no longer reproduces: move it to MUST-REJECT"))
             else:
-                ok = result != "PASS" and rc == 1
-                print("[%s] %-22s rc=%s result=%-13s %s" %
-                      ("OK" if ok else "MISMATCH", name, rc, result, why))
-                if not ok:
+                want = EXPECT_CHECK.get(name)
+                rejected = result != "PASS" and rc == 1
+                triggered = want is None or seen.get(want) not in (None, "PASS")
+                ok = rejected and triggered
+                detail = ""
+                if want and not triggered:
+                    detail = "  !! %s never came back non-PASS (saw %s)" % (
+                        want, seen.get(want, "absent"))
+                elif want:
+                    detail = "  %s=%s" % (want, seen.get(want))
+                print("[%s] %-22s rc=%s result=%-13s %s%s" %
+                      ("OK" if ok else "MISMATCH", name, rc, result, why, detail))
+                if not rejected:
                     problems.append((name, rc, result, "expected rejection"))
+                elif not triggered:
+                    problems.append((name, rc, result,
+                                     "rejected, but not by %s - the case exists for that check"
+                                     % want))
             print("      case-digest=%s" % dig)
 
     total = len(CASES)
