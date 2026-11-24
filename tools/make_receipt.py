@@ -40,10 +40,17 @@ def sha256_file(path):
 
 
 def digest_case(case):
-    """SHA-256 of every file under the case, in sorted relative-path order."""
+    """SHA-256 of every file under the case, in sorted relative-path order.
+
+    `dirs.sort()` is required, not cosmetic: `os.walk` visits subdirectories in
+    raw readdir order, which differs between NTFS and ext4. Without it the same
+    bytes produce a different digest per platform, and a receipt made on one
+    machine is rejected on the other.
+    """
     entries = []
     base = os.path.join(VECTORS, case)
-    for root, _dirs, files in os.walk(base):
+    for root, dirs, files in os.walk(base):
+        dirs.sort()
         for name in sorted(files):
             full = os.path.join(root, name)
             rel = os.path.relpath(full, base).replace(os.sep, "/")
