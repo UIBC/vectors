@@ -33,6 +33,7 @@ Committed bytes, however, must be stable, because receipts hash them. The fixtur
 
 - No third-party implementation has been run against these vectors. The only verifier exercised here is the reference one.
 - No reordering or rollback vector yet; rollback needs an external monotonic anchor (`--expect-head`) and cannot be shown inside one package.
+- **D-002 fix status, 2026-11-24**: a draft upstream PR (`zhaoxinghua09-cell/uibc-core#431`) adds `evidence_index_full_digest` plus check S20 over exactly these three fields, without widening the sealed narrow digest (widening it would fail every existing seal). Measured there: 7 tests, and 24/24 attacks over the three fields now caught. It is a draft because the new check has no registered normative basis yet, and the release number was deliberately left to whoever cuts it. Until it ships, the row below stands.
 - **D-002, verified 2026-11-24**: the S7 index-metadata digest covers `path`, `content_hash`, `type` and `note`, but **not** `evidence_id`, `media_type` or `created_at`. Rewriting any of those three in `evidence/index.json` leaves the verdict at **PASS**. Consequence: evidence can be backdated and its identifier swapped without detection. Reproduce with `python tools/run_adversarial.py` (rows `index-metadata-drift`, `evidence-id-drift`, `media-type-drift`); `--strict` fails until it is fixed. Filed against `uibc-core` 0.5.0.
 - **Upstream defect (Windows)**: `uibc-core` 0.5.0 prints Chinese `basis.note` strings and crashes with
   `UnicodeEncodeError: 'charmap' codec` on a cp1252 console. Run 1 of this repo's CI went
@@ -77,3 +78,4 @@ Twelve doctored packages, built at run time from `vectors/clean`, never committe
 | media-type-drift | **PASS today** | D-002 |
 
 Nine must be rejected. Three reproduce D-002 and are reported as defects, not counted as passes.
+
