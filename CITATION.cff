@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "These are test fixtures. Cite them when you reproduce a verdict; do not cite them as a conformance suite for third-party implementations, which does not exist yet."
+title: "UIBC conformance vectors: four packages and a six-row expectation gate"
+abstract: >-
+  Executable evidence packages for UIBC (Unified Integrity Boundary Check):
+  clean, tampered, deleted and keyswap, each with a committed expectation table.
+  The gate demonstrates the boundary of unpinned verification - a full forgery,
+  re-sealed by another key, verifies against itself and is rejected only when
+  the owner's public key is pinned. Verdicts are three-valued (PASS, FAIL and
+  the explicit UNKNOWN), and the repository carries a receipt ledger for
+  third-party runs.
+type: software
+authors:
+  - family-names: Zhao
+    given-names: Xinghua
+    alias: zhaoxinghua09-cell
+    affiliation: "individual capacity; no organisation represented"
+version: "unversioned - main as of 2026-11-24"
+date-released: 2026-11-24
+license: Apache-2.0
+repository-code: https://github.com/UIBC/vectors
+url: https://github.com/UIBC/vectors
+keywords:
+  - integrity
+  - evidence
+  - agent
+  - verification
+  - ed25519
+  - conformance
+  - provenance
+references:
+  - type: software
+    title: "uibc-core: the reference verifier these fixtures are built against"
+    version: "0.5.0"
+    repository-code: https://github.com/zhaoxinghua09-cell/uibc-core
+    url: https://pypi.org/project/uibc-core/0.5.0/
+  - type: standard
+    title: "UIBC specification, draft 00 (non-normative)"
+    repository-code: https://github.com/UIBC/spec
+    notes: "Not submitted to any standards body."

@@ -1,0 +1,9 @@
+# CODEOWNERS does not inherit from UIBC/.github - that file only covers the
+# repositories GitHub treats as inheritable community health files, and this is
+# not one of them. So each repository carries its own copy.
+#
+# Until the ruleset on the default branch is told to require a code-owner
+# review, this file documents who owns review rather than enforcing it. The
+# repository has one maintainer; a rule that requires an approval nobody else
+# can give would stop work rather than slow it down.
+* @zhaoxinghua09-cell
