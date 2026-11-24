@@ -1,9 +1,9 @@
 [OK] clean                        rc=0 result=PASS (expected rc=0 result=PASS)
-[OK] clean --pubkey D:\tmp\uibc-org-h\vectors\keys\owner.key.pub rc=0 result=PASS (expected rc=0 result=PASS)
+[OK] clean --pubkey keys/owner.key.pub rc=0 result=PASS (expected rc=0 result=PASS)
 [OK] tampered                     rc=1 result=FAIL (expected rc=1 result=FAIL)
 [OK] deleted                      rc=1 result=FAIL (expected rc=1 result=FAIL)
 [OK] keyswap                      rc=0 result=PASS (expected rc=0 result=PASS)
-[OK] keyswap --pubkey D:\tmp\uibc-org-h\vectors\keys\owner.key.pub rc=1 result=FAIL (expected rc=1 result=FAIL)
+[OK] keyswap --pubkey keys/owner.key.pub rc=1 result=FAIL (expected rc=1 result=FAIL)
 [OK] unsigned                     rc=1 result=INCONCLUSIVE (expected rc=1 result=INCONCLUSIVE)
 [OK] unknown-upgrade              rc=1 result=INCONCLUSIVE (expected rc=1 result=INCONCLUSIVE)
 

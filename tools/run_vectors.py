@@ -62,9 +62,22 @@ def verify(case, extra):
 
 def main():
     failures = []
+
+    def label_part(extra):
+        # The log is an artefact a reviewer reads and a stranger replays. An
+        # absolute path from the machine that produced it makes it unrepeatable
+        # and leaks the author's directory layout, so paths are printed
+        # repo-relative: `--pubkey keys/owner.key.pub` means the same thing
+        # anywhere the repo is cloned.
+        out = []
+        for tok in extra:
+            rel = os.path.relpath(tok, ROOT) if os.path.isabs(tok) else tok
+            out.append(rel.replace("\\", "/"))
+        return " ".join(out)
+
     for case, extra, want_rc, want_result in ROWS:
         rc, result, out, err = verify(case, extra)
-        label = f"{case}{' ' + ' '.join(extra) if extra else ''}"
+        label = f"{case}{' ' + label_part(extra) if extra else ''}"
         ok = (rc == want_rc and result == want_result)
         print(f"[{'OK' if ok else 'MISMATCH'}] {label:<28} rc={rc} result={result} "
               f"(expected rc={want_rc} result={want_result})")
