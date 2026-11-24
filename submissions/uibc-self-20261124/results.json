@@ -1,6 +1,6 @@
 {
   "contract_version": "uibc-submission-results/1",
-  "corpus_digest": "970769c67b1053b2f3c1e1c01fb79aae3103bef07dd196d52e5099c32233ae0c",
+  "corpus_digest": "81e31f78f106eaf6011efa00b1312b5a35ac9b732a73728cb8024c7ef306e3d9",
   "verifier": {
     "id": "uibc-core-verifier",
     "version": "0.5.0",
@@ -172,6 +172,7 @@
         "S13",
         "S14",
         "S15",
+        "S16",
         "S17",
         "S18"
       ]
@@ -197,6 +198,7 @@
         "S13",
         "S14",
         "S15",
+        "S16",
         "S17",
         "S18",
         "S19"

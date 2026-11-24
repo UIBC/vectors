@@ -20,11 +20,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.py }}
-      - run: python -m pip install --disable-pip-version-check "uibc-core==0.5.0"
-      - name: matrix gate (eight rows)
+      # asn1crypto and cryptography are the extras uibc-core needs to judge an
+      # RFC 3161 token. Without them S16 answers INCONCLUSIVE, and a corpus that
+      # claims an external witness would be shipping one nobody can judge.
+      - run: python -m pip install --disable-pip-version-check "uibc-core==0.5.0" asn1crypto cryptography
+      - name: matrix gate (ten rows)
         run: python tools/run_vectors.py
-      - name: adversarial supplement (9 must-reject + 3 documented gaps)
+      - name: adversarial supplement (17 must-reject + 3 documented gaps)
         run: python tools/run_adversarial.py
+      - name: external timestamp (offline, against the shipped CA bundle)
+        run: python tools/check_tsa.py
 
   hygiene:
     # Two questions that the matrix gate cannot answer, because both can be

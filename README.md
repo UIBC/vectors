@@ -3,7 +3,7 @@
 Seven executable packages and ten rows that show what a UIBC verdict is allowed to mean, and where it stops. Every row is produced by `tools/make_vectors.py` / `tools/make_adverse.py` and checked by `tools/run_vectors.py` against a hand-written expectation table.
 
 ```bash
-pip install uibc-core==0.5.0
+pip install uibc-core==0.5.0 asn1crypto cryptography
 python tools/run_vectors.py        # exits 0 only when all ten rows hold
 python tools/run_adversarial.py    # 9 must-reject cases + 3 documented gaps
 python tools/check_frozen.py       # fixture bytes vs FIXTURES.sha256
@@ -23,14 +23,16 @@ No network, no credentials, no owner key: the seals are Ed25519, and the public 
 | `keyswap` | pinned to owner key | FAIL | pinning is the only thing that catches it |
 | `unsigned` | open | INCONCLUSIVE | no seal: consistent, unattested — never PASS |
 | `unknown-upgrade` | open | INCONCLUSIVE | a manifest that *declares* PASS cannot upgrade a verdict |
-| `full` | `--expect-head <head>` | PASS | closure, Merkle tree, receipt chain, anchor set, policy map and an out-of-band head pin all hold (S9, S10, S13, S14, S15, S17, S18) |
+| `full` | `--expect-head <head>` | PASS | closure, Merkle tree, receipt chain, anchor set, policy map, a **real Sectigo RFC 3161 timestamp** and an out-of-band head pin all hold (S9, S10, S13, S14, S15, S16, S17, S18) |
 | `full` | `--expect-head` + `--state-file` | INCONCLUSIVE | a first freshness observation has nothing to compare against — never PASS (S19) |
 
 The fifth row is not a defect report, it is the boundary: **unpinned verification proves internal consistency, not authorship**. Anyone quoting a UIBC PASS without saying whether the key was pinned is quoting half a result.
 
 The last two rows are that boundary seen from the other side. A verifier that answers PASS for an unsigned package cannot tell "signed" from "declared", and a package that declares its own PASS has produced no evidence at all.
 
-The two `full` rows exist because most checks are opt-in: they speak only when a package carries the artefact or the caller passes the flag. A matrix made of the first eight rows teaches a submission to claim ten of nineteen checks — not because it is hiding anything, but because the corpus never gave the verifier the inputs. `tools/make_full.py` builds the package; the pin is the checkpoint the package itself declares, so a drifted head breaks that row rather than passing quietly. Two limits are stated in that builder: S10 checks only that all six closure components were *declared with a digest*, and S15 resolves an anchor against the tree the package can recompute — neither is a claim about model contents or a third-party log. S16 stays unreached: it needs an RFC 3161 token from a TSA whose key we do not hold.
+The two `full` rows exist because most checks are opt-in: they speak only when a package carries the artefact or the caller passes the flag. A matrix made of the first eight rows teaches a submission to claim ten of nineteen checks — not because it is hiding anything, but because the corpus never gave the verifier the inputs. `tools/make_full.py` builds the package; the pin is the checkpoint the package itself declares, so a drifted head breaks that row rather than passing quietly. Two limits are stated in that builder: S10 checks only that all six closure components were *declared with a digest*, and S15 resolves an anchor against the tree the package can recompute — neither is a claim about model contents or a third-party log.
+
+**S16 is the one witness in this corpus we cannot mint.** `evidence/external_anchor.json` carries an RFC 3161 token issued by Sectigo's public TSA over the sealed `manifest.json` (gen_time is inside the token, not in the repo's prose), plus the CA bundle needed to check it. `tools/check_tsa.py` re-verifies it **offline** on every push: messageImprint, chain to the shipped bundle, signature. It dates existence, not correctness — a timestamp says these bytes existed at gen_time and says nothing about whether the checks below them pass. Network is needed once, in `tools/make_external_anchor.py`; everything after that runs without it.
 
 ## Adversarial supplement (separate from the frozen matrix)
 
@@ -54,7 +56,7 @@ The last three are a genuine finding, not a passing test. **D-002**: the S7 inde
 ## Send back a receipt
 
 ```bash
-pip install uibc-core==0.5.0
+pip install uibc-core==0.5.0 asn1crypto cryptography
 python tools/make_receipt.py --runner "<your handle>" --blind yes|no --code independent|author
 python tools/check_receipt.py receipts/<file>.json     # must print ACCEPTABLE
 ```
@@ -66,7 +68,7 @@ Then open an *Independent run receipt* issue with the file. A receipt is a recor
 The committed fixture files carry CRLF (they were written on Windows), and a receipt hashes their bytes. Any renormalisation — `git add --renormalize`, or an editor that rewrites line endings and commits — moves every digest and turns a valid receipt into a rejected one. `.gitattributes` declares `vectors/`, `receipts/` and `keys/` non-text so that cannot happen by accident. If `check_receipt.py` rejects a receipt the build did not touch, suspect the working bytes before the receipt: compare `git hash-object` of the file with `git rev-parse HEAD:<path>`.
 
 ```bash
-pip install uibc-core==0.5.0
+pip install uibc-core==0.5.0 asn1crypto cryptography
 python tools/stranger.py           # every gate, timed, with a machine-readable record
 ```
 

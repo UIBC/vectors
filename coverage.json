@@ -1,16 +1,14 @@
 {
   "contract": "uibc-coverage-map/1",
-  "corpus_digest": "970769c67b1053b2f3c1e1c01fb79aae3103bef07dd196d52e5099c32233ae0c",
+  "corpus_digest": "81e31f78f106eaf6011efa00b1312b5a35ac9b732a73728cb8024c7ef306e3d9",
   "counts": {
     "specified": 19,
-    "matrix_reached": 18,
-    "any_case_reached": 18,
+    "matrix_reached": 19,
+    "any_case_reached": 19,
     "deciding": 16,
-    "unreached": 1
+    "unreached": 0
   },
-  "unreached": [
-    "S16"
-  ],
+  "unreached": [],
   "checks": [
     {
       "id": "S1",
@@ -148,6 +146,15 @@
       "non_pass": 1
     },
     {
+      "id": "S16",
+      "name": "external timestamp (RFC 3161)",
+      "basis": "direct",
+      "citation": "RFC 3161",
+      "matrix_cases": 2,
+      "adversarial_cases": 0,
+      "non_pass": 0
+    },
+    {
       "id": "S17",
       "name": "linear receipt chain",
       "basis": "direct",
@@ -228,13 +235,13 @@
       "case": "full",
       "mode": "flags",
       "result": "PASS",
-      "checks": 17
+      "checks": 18
     },
     {
       "case": "full",
       "mode": "flags",
       "result": "PASS",
-      "checks": 18
+      "checks": 19
     }
   ],
   "adversarial": [

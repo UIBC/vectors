@@ -510,14 +510,30 @@ def selftest():
         write_witness(d, fresh_seed(), "C. Somebody", real_digest)
         cases.append(("statement names another person", d, "S11"))
 
-        # 14: a check claimed that no row ever observed (the 19-vs-10 problem)
+        # 14: a check claimed that no row ever observed (the 19-vs-10 problem).
+        #     This case used to move an id out of `not_covered`, which stopped
+        #     proving anything the day the corpus reached all nineteen: the list
+        #     became empty and the doctored submission was byte-identical to the
+        #     honest one, so the case passed by doing nothing. It now claims a
+        #     check that the corpus does observe and then removes that check from
+        #     every row's emitted list - which is the real shape of the problem:
+        #     a claim with no run behind it.
         d = prep(tmp, "claim-unobserved")
+        CLAIMED = "S16"
+
         def claim_more(o):
-            un = o["scope"]["not_covered"]
-            if un:
-                o["checks"].append(un[0])
-                o["scope"]["not_covered"] = un[1:]
+            if CLAIMED not in o["checks"]:
+                o["checks"].append(CLAIMED)
+            o["scope"]["not_covered"] = [c for c in o["scope"]["not_covered"]
+                                         if c != CLAIMED]
+
+        def drop_observation(o):
+            for row in o["rows"]:
+                if isinstance(row.get("checks_emitted"), list):
+                    row["checks_emitted"] = [c for c in row["checks_emitted"]
+                                             if c != CLAIMED]
         edit(d, "product.json", claim_more)
+        edit(d, "results.json", drop_observation)
         cases.append(("claimed a check nobody observed", d, "S13"))
 
         # 15: a row that forgot to say which checks it emitted

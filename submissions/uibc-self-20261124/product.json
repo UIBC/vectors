@@ -20,19 +20,18 @@
     "S13",
     "S14",
     "S15",
+    "S16",
     "S17",
     "S18",
     "S19"
   ],
   "scope": {
-    "not_covered": [
-      "S16"
-    ]
+    "not_covered": []
   },
   "contact": "https://github.com/UIBC",
   "independence": "same-maintainer",
   "competence_basis": "none - no personnel qualification, laboratory accreditation or third-party witness accompanies this record",
   "witness": null,
   "submitted_at": "2026-11-24",
-  "note": "A submission by the corpus author, kept as the first row so the format is exercised by something real rather than by an empty directory. It certifies nothing and it is not a second opinion. competence_basis and witness are stated as absent rather than omitted, because a reviewer asks those two questions before asking whether anything passed. It claims the checks its own matrix observes (COVERAGE.md); the one check the corpus never reaches (S16, which needs a TSA key we do not hold) is declared not covered rather than claimed."
+  "note": "A submission by the corpus author, kept as the first row so the format is exercised by something real rather than by an empty directory. It certifies nothing and it is not a second opinion. competence_basis and witness are stated as absent rather than omitted, because a reviewer asks those two questions before asking whether anything passed. It claims every check the corpus reaches, including S16: the external RFC 3161 token in vectors/full is issued by Sectigo, not by us, and it verifies offline against the CA bundle shipped beside it."
 }

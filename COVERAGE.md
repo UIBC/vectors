@@ -6,10 +6,10 @@ cannot drift from the thing it describes.
 
 Two scopes, because they answer different questions:
 
-- **frozen matrix** (the eight rows a submission runs): **18/19** checks reached
-- **everything the corpus ships** (matrix + 20 doctored cases): **18/19** reached
+- **frozen matrix** (the eight rows a submission runs): **19/19** checks reached
+- **everything the corpus ships** (matrix + 20 doctored cases): **19/19** reached
 - **checks that have ever answered something other than PASS**: **16/19**
-- **checks no shipped case reaches**: **1** — S16
+- **checks no shipped case reaches**: **0**
 
 A check that has only ever said PASS has never been observed to decide
 anything. That is not proof it is broken; it is proof the corpus does not
@@ -38,7 +38,7 @@ cases are generated at run time instead of committed.
 | S13 | merkle inclusion proofs | related (RFC 6962) | 2 | 1 | 1 |
 | S14 | strict base64 | related (RFC 4648 §4) | 2 | 1 | 1 |
 | S15 | anchor event resolution | none | 2 | 1 | 1 |
-| S16 | — | — | 0 | 0 | **no case reaches it** |
+| S16 | external timestamp (RFC 3161) | direct (RFC 3161) | 2 | 0 | 0 **never** |
 | S17 | linear receipt chain | direct (draft-marques-asqav-compliance-receipts-01) | 2 | 1 | 1 |
 | S18 | policy artefact resolution | direct (draft-marques-asqav-compliance-receipts-01 §4.2.4) | 2 | 1 | 1 |
 | S19 | freshness state | related (draft-bailey-scitt-agent-session-receipt) | 1 | 1 | 1 |
@@ -55,8 +55,8 @@ cases are generated at run time instead of committed.
 | keyswap | pinned | FAIL | 10 |
 | unsigned | open | INCONCLUSIVE | 10 |
 | unknown-upgrade | open | INCONCLUSIVE | 10 |
-| full | flags | PASS | 17 |
 | full | flags | PASS | 18 |
+| full | flags | PASS | 19 |
 
 ## The doctored cases, and what each one reaches
 

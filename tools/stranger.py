@@ -37,9 +37,13 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # (label, argv, must-contain-in-last-line)  - argv relative to this interpreter
 GATES = [
-    ("eight rows", ["tools/run_vectors.py"], "MATRIX GATE OK"),
+    ("ten rows", ["tools/run_vectors.py"], "MATRIX GATE OK"),
     ("adversarial", ["tools/run_adversarial.py"], "ADVERSARIAL OK"),
     ("frozen fixtures", ["tools/check_frozen.py"], "FROZEN OK"),
+    # The one artefact in the corpus that a third party issued and that can rot
+    # without changing any verdict: an expiring TSA certificate, a stale bundle,
+    # a re-seal that moves the digest. Offline, so it runs here too.
+    ("external timestamp", ["tools/check_tsa.py"], "TSA CHECK OK"),
     ("submission gate", ["tools/check_submission.py"], "SUBMISSIONS OK"),
     ("gate self-test", ["tools/check_submission.py", "--selftest"], "SELFTEST OK"),
     ("report self-test", ["tools/check_report.py", "--selftest"], "REPORT SELFTEST OK"),
