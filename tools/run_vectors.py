@@ -1,10 +1,14 @@
-"""The gate: five assertions that must hold, or this run is not evidence.
+"""The gate: assertions that must hold, or this run is not evidence.
 
     python tools/run_vectors.py
 
 Each assertion is a (case, mode, expected) row. A row that does not match is
 printed and the process exits 1 - a vector set that "mostly" holds is worth
 nothing, because the one cell that drifted is the one that matters.
+
+Rows 7-8 are the boundary in the other direction: an unsigned package, and one
+whose manifest declares PASS, must both come back INCONCLUSIVE. A verifier that
+answers PASS for either is telling you it cannot tell "signed" from "declared".
 """
 
 import json
@@ -26,6 +30,11 @@ ROWS = [
     # and is only caught when the verifier pins the owner's public key.
     ("keyswap",  [],                                       0, "PASS"),
     ("keyswap",  ["--pubkey", OWNER_PUB],                  1, "FAIL"),
+    # a package with no seal: consistent, unattested -> INCONCLUSIVE, never PASS
+    ("unsigned", [],                                       1, "INCONCLUSIVE"),
+    # a manifest that *declares* PASS without a seal: a declaration is not
+    # evidence, and INCONCLUSIVE must not be upgradable by self-description
+    ("unknown-upgrade", [],                                1, "INCONCLUSIVE"),
 ]
 
 

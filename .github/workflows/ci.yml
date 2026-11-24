@@ -21,8 +21,10 @@ jobs:
         with:
           python-version: ${{ matrix.py }}
       - run: python -m pip install --disable-pip-version-check "uibc-core==0.5.0"
-      - name: matrix gate (six rows)
+      - name: matrix gate (eight rows)
         run: python tools/run_vectors.py
+      - name: adversarial supplement (9 must-reject + 3 documented gaps)
+        run: python tools/run_adversarial.py
 
   hygiene:
     # Two questions that the matrix gate cannot answer, because both can be
@@ -36,6 +38,10 @@ jobs:
           python-version: "3.12"
       - name: key hygiene (no seed outside keys/, fixtures pinned by digest)
         run: python tools/check_key_hygiene.py
+      - name: frozen fixtures (committed bytes vs FIXTURES.sha256)
+        run: python tools/check_frozen.py
+      - name: report checker negative control (doctored reports must be rejected)
+        run: python tools/check_report.py --selftest
       - name: receipt ledger (every committed receipt must still describe the committed bytes)
         run: |
           set -e
