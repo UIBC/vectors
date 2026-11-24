@@ -54,14 +54,26 @@
           "query": "agent receipt index digest metadata not covered by content hash",
           "on": "2026-11-25",
           "result": "No hit in the drafts we have cached; the closest statements are about closure components (S10) and chain links (S17), both of which are about different objects."
+        },
+        {
+          "query": "IETF draft agent receipt manifest digest over metadata evidence index integrity 2026",
+          "on": "2026-11-25",
+          "result": "No IETF text. One practitioner repository (getaskclaw/multi-agent-dialogue-protocol, issue #5) already builds an evidence-index canary whose tamper flips both a report and a validator independently. The idea is not novel; the normative sentence is what is missing."
         }
       ],
+      "prior_art": {
+        "doc": "getaskclaw/multi-agent-dialogue-protocol issue #5",
+        "url": "https://github.com/getaskclaw/multi-agent-dialogue-protocol/issues/5",
+        "what": "an evidence index derived on demand, with a tamper canary that fails the report and the validator independently",
+        "why_it_does_not_settle_it": "a repository is not a requirement; nothing there obliges anyone else to cover the index"
+      },
+      "english": "basis/proposals/p-001-index-metadata.en.md",
       "nearest": {
         "doc": "C2PA hard binding (via streaming-video-technology-alliance CML results page)",
         "url": "https://streaming-video-technology-alliance.github.io/common-media-library/documents/_svta_cml-c2pa.Results_and_Error_Codes.html",
         "why_not": "A hard binding binds an asset's bytes to a manifest. Our gap is a manifest's own metadata, which no content hash covers, so editing it leaves every check green. Different direction, different object."
       },
-      "note": "This is the D-002 defect turned into a proposal: the sentence that survived an edit is the sentence nobody hashed."
+      "note": "This is the D-002 defect turned into a proposal: the sentence that survived an edit is the sentence nobody hashed. Prior art found the same day it was written, so the draft says so rather than presenting the idea as ours."
     },
     {
       "check": "S12",
@@ -91,21 +103,28 @@
     {
       "check": "S15",
       "name": "anchor event resolution",
-      "status": "proposal-drafted",
-      "proposal": "basis/proposals/p-002-anchor-event-resolution.md",
+      "status": "external-basis-found",
+      "proposed_class": "related",
       "searches": [
         {
-          "query": "OpenTimestamps anchor event resolution verifier requirement",
+          "query": "OpenTimestamps verification resolve block merkle root mismatch semantics draft",
           "on": "2026-11-25",
-          "result": "No external text we found tells a verifier how to resolve an anchor event or recompute a root after resolution; the closest material describes calendars and proofs, not the verification step."
+          "result": "draft-crovia-tacet-01 states: \"A verifier that cannot reach a header source MUST report the anchor as unchecked, never as failed, and MUST expose the height and the expected Merkle root so that a human can check them elsewhere.\" draft-fassbender-scitt-time-anchor-07 says a branch whose replay cannot complete returns NULL, and \"Section 3.1 step 8 classifies the branch as unevaluated rather than as failing.\""
+        },
+        {
+          "query": "anchor event resolution verifier requirement recompute root",
+          "on": "2026-11-25",
+          "result": "fassbender-07 also constrains the replay itself: append, prepend and SHA-256 only. The three-state reporting this repo was about to propose is already normative in two drafts."
         }
       ],
       "nearest": {
-        "doc": "draft-fassbender-scitt-time-anchor-05",
-        "url": "https://www.ietf.org/archive/id/draft-fassbender-scitt-time-anchor-05.txt",
-        "why_not": "It motivates time anchors; it does not specify resolution semantics for a verifier."
+        "doc": "draft-crovia-tacet-01",
+        "url": "https://www.ietf.org/archive/id/draft-crovia-tacet-01.txt",
+        "why_not": "It scopes OTS-style header anchors. Our rule also resolves a non-header anchor (a SCITT time-stamp token), and the order in which anchor types are tried is ours - which is why this is `related` rather than `direct`."
       },
-      "note": "A resolution rule every implementation must invent separately is a good candidate for a shared one."
+      "note": "p-002 was drafted today and withdrawn the same day: the survey it asked for had already been answered, twice, with MUST. Filing it would have been exactly the overclaim this table exists to prevent, so the withdrawal is recorded in the file rather than deleted.",
+      "withdrawn_proposal": "basis/proposals/p-002-anchor-event-resolution.md",
+      "upstream": "uibc_core/basis.py, S15 entry"
     }
   ]
 }
