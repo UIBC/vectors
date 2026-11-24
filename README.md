@@ -61,6 +61,13 @@ Then open an *Independent run receipt* issue with the file. A receipt is a recor
 
 The committed fixture files carry CRLF (they were written on Windows), and a receipt hashes their bytes. Any renormalisation — `git add --renormalize`, or an editor that rewrites line endings and commits — moves every digest and turns a valid receipt into a rejected one. `.gitattributes` declares `vectors/`, `receipts/` and `keys/` non-text so that cannot happen by accident. If `check_receipt.py` rejects a receipt the build did not touch, suspect the working bytes before the receipt: compare `git hash-object` of the file with `git rev-parse HEAD:<path>`.
 
+```bash
+pip install uibc-core==0.5.0
+python tools/stranger.py           # every gate, timed, with a machine-readable record
+```
+
+`tools/stranger.py` is the short version of this whole README: it runs each gate, compares the output against a declared line, writes `stranger-run.json`, and exits non-zero if any gate is missing or mismatched. Ten seconds from a fresh clone. Passing it means the repository is self-consistent — not that it is conformant, and not that anyone has reviewed it.
+
 ## Everything a stranger can run, and what each one proves
 
 Measured on 2026-11-24 from a fresh clone, a fresh venv, nothing else installed. `pip install` took 2.1 s; the first three gates together took 4.5 s.
