@@ -1,0 +1,92 @@
+{
+  "contract_version": "uibc-implementations/2",
+  "purpose": "Every verifier this corpus has been compared against, with the two fields that decide whether a number may be quoted: independence, and where the evidence for that row lives. An entry is a fact about a recorded run, not a claim about a product.",
+  "independence_rule": "independent = different maintainer, written from the specification text without reading this repository's reference code. same-maintainer = one of us. tools/check_implementations.py refuses any other word, and refuses 'independent' from this organisation's own repository address.",
+  "maintainer": {
+    "org": "UIBC",
+    "github": "zhaoxinghua09-cell",
+    "note": "A single-operator corpus. The honest label is cheaper than an overclaim someone else disproves later."
+  },
+  "implementations": [
+    {
+      "id": "uibc-core-verifier",
+      "language": "Python",
+      "entrypoint": "python -m uibc_core.cli verify <package-dir>",
+      "repository": "https://github.com/zhaoxinghua09-cell/uibc-core",
+      "role": "reference",
+      "independence": "same-maintainer",
+      "checks": ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12", "S13", "S14", "S15", "S16", "S17", "S18", "S19"],
+      "scored_in_this_run": true,
+      "evidence_source": "interop-results.json (this repository)"
+    },
+    {
+      "id": "verify-js (uibc-core)",
+      "language": "JavaScript (Node, zero dependencies)",
+      "entrypoint": "node tools/verify-js/verify.mjs <package-dir>",
+      "repository": "https://github.com/zhaoxinghua09-cell/uibc-core/tree/main/tools/verify-js",
+      "role": "second-implementation",
+      "independence": "same-maintainer",
+      "checks": ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12", "S13", "S14", "S15", "S16", "S17", "S18"],
+      "scored_in_this_run": false,
+      "evidence_source": "uibc-core docs/SECOND-IMPLEMENTATION.md, tools/cross_impl_check.py --json: strict 36/36, refused 30/36 over 36 packages; enforced by the second-implementation CI job",
+      "coverage_note": "S0 is the verifier's own crash line, so a sound package has none to compare."
+    },
+    {
+      "id": "uibc-js/0.1",
+      "language": "JavaScript (Node 22, zero dependencies)",
+      "entrypoint": "node second-impl/verify.mjs <package-dir> [--pubkey <hex-or-base64>]",
+      "repository": "https://github.com/UIBC/vectors/tree/main/second-impl",
+      "role": "public-corpus-replay",
+      "independence": "same-maintainer",
+      "checks": ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S11", "S12"],
+      "scored_in_this_run": true,
+      "evidence_source": "interop-results.json (this repository)",
+      "coverage_note": "Exists so the public corpus can be replayed with Node alone, without Python and without reading a second repository. It is not an improvement on verify-js; it is reachability."
+    },
+    {
+      "id": "uibc-iverify",
+      "language": "Python (separate codebase)",
+      "entrypoint": "python ivcli.py <package>",
+      "repository": "https://github.com/zhaoxinghua09-cell/uibc-core/blob/main/independent_verifier",
+      "role": "external-verifier-benchmark",
+      "independence": "same-maintainer",
+      "checks": [],
+      "scored_in_this_run": false,
+      "evidence_source": "uibc-core benchmarks/submissions/uibc-iverify@158a82d.json: 21 mutants, 2 accepted (false-accept rate 9.5%)",
+      "coverage_note": "Different axis entirely: not 'does it agree on the corpus' but 'how many doctored packages does it accept'. Kept in the same manifest because a reader weighing implementations needs both numbers in one place."
+    }
+  ],
+  "evidence": {
+    "runner": "tools/run_crossimpl.py",
+    "results": "interop-results.json",
+    "rows": 20,
+    "verdicts_agree": 20,
+    "check_comparisons": 182,
+    "checks_agree": 182,
+    "last_run": "2026-11-24",
+    "note": "The four counts are recomputed from interop-results.json by tools/check_implementations.py; a stale number fails CI instead of impressing a reader."
+  },
+  "known_divergences": [
+    {
+      "id": "S5-S8-root-source",
+      "status": "already-documented-upstream; re-derived here",
+      "what": "Whether the evidence root is computed over bytes on disk or over hashes claimed in evidence/index.json. The reference computes it over on-disk bytes, reports S5 as skipped (INCONCLUSIVE) when S4 fails, and S8 as FAIL when the checkpoint over on-disk bytes differs.",
+      "disposition": "This repository's first cross-run reported PASS for S5/S8 on tampered, deleted and hash-flip packages: arithmetically true, semantically worthless. It was corrected in the same run.",
+      "credit": "Not a new finding. uibc-core recorded it as bug 3 of four in docs/SECOND-IMPLEMENTATION.md before this repository existed. Re-deriving it from the other side is a check that the documentation is accurate, not a discovery - and it is kept here so that a reader of the public corpus can see the rule rather than have to trust a link."
+    }
+  ],
+  "what_this_manifest_cannot_say": [
+    "that any implementation is secure or competent",
+    "that the corpus is complete - 20 rows is a floor, not a proof",
+    "that agreement among same-maintainer implementations is corroboration; it is convergence"
+  ],
+  "how_to_add_an_external_implementation": {
+    "1": "Add one object here with independence='independent', the checks you actually run, and evidence_source pointing at a machine-readable record.",
+    "2": "Either run tools/run_crossimpl.py yourself, or submit results in the same shape as interop-results.json.",
+    "3": "set scored_in_this_run=false and name your own record; the gate does not require your numbers to be ours, only that a checkable record exists.",
+    "4": "A row claiming 'independent' from this organisation's address is refused. The label is checked, not trusted.",
+    "5": "Nothing here certifies a product."
+  }
+}
+
+
