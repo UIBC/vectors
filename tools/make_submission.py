@@ -34,6 +34,9 @@ import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOOLS = os.path.join(ROOT, "tools")
+sys.path.insert(0, TOOLS)
+import run_vectors as rv  # noqa: E402 - the frozen rows, one source of truth
+
 SUBMISSIONS = os.path.join(ROOT, "submissions")
 ALL_CHECKS = [f"S{i}" for i in range(1, 20)]
 CONTRACT = "uibc-submission-results/1"
@@ -67,6 +70,20 @@ def run_matrix():
     return p.stdout
 
 
+def emitted_ids(case, extra):
+    """The check ids this verifier actually evaluated on one case.
+
+    Read from the verifier's own JSON rather than assumed: the specification
+    names nineteen checks, and a submission may only claim the ones its results
+    observed. S13 in the gate enforces that; this is where the observation is
+    recorded.
+    """
+    import coverage_map as cov  # noqa: E402 - same directory, one implementation
+    doc = cov.verify(case, extra)
+    return sorted((c["id"] for c in doc.get("checks", [])),
+                  key=lambda s: int(s[1:]) if s[1:].isdigit() else 999)
+
+
 def parse_rows(log):
     rows = []
     for line in log.splitlines():
@@ -84,6 +101,18 @@ def parse_rows(log):
     return rows
 
 
+def attach_emitted(rows):
+    """Record which checks each row actually put under test."""
+    by_label = {}
+    for case, extra, _rc, _want in rv.ROWS:
+        mode = "pinned" if any(a == "--pubkey" for a in extra) else "open"
+        by_label[(case, mode)] = extra
+    for r in rows:
+        extra = by_label.get((r["case"], r["mode"]), [])
+        r["checks_emitted"] = emitted_ids(r["case"], extra)
+    return rows
+
+
 def build_results(rows, product, date):
     return {
         "contract_version": CONTRACT,
@@ -98,13 +127,28 @@ def build_results(rows, product, date):
     }
 
 
-def build_product(args, product_in=None):
+def build_product(args, product_in=None, rows=None):
+    """Describe the submitter, and claim only what the rows actually observed.
+
+    Default claim is the union of check ids the verifier emitted across this run,
+    not all nineteen. Nineteen is how many the specification names; it is not how
+    many this corpus put under test (see COVERAGE.md), and a submission that
+    claimed all nineteen would be asserting behaviour nobody watched.
+    """
     base = dict(product_in) if product_in else {}
-    checks = base.get("checks") or [c for c in (args.checks or "all").split(",") if c]
-    if checks == ["all"] or checks == ALL_CHECKS:
-        checks, not_covered = list(ALL_CHECKS), []
-    else:
+    if "checks" in base:
+        checks = base["checks"]
+        not_covered = base.get("scope", {}).get("not_covered",
+                                                [c for c in ALL_CHECKS if c not in checks])
+    elif args.checks and args.checks != "all":
+        checks = [c.strip() for c in args.checks.split(",") if c.strip()]
         not_covered = [c for c in ALL_CHECKS if c not in checks]
+    elif rows is not None:
+        checks = sorted({i for r in rows for i in r.get("checks_emitted", [])},
+                        key=lambda s: int(s[1:]) if s[1:].isdigit() else 999)
+        not_covered = [c for c in ALL_CHECKS if c not in checks]
+    else:  # no rows and no explicit list: claim nothing, and say so
+        checks, not_covered = [], list(ALL_CHECKS)
     out = {
         "legal_entity": base.get("legal_entity") or args.legal_entity,
         "implementation": base.get("implementation") or args.implementation,
@@ -171,8 +215,8 @@ def reproduce(sub_id):
     with open(os.path.join(src, "product.json"), encoding="utf-8") as fh:
         product_in = json.load(fh)
     log = run_matrix()
-    rows = parse_rows(log)
-    product = build_product(_neutral(), product_in)
+    rows = attach_emitted(parse_rows(log))
+    product = build_product(_neutral(), product_in, rows)
     if "witness" not in product:
         product["witness"] = product_in.get("witness")
     results = build_results(rows, product, product.get("submitted_at"))
@@ -232,12 +276,15 @@ def main():
         raise SystemExit("missing --" + ", --".join(m.replace("_", "-") for m in missing)
                          + ": a submission without an accountable party is an anonymous claim")
     log = run_matrix()
-    product = build_product(a)
-    results = build_results(parse_rows(log), product, a.date)
+    rows = attach_emitted(parse_rows(log))
+    product = build_product(a, rows=rows)
+    results = build_results(rows, product, a.date)
     dest = os.path.join(SUBMISSIONS, a.out or a.id)
     emit(dest, product, results, log)
     print(f"WROTE {os.path.relpath(dest, ROOT).replace(os.sep, '/')} - "
-          f"{len(results['rows'])} rows, corpus_digest {results['corpus_digest'][:12]}...")
+          f"{len(results['rows'])} rows, {len(product['checks'])} check(s) claimed "
+          f"({len(product['scope']['not_covered'])} declared not covered), "
+          f"corpus_digest {results['corpus_digest'][:12]}...")
     print("Next: python tools/check_submission.py   # the gate decides, not the generator")
     return 0
 

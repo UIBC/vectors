@@ -49,6 +49,10 @@ GATES = [
     ("submission reproduced",
      ["tools/make_submission.py", "--id", "uibc-self-20261124", "--reproduce"],
      "SUBMISSION REPRODUCED"),
+    # Nineteen checks are named in the specification; COVERAGE.md says how many
+    # the corpus reaches. If that file drifts from the corpus, the number a reader
+    # quotes is wrong, which is worse than the number being small.
+    ("coverage map", ["tools/coverage_map.py", "--check"], "COVERAGE OK"),
 ]
 
 

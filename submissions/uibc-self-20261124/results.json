@@ -11,49 +11,145 @@
       "case": "clean",
       "mode": "open",
       "verdict": "PASS",
-      "exit_code": 0
+      "exit_code": 0,
+      "checks_emitted": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S11",
+        "S12"
+      ]
     },
     {
       "case": "clean",
       "mode": "pinned",
       "verdict": "PASS",
-      "exit_code": 0
+      "exit_code": 0,
+      "checks_emitted": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S11",
+        "S12"
+      ]
     },
     {
       "case": "tampered",
       "mode": "open",
       "verdict": "FAIL",
-      "exit_code": 1
+      "exit_code": 1,
+      "checks_emitted": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S11",
+        "S12"
+      ]
     },
     {
       "case": "deleted",
       "mode": "open",
       "verdict": "FAIL",
-      "exit_code": 1
+      "exit_code": 1,
+      "checks_emitted": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S11",
+        "S12"
+      ]
     },
     {
       "case": "keyswap",
       "mode": "open",
       "verdict": "PASS",
-      "exit_code": 0
+      "exit_code": 0,
+      "checks_emitted": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S11",
+        "S12"
+      ]
     },
     {
       "case": "keyswap",
       "mode": "pinned",
       "verdict": "FAIL",
-      "exit_code": 1
+      "exit_code": 1,
+      "checks_emitted": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S11",
+        "S12"
+      ]
     },
     {
       "case": "unsigned",
       "mode": "open",
       "verdict": "INCONCLUSIVE",
-      "exit_code": 1
+      "exit_code": 1,
+      "checks_emitted": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S11",
+        "S12"
+      ]
     },
     {
       "case": "unknown-upgrade",
       "mode": "open",
       "verdict": "INCONCLUSIVE",
-      "exit_code": 1
+      "exit_code": 1,
+      "checks_emitted": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S11",
+        "S12"
+      ]
     }
   ],
   "recorded_at": "2026-11-24"

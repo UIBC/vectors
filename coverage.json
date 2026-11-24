@@ -1,0 +1,153 @@
+{
+  "contract": "uibc-coverage-map/1",
+  "corpus_digest": "bb7709e3ae9b6e574ca1ee9c88c863c3954de617d905933587763bd84969afaa",
+  "counts": {
+    "specified": 19,
+    "exercised": 10,
+    "discriminating": 4,
+    "unreached": 9
+  },
+  "unreached": [
+    "S9",
+    "S10",
+    "S13",
+    "S14",
+    "S15",
+    "S16",
+    "S17",
+    "S18",
+    "S19"
+  ],
+  "checks": [
+    {
+      "id": "S1",
+      "name": "package structure",
+      "basis": "none",
+      "citation": "",
+      "cases": 8,
+      "non_pass": 0
+    },
+    {
+      "id": "S2",
+      "name": "identity consistency",
+      "basis": "direct",
+      "citation": "draft-noa-scitt-ai-agent-receipt-00",
+      "cases": 8,
+      "non_pass": 0
+    },
+    {
+      "id": "S3",
+      "name": "lifecycle state machine + semantics",
+      "basis": "related",
+      "citation": "draft-maintainer-1f916-agent-record-01",
+      "cases": 8,
+      "non_pass": 0
+    },
+    {
+      "id": "S4",
+      "name": "evidence integrity",
+      "basis": "none",
+      "citation": "",
+      "cases": 8,
+      "non_pass": 2
+    },
+    {
+      "id": "S5",
+      "name": "evidence root",
+      "basis": "related",
+      "citation": "RFC 6962",
+      "cases": 8,
+      "non_pass": 2
+    },
+    {
+      "id": "S6",
+      "name": "seal signature",
+      "basis": "related",
+      "citation": "RFC 8032",
+      "cases": 8,
+      "non_pass": 3
+    },
+    {
+      "id": "S7",
+      "name": "evidence index metadata",
+      "basis": "none",
+      "citation": "",
+      "cases": 8,
+      "non_pass": 0
+    },
+    {
+      "id": "S8",
+      "name": "package checkpoint head",
+      "basis": "related",
+      "citation": "draft-maintainer-1f916-agent-record-01",
+      "cases": 8,
+      "non_pass": 2
+    },
+    {
+      "id": "S11",
+      "name": "strict serialization",
+      "basis": "related",
+      "citation": "RFC 8785",
+      "cases": 8,
+      "non_pass": 0
+    },
+    {
+      "id": "S12",
+      "name": "timestamp and identifier strictness",
+      "basis": "none",
+      "citation": "",
+      "cases": 8,
+      "non_pass": 0
+    }
+  ],
+  "rows": [
+    {
+      "case": "clean",
+      "mode": "open",
+      "result": "PASS",
+      "checks": 10
+    },
+    {
+      "case": "clean",
+      "mode": "pinned",
+      "result": "PASS",
+      "checks": 10
+    },
+    {
+      "case": "tampered",
+      "mode": "open",
+      "result": "FAIL",
+      "checks": 10
+    },
+    {
+      "case": "deleted",
+      "mode": "open",
+      "result": "FAIL",
+      "checks": 10
+    },
+    {
+      "case": "keyswap",
+      "mode": "open",
+      "result": "PASS",
+      "checks": 10
+    },
+    {
+      "case": "keyswap",
+      "mode": "pinned",
+      "result": "FAIL",
+      "checks": 10
+    },
+    {
+      "case": "unsigned",
+      "mode": "open",
+      "result": "INCONCLUSIVE",
+      "checks": 10
+    },
+    {
+      "case": "unknown-upgrade",
+      "mode": "open",
+      "result": "INCONCLUSIVE",
+      "checks": 10
+    }
+  ]
+}

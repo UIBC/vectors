@@ -46,6 +46,11 @@ Rules:
       may not be the key the submitter declared. A submitter signing their own
       witness statement is refused on identity, before the signature is even
       checked, because the attack this rule exists for is self-witnessing.
+  S13 a claimed check must appear in at least one row's checks_emitted, and every
+      row must carry that list. Nineteen is how many checks the specification
+      names; it is not how many this corpus puts under test (COVERAGE.md says
+      ten). A submission claiming all nineteen would be asserting behaviour
+      nobody watched - the claim would be about code paths, not observations.
 
 Rule numbers above are this script's own namespace (S1-S12) and are not the
 verifier's check ids (S1-S19). A rejection line quotes its rule; a submission
@@ -339,6 +344,21 @@ def judge(path):
 
     # S11/S12
     problems.extend(judge_witness(path, product, results))
+
+    # S13 - a claim about a check is a claim about something having been observed.
+    observed = set()
+    for r in rows:
+        got = r.get("checks_emitted")
+        if not isinstance(got, list) or not got:
+            problems.append(f"S13: row {r.get('case')}|{r.get('mode')} does not list the checks "
+                            "it emitted - without that list a claim cannot be checked")
+            continue
+        observed.update(got)
+    unobserved = [c for c in checks if c not in observed]
+    if unobserved:
+        problems.append(f"S13: checks {unobserved} are claimed but appear in no row's emitted "
+                        "list - claim only what the run observed, and declare the rest in "
+                        "scope.not_covered")
     return problems
 
 
@@ -490,15 +510,31 @@ def selftest():
         write_witness(d, fresh_seed(), "C. Somebody", real_digest)
         cases.append(("statement names another person", d, "S11"))
 
-        # 14: and the honest case must still pass, or the rule is a wall not a check
+        # 14: a check claimed that no row ever observed (the 19-vs-10 problem)
+        d = prep(tmp, "claim-unobserved")
+        def claim_more(o):
+            un = o["scope"]["not_covered"]
+            if un:
+                o["checks"].append(un[0])
+                o["scope"]["not_covered"] = un[1:]
+        edit(d, "product.json", claim_more)
+        cases.append(("claimed a check nobody observed", d, "S13"))
+
+        # 15: a row that forgot to say which checks it emitted
+        d = prep(tmp, "no-emitted-list")
+        def strip_emitted(o):
+            o["rows"][0].pop("checks_emitted", None)
+        edit(d, "results.json", strip_emitted)
+        cases.append(("row without an emitted list", d, "S13"))
+
+        # 16: and the honest case must still pass, or the rule is a wall not a check
         d = prep(tmp, "honest-witness")
         name_witness(d, "D. Reviewer")
         write_witness(d, fresh_seed(), "D. Reviewer", real_digest)
         honest = judge(d)
         honest_statement_ok = not honest
         if not honest_statement_ok:
-            print(f"[{'MISSED' if honest else 'OK'}] honest witness rejected wrongly"
-                  f"  got: {honest[:1]}")
+            print(f"[MISSED] honest witness rejected wrongly  got: {honest[:3]}")
 
         caught = 0
         for name, d, rule in cases:
