@@ -4,13 +4,12 @@
   "counts": {
     "specified": 19,
     "matrix_reached": 10,
-    "any_case_reached": 17,
-    "deciding": 15,
-    "unreached": 2
+    "any_case_reached": 18,
+    "deciding": 16,
+    "unreached": 1
   },
   "unreached": [
-    "S16",
-    "S18"
+    "S16"
   ],
   "checks": [
     {
@@ -19,7 +18,7 @@
       "basis": "none",
       "citation": "",
       "matrix_cases": 8,
-      "adversarial_cases": 18,
+      "adversarial_cases": 19,
       "non_pass": 1
     },
     {
@@ -28,7 +27,7 @@
       "basis": "direct",
       "citation": "draft-noa-scitt-ai-agent-receipt-00",
       "matrix_cases": 8,
-      "adversarial_cases": 18,
+      "adversarial_cases": 19,
       "non_pass": 0
     },
     {
@@ -37,7 +36,7 @@
       "basis": "related",
       "citation": "draft-maintainer-1f916-agent-record-01",
       "matrix_cases": 8,
-      "adversarial_cases": 18,
+      "adversarial_cases": 19,
       "non_pass": 2
     },
     {
@@ -46,7 +45,7 @@
       "basis": "none",
       "citation": "",
       "matrix_cases": 8,
-      "adversarial_cases": 18,
+      "adversarial_cases": 19,
       "non_pass": 4
     },
     {
@@ -55,7 +54,7 @@
       "basis": "related",
       "citation": "RFC 6962",
       "matrix_cases": 8,
-      "adversarial_cases": 18,
+      "adversarial_cases": 19,
       "non_pass": 4
     },
     {
@@ -64,7 +63,7 @@
       "basis": "related",
       "citation": "RFC 8032",
       "matrix_cases": 8,
-      "adversarial_cases": 18,
+      "adversarial_cases": 19,
       "non_pass": 9
     },
     {
@@ -73,7 +72,7 @@
       "basis": "none",
       "citation": "",
       "matrix_cases": 8,
-      "adversarial_cases": 18,
+      "adversarial_cases": 19,
       "non_pass": 1
     },
     {
@@ -82,7 +81,7 @@
       "basis": "related",
       "citation": "draft-maintainer-1f916-agent-record-01",
       "matrix_cases": 8,
-      "adversarial_cases": 18,
+      "adversarial_cases": 19,
       "non_pass": 6
     },
     {
@@ -109,7 +108,7 @@
       "basis": "related",
       "citation": "RFC 8785",
       "matrix_cases": 8,
-      "adversarial_cases": 19,
+      "adversarial_cases": 20,
       "non_pass": 2
     },
     {
@@ -118,7 +117,7 @@
       "basis": "none",
       "citation": "",
       "matrix_cases": 8,
-      "adversarial_cases": 18,
+      "adversarial_cases": 19,
       "non_pass": 0
     },
     {
@@ -153,6 +152,15 @@
       "name": "linear receipt chain",
       "basis": "direct",
       "citation": "draft-marques-asqav-compliance-receipts-01",
+      "matrix_cases": 0,
+      "adversarial_cases": 1,
+      "non_pass": 1
+    },
+    {
+      "id": "S18",
+      "name": "policy artefact resolution",
+      "basis": "direct",
+      "citation": "draft-marques-asqav-compliance-receipts-01 §4.2.4",
       "matrix_cases": 0,
       "adversarial_cases": 1,
       "non_pass": 1
@@ -452,6 +460,22 @@
         "S7",
         "S8",
         "S19",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "case": "policy-unresolved",
+      "checks": [
+        "S11",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S12",
+        "S18",
+        "S7",
+        "S8",
         "S5",
         "S6"
       ]

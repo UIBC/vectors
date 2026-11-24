@@ -23,9 +23,12 @@ while the check it exists for never runs. Cases that trip several checks state
 the one they exist for; the others are visible in the same output.
 
 Pass criterion: every MUST-REJECT row is rejected, every declared check is
-observed to be non-PASS, and every KNOWN-GAP row still behaves exactly as the
-ledger says. --strict additionally requires KNOWN-GAP rows to be rejected, so a
-fix can be proven.
+observed to be non-PASS, and that check's *detail* contains the phrase the case
+expects - "rejected by the right check" and "rejected by the right check for the
+reason this case is about" are different facts, and two cases here were the
+wrong reason until the phrase was required. Every KNOWN-GAP row must still
+behave exactly as the ledger says. --strict additionally requires KNOWN-GAP rows
+to be rejected, so a fix can be proven.
 """
 
 import argparse
@@ -189,19 +192,45 @@ def mutate_state_corrupt(d):
         fh.write("{ this is not json ")
 
 
+def mutate_policy_unresolved(d):
+    """A policy digest that does not resolve to the artefact it names.
+
+    The draft makes an unresolvable `policy_digest` a rejection, not a warning:
+    a digest nobody can resolve proves a policy existed only if someone kept
+    the policy. Pointing at a file that *is* present is deliberate - the case
+    is about a wrong hash, not a missing file, so it cannot be "rejected
+    because the artefact is absent".
+    """
+    doc = {"policies": [{"digest": "sha256:" + "00" * 32,
+                         "path": "evidence/index.json"}]}
+    _write(d, os.path.join("evidence", "policies.json"), doc)
+
+
 def mutate_chain_broken(d):
-    """A receipt chain whose successor does not name its predecessor."""
-    doc = {"algorithm": "uibc-chain/1",
-           "receipts": [{"receipt_id": "r1", "previousReceiptHash": "00" * 32},
-                        {"receipt_id": "r2", "previousReceiptHash": "11" * 32}]}
+    """A receipt chain whose successor does not name its predecessor.
+
+    Both receipts carry a well-formed envelope on purpose: a chain rejected for
+    a missing envelope would be rejected for something other than the link,
+    and this case exists for the link.
+    """
+    doc = {"schema": "uibc-chain/1",
+           "receipts": [{"envelope": {"seq": 1}, "previous_receipt_hash": "0" * 64},
+                        {"envelope": {"seq": 2}, "previous_receipt_hash": "11" * 32}]}
     _write(d, os.path.join("evidence", "chain.json"), doc)
 
 
 def mutate_anchor_unresolved(d):
-    """An anchor set that names an event nobody can resolve against this tree."""
-    doc = {"algorithm": "uibc-anchors/1",
-           "anchors": [{"id": "a1", "type": "bitcoin", "root": "00" * 32,
-                        "block_height": 1}]}
+    """An anchor whose declared root is not the root this package resolves to.
+
+    Uses the one resolver the verifier supports offline, and files every field
+    well-formed, so the only thing wrong is the root - otherwise the case would
+    be "unsupported resolver", a different rule.
+    """
+    doc = {"resolver": "evidence-merkle",
+           "anchors": [{"id": "a1", "version": 1, "leaf_hash": "00" * 32,
+                        "anchored_at": "2026-01-01T00:00:00Z",
+                        "root": "00" * 32, "index": 0, "size": 1,
+                        "proof": ["00" * 32]}]}
     _write(d, os.path.join("evidence", "anchors.json"), doc)
 
 
@@ -226,6 +255,7 @@ CASES = [
     ("chain-broken", mutate_chain_broken, "S17 successor does not name its predecessor"),
     ("anchor-unresolved", mutate_anchor_unresolved, "S15 anchor root resolves to nothing"),
     ("state-unreadable", mutate_state_corrupt, "S19 unreadable high-water mark is a FAIL"),
+    ("policy-unresolved", mutate_policy_unresolved, "S18 policy digest resolves to nothing"),
     # documented gaps: these three are NOT caught today
     ("index-metadata-drift", mutate_index_created_at, "created_at rewritten"),
     ("evidence-id-drift", mutate_index_evidence_id, "evidence_id rewritten"),
@@ -250,6 +280,30 @@ EXPECT_CHECK = {
     "chain-broken": "S17",
     "anchor-unresolved": "S15",
     "state-unreadable": "S19",
+    "policy-unresolved": "S18",
+}
+
+# The second half of the same problem. A case can be rejected by the right
+# check for the wrong reason - `state-unreadable` on its first run was answered
+# by S19 as "first observation", which is non-PASS and would have passed the
+# id-only criterion. Each entry is a phrase the check's own detail must contain
+# for the case to count. Empty string means "observed, reason not pinned".
+EXPECT_DETAIL = {
+    "dup-json-member": "duplicate member",
+    "control-char": "control character",
+    "extra-root-file": "undeclared files at package root",
+    "hash-flip": "hash mismatch",
+    "ts-rollback": "goes backwards",
+    "seq-gap": "breaks contiguity",
+    "unsigned": "provenance is unattested",
+    "head-pin-wrong": "does not match the pinned",
+    "closure-incomplete": "closure is incomplete",
+    "base64-improper": "outside the base64 alphabet",
+    "merkle-bad-proof": "does not verify",
+    "chain-broken": "predecessor",
+    "anchor-unresolved": "not the root this package resolves to",
+    "state-unreadable": "state file unreadable",
+    "policy-unresolved": "but the artefact hashes to",
 }
 
 
@@ -268,7 +322,7 @@ def extra_args(case, package_dir):
 def check_results(doc):
     out = {}
     for c in doc.get("checks", []) or []:
-        out[c.get("id")] = c.get("result")
+        out[c.get("id")] = (c.get("result"), c.get("detail") or "")
     return out
 
 
@@ -329,15 +383,21 @@ def main():
                     problems.append((name, rc, result, "gap no longer reproduces: move it to MUST-REJECT"))
             else:
                 want = EXPECT_CHECK.get(name)
+                phrase = EXPECT_DETAIL.get(name, "")
                 rejected = result != "PASS" and rc == 1
-                triggered = want is None or seen.get(want) not in (None, "PASS")
-                ok = rejected and triggered
+                seen_res, seen_detail = seen.get(want, (None, "")) if want else (None, "")
+                triggered = want is None or seen_res not in (None, "PASS")
+                explained = not phrase or phrase.lower() in seen_detail.lower()
+                ok = rejected and triggered and explained
                 detail = ""
                 if want and not triggered:
                     detail = "  !! %s never came back non-PASS (saw %s)" % (
-                        want, seen.get(want, "absent"))
+                        want, seen_res or "absent")
+                elif want and not explained:
+                    detail = "  !! %s=%s but the detail does not say %r: %s" % (
+                        want, seen_res, phrase, seen_detail[:90])
                 elif want:
-                    detail = "  %s=%s" % (want, seen.get(want))
+                    detail = "  %s=%s" % (want, seen_res)
                 print("[%s] %-22s rc=%s result=%-13s %s%s" %
                       ("OK" if ok else "MISMATCH", name, rc, result, why, detail))
                 if not rejected:
@@ -346,6 +406,10 @@ def main():
                     problems.append((name, rc, result,
                                      "rejected, but not by %s - the case exists for that check"
                                      % want))
+                elif not explained:
+                    problems.append((name, rc, result,
+                                     "right check, wrong reason: %s did not mention %r"
+                                     % (want, phrase)))
             print("      case-digest=%s" % dig)
 
     total = len(CASES)

@@ -7,9 +7,9 @@ cannot drift from the thing it describes.
 Two scopes, because they answer different questions:
 
 - **frozen matrix** (the eight rows a submission runs): **10/19** checks reached
-- **everything the corpus ships** (matrix + 19 doctored cases): **17/19** reached
-- **checks that have ever answered something other than PASS**: **15/19**
-- **checks no shipped case reaches**: **2** — S16, S18
+- **everything the corpus ships** (matrix + 20 doctored cases): **18/19** reached
+- **checks that have ever answered something other than PASS**: **16/19**
+- **checks no shipped case reaches**: **1** — S16
 
 A check that has only ever said PASS has never been observed to decide
 anything. That is not proof it is broken; it is proof the corpus does not
@@ -23,24 +23,24 @@ cases are generated at run time instead of committed.
 
 | check | name | basis | matrix cases | adversarial cases | non-PASS seen |
 |---|---|---|---|---|---|
-| S1 | package structure | none | 8 | 18 | 1 |
-| S2 | identity consistency | direct (draft-noa-scitt-ai-agent-receipt-00) | 8 | 18 | 0 **never** |
-| S3 | lifecycle state machine + semantics | related (draft-maintainer-1f916-agent-record-01) | 8 | 18 | 2 |
-| S4 | evidence integrity | none | 8 | 18 | 4 |
-| S5 | evidence root | related (RFC 6962) | 8 | 18 | 4 |
-| S6 | seal signature | related (RFC 8032) | 8 | 18 | 9 |
-| S7 | evidence index metadata | none | 8 | 18 | 1 |
-| S8 | package checkpoint head | related (draft-maintainer-1f916-agent-record-01) | 8 | 18 | 6 |
+| S1 | package structure | none | 8 | 19 | 1 |
+| S2 | identity consistency | direct (draft-noa-scitt-ai-agent-receipt-00) | 8 | 19 | 0 **never** |
+| S3 | lifecycle state machine + semantics | related (draft-maintainer-1f916-agent-record-01) | 8 | 19 | 2 |
+| S4 | evidence integrity | none | 8 | 19 | 4 |
+| S5 | evidence root | related (RFC 6962) | 8 | 19 | 4 |
+| S6 | seal signature | related (RFC 8032) | 8 | 19 | 9 |
+| S7 | evidence index metadata | none | 8 | 19 | 1 |
+| S8 | package checkpoint head | related (draft-maintainer-1f916-agent-record-01) | 8 | 19 | 6 |
 | S9 | head pinned out-of-band | related (draft-bailey-scitt-agent-session-receipt) | 0 | 1 | 1 |
 | S10 | attestation closure declared | direct (draft-sharif-agent-audit-trail-03 §13.6) | 0 | 1 | 1 |
-| S11 | strict serialization | related (RFC 8785) | 8 | 19 | 2 |
-| S12 | timestamp and identifier strictness | none | 8 | 18 | 0 **never** |
+| S11 | strict serialization | related (RFC 8785) | 8 | 20 | 2 |
+| S12 | timestamp and identifier strictness | none | 8 | 19 | 0 **never** |
 | S13 | merkle inclusion proofs | related (RFC 6962) | 0 | 1 | 1 |
 | S14 | strict base64 | related (RFC 4648 §4) | 0 | 1 | 1 |
 | S15 | anchor event resolution | none | 0 | 1 | 1 |
 | S16 | — | — | 0 | 0 | **no case reaches it** |
 | S17 | linear receipt chain | direct (draft-marques-asqav-compliance-receipts-01) | 0 | 1 | 1 |
-| S18 | — | — | 0 | 0 | **no case reaches it** |
+| S18 | policy artefact resolution | direct (draft-marques-asqav-compliance-receipts-01 §4.2.4) | 0 | 1 | 1 |
 | S19 | freshness state | related (draft-bailey-scitt-agent-session-receipt) | 0 | 1 | 1 |
 
 ## The eight frozen cases, and what each one reaches
@@ -76,6 +76,7 @@ cases are generated at run time instead of committed.
 | chain-broken | S17 successor does not name its predecessor | 11: S11, S1, S2, S3, S4, S12, S17, S7, S8, S5, S6 |
 | anchor-unresolved | S15 anchor root resolves to nothing | 11: S11, S1, S2, S3, S4, S12, S15, S7, S8, S5, S6 |
 | state-unreadable | S19 unreadable high-water mark is a FAIL | 11: S11, S1, S2, S3, S4, S12, S7, S8, S19, S5, S6 |
+| policy-unresolved | S18 policy digest resolves to nothing | 11: S11, S1, S2, S3, S4, S12, S18, S7, S8, S5, S6 |
 | index-metadata-drift | created_at rewritten | 10: S11, S1, S2, S3, S4, S12, S7, S8, S5, S6 |
 | evidence-id-drift | evidence_id rewritten | 10: S11, S1, S2, S3, S4, S12, S7, S8, S5, S6 |
 | media-type-drift | media_type rewritten | 10: S11, S1, S2, S3, S4, S12, S7, S8, S5, S6 |
