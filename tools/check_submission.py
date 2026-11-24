@@ -25,9 +25,21 @@ Rules:
       has been tidied into a summary is refused
   S7  checks must be a subset of S1-S19; claiming a check that does not exist is
       refused
+  S8  competence_basis must be present and non-empty, or the literal 'none'.
+      A reviewer of a software verification record asks who ran it and on what
+      standing (MDR submission guidance asks for personnel competence for in-house
+      testing, laboratory accreditation for third-party testing). Omitting the
+      field is the failure this catches; 'none' is an acceptable, visible answer.
+  S9  the 'witness' key must exist, even when its value is null. Null says "no
+      witness"; a missing key says "we did not think about it". Only the keyword
+      'independent' may be used when a witness is named, and it may not be used
+      by this organisation.
+  S10 every check id in S1-S19 must appear in exactly one of 'checks' or
+      'scope.not_covered'. Silence about a check reads as coverage.
 
 A submission is not certified by passing. Passing means the bytes it shipped
-describe the same verdicts this corpus records.
+describe the same verdicts this corpus records, and that it has said out loud
+which of the reviewer-required facts it does not have.
 """
 
 import hashlib
@@ -129,6 +141,53 @@ def judge(path):
     unknown = [c for c in checks if c not in KNOWN_CHECKS]
     if unknown:
         problems.append(f"S7: checks {unknown} do not exist in S1-S19")
+
+    # S8 - who ran it, and on what standing. Reviewers of a verification record
+    # ask this before they ask whether it passed; a record that cannot answer it
+    # is a narrative with numbers. 'none' is allowed on purpose: an honest
+    # absence is checkable, an omission is not.
+    basis = product.get("competence_basis")
+    if not isinstance(basis, str) or not basis.strip():
+        problems.append("S8: competence_basis is missing or empty - say who ran it and on "
+                        "what standing, or write 'none'")
+    elif basis.strip().lower() != "none" and len(basis.strip()) < 8:
+        problems.append(f"S8: competence_basis='{basis}' is too short to identify a basis; "
+                        "name the person, laboratory or accreditation, or write 'none'")
+
+    # S9 - a witness must be either absent on purpose or named.
+    if "witness" not in product:
+        problems.append("S9: the 'witness' key is absent - use null to say there was none, "
+                        "which is a different statement from not mentioning it")
+    else:
+        w = product["witness"]
+        if w is not None:
+            if not isinstance(w, dict) or not str(w.get("name", "")).strip():
+                problems.append("S9: witness must be null or an object with a non-empty name")
+            elif str(w.get("independent_of_submitter", "")).lower() not in {"true", "false"}:
+                problems.append("S9: witness must state independent_of_submitter as true or false")
+            elif str(w.get("independent_of_submitter")).lower() == "true" and \
+                    str(product.get("legal_entity", "")).strip().lower() in {"uibc", "uibc org"}:
+                problems.append("S9: a witness cannot be independent_of_submitter 'true' when "
+                                "the submitter is this organisation and the witness is unnamed "
+                                "by an outside body")
+
+    # S10 - silence about a check reads as coverage.
+    scope = product.get("scope") if isinstance(product.get("scope"), dict) else {}
+    not_covered = scope.get("not_covered")
+    if not isinstance(not_covered, list):
+        problems.append("S10: scope.not_covered is missing - list the checks this submission "
+                        "does not claim, even when the list is empty")
+    else:
+        closed = list(checks) + list(not_covered)
+        bad = [c for c in closed if c not in KNOWN_CHECKS]
+        for c in KNOWN_CHECKS:
+            n = closed.count(c)
+            if n == 0:
+                problems.append(f"S10: check {c} is neither claimed nor listed as not covered")
+            elif n > 1:
+                problems.append(f"S10: check {c} appears {n} times across checks and not_covered")
+        if bad:
+            problems.append(f"S10: scope.not_covered names unknown checks {bad}")
     return problems
 
 
@@ -196,6 +255,28 @@ def selftest():
         d = prep(tmp, "invented-check")
         edit(d, "product.json", lambda o: o.update(checks=["S99", "S1"]))
         cases.append(("invented check id", d, "S7"))
+
+        # 7: competence silently omitted - the reviewer's first question
+        d = prep(tmp, "no-competence")
+        def drop_basis(o):
+            o.pop("competence_basis", None)
+        edit(d, "product.json", drop_basis)
+        cases.append(("competence omitted", d, "S8"))
+
+        # 8: witness key removed instead of set to null
+        d = prep(tmp, "no-witness-key")
+        def drop_witness(o):
+            o.pop("witness", None)
+        edit(d, "product.json", drop_witness)
+        cases.append(("witness key omitted", d, "S9"))
+
+        # 9: a check neither claimed nor disclaimed
+        d = prep(tmp, "silent-scope")
+        def shrink_scope(o):
+            o["checks"] = [c for c in o["checks"] if c != "S19"]
+            o["scope"] = {"not_covered": []}
+        edit(d, "product.json", shrink_scope)
+        cases.append(("check neither claimed nor disclaimed", d, "S10"))
 
         caught = 0
         for name, d, rule in cases:
