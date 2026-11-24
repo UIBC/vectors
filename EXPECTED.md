@@ -39,6 +39,16 @@ Committed bytes, however, must be stable, because receipts hash them. The fixtur
   **red on both Windows jobs** for exactly this reason. Our workflow sets `PYTHONIOENCODING=utf-8`,
   which is a runner-side workaround, not a fix to the package. Reported upstream: pending.
 
+## Cross-version: what an older verifier says
+
+The rows above are the answer **at or above the declared floor** (`min_verifier_version: 0.5.0` in every manifest). Below the floor the corpus accepts two answers, `INCONCLUSIVE` and `FAIL`, because both are honest; it refuses only `PASS`. `VERSION-MATRIX.md` is the generated table, `crossversion-results.json` the machine copy.
+
+```bash
+python tools/run_crossversion.py --also /path/to/python-with-0.4.1
+```
+
+Measured on 2026-11-24: `uibc-core` 0.4.1 answers `INCONCLUSIVE` on `clean` in both modes. That is not a regression — it is the floor working. An old verifier declining to call the corpus's own positive anchor healthy is the behaviour a version floor exists to produce; the cell that would be alarming is `PASS` there.
+
 ## Frozen fixtures
 
 `FIXTURES.sha256` records one SHA-256 per committed fixture file across the six packages. `python tools/check_frozen.py` recomputes them; CI runs it on every push. Adding or changing a fixture therefore requires an explicit `--write` and a visible diff, which is the point: a vector set that changes silently is not a vector set.
