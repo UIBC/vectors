@@ -1,0 +1,6 @@
+{
+  "contract": "uibc-external-runs/1",
+  "note": "One record per run performed by somebody other than the maintainers. Every record names a log that has to exist in this repository with the digest recorded here; tools/check_external_runs.py derives headline_verified from the records that pass and fails when the typed number and the records disagree.",
+  "headline_verified": 0,
+  "entries": []
+}

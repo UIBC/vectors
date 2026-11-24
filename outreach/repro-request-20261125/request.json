@@ -1,0 +1,72 @@
+{
+  "contract": "uibc-repro-request/1",
+  "issued_by": "UIBC maintainers",
+  "issued_at": "2026-11-25",
+  "repository": "https://github.com/UIBC/vectors",
+  "corpus_digest": "81e31f78f106eaf6011efa00b1312b5a35ac9b732a73728cb8024c7ef306e3d9",
+  "rows": 10,
+  "gates": [
+    {
+      "label": "ten rows",
+      "command": "python tools/run_vectors.py",
+      "must_contain": "MATRIX GATE OK"
+    },
+    {
+      "label": "adversarial",
+      "command": "python tools/run_adversarial.py",
+      "must_contain": "ADVERSARIAL OK"
+    },
+    {
+      "label": "frozen fixtures",
+      "command": "python tools/check_frozen.py",
+      "must_contain": "FROZEN OK"
+    },
+    {
+      "label": "external timestamp",
+      "command": "python tools/check_tsa.py",
+      "must_contain": "TSA CHECK OK"
+    },
+    {
+      "label": "submission gate",
+      "command": "python tools/check_submission.py",
+      "must_contain": "SUBMISSIONS OK"
+    },
+    {
+      "label": "gate self-test",
+      "command": "python tools/check_submission.py --selftest",
+      "must_contain": "SELFTEST OK"
+    },
+    {
+      "label": "report self-test",
+      "command": "python tools/check_report.py --selftest",
+      "must_contain": "REPORT SELFTEST OK"
+    },
+    {
+      "label": "key hygiene",
+      "command": "python tools/check_key_hygiene.py",
+      "must_contain": "KEY HYGIENE OK"
+    },
+    {
+      "label": "submission reproduced",
+      "command": "python tools/make_submission.py --id uibc-self-20261124 --reproduce",
+      "must_contain": "SUBMISSION REPRODUCED"
+    },
+    {
+      "label": "coverage map",
+      "command": "python tools/coverage_map.py --check",
+      "must_contain": "COVERAGE OK"
+    }
+  ],
+  "what_we_ask": [
+    "clone the repository at the commit named in this directory",
+    "create a fresh virtualenv and run exactly: pip install uibc-core==0.5.0 asn1crypto cryptography",
+    "run `python tools/stranger.py` and paste its log, unedited",
+    "fill reply-template.json and return it with the log"
+  ],
+  "what_this_proves": "That the corpus reproduces on a machine we do not control, and that a verifier we did not build agrees with the verdicts. It does not make the corpus conformant, and it does not make the submitter independent unless they say so and the ledger can see it.",
+  "what_it_does_not_prove": [
+    "conformance of anything to the specification's intent",
+    "that a second implementation exists (this is still the reference verifier)",
+    "that the checks are correct, only that they answer the same way twice"
+  ]
+}

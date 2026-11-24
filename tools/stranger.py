@@ -44,6 +44,12 @@ GATES = [
     # without changing any verdict: an expiring TSA certificate, a stale bundle,
     # a re-seal that moves the digest. Offline, so it runs here too.
     ("external timestamp", ["tools/check_tsa.py"], "TSA CHECK OK"),
+    # The number of runs performed by people who are not us is derived from a
+    # ledger, not typed. This gate keeps it that way, and its self-test proves
+    # the derivation by trying to satisfy the headline dishonestly.
+    ("external runs ledger", ["tools/check_external_runs.py"], "EXTERNAL RUNS OK"),
+    ("external runs self-test", ["tools/check_external_runs.py", "--selftest"],
+     "EXTERNAL RUNS SELFTEST OK"),
     ("submission gate", ["tools/check_submission.py"], "SUBMISSIONS OK"),
     ("gate self-test", ["tools/check_submission.py", "--selftest"], "SELFTEST OK"),
     ("report self-test", ["tools/check_report.py", "--selftest"], "REPORT SELFTEST OK"),

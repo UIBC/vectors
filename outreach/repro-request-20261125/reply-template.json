@@ -1,0 +1,20 @@
+{
+  "contract": "uibc-external-run/1",
+  "id": "<your handle or organisation>-<yyyymmdd>",
+  "runner": "<name or organisation that ran it>",
+  "independent_of_maintainer": "true | false - false is accepted and counted separately",
+  "date": "<YYYY-MM-DD>",
+  "verifier_version": "<what `python -m uibc_core.cli --version` printed>",
+  "python": "<python -V>",
+  "os": "<uname -a / Windows build>",
+  "corpus_digest": "<from request.json; do not edit>",
+  "gates": [
+    {
+      "name": "<gate label>",
+      "ok": "true | false",
+      "evidence_line": "<the line the gate printed>"
+    }
+  ],
+  "log_path": "logs/<id>.log",
+  "note": "<anything a reader should know: what surprised you, what failed>"
+}

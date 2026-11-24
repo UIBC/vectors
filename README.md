@@ -76,22 +76,35 @@ python tools/stranger.py           # every gate, timed, with a machine-readable 
 
 ## Everything a stranger can run, and what each one proves
 
-Measured on 2026-11-24 from a fresh clone, a fresh venv, nothing else installed. `pip install` took 2.1 s; the first three gates together took 4.5 s.
+`python tools/stranger.py` runs all of it and writes `stranger-run.json`: each gate's argv, exit code, duration and the line that carries its promise. Measured 2026-11-25 on one machine: 13 gates, 27.3 s.
 
-| command | time | expected last line |
-|---|---|---|
-| `python tools/run_vectors.py` | 1.7 s | `MATRIX GATE OK - all 10 rows match.` |
-| `python tools/run_adversarial.py` | 2.6 s | `ADVERSARIAL OK - 9/9 must-reject cases rejected; 3 documented gap(s) still reproduce.` |
-| `python tools/check_frozen.py` | 0.2 s | `FROZEN OK - 45 fixture files match FIXTURES.sha256` |
-| `python tools/check_submission.py` | 0.2 s | `SUBMISSIONS OK - 1 submission(s), all matched the frozen corpus.` |
-| `python tools/check_submission.py --selftest` | 0.1 s | `SUBMISSION SELFTEST OK - 6/6 doctored submissions rejected.` |
-| `python tools/check_report.py --selftest` | 0.1 s | `REPORT SELFTEST OK - 4/4 doctored reports rejected, 1 honest report accepted` |
-| `python tools/check_key_hygiene.py` | 0.2 s | `KEY HYGIENE OK - 80 tracked files … no seed outside keys/` |
-| `python tools/run_crossversion.py --also <python-with-0.4.1>` | 1.8 s | `CROSSVERSION OK - 2 verifier(s) x 10 rows` |
+| command | expected line |
+|---|---|
+| `python tools/run_vectors.py` | `MATRIX GATE OK - all 10 rows match.` |
+| `python tools/run_adversarial.py` | `ADVERSARIAL OK - 17/17 must-reject cases rejected; 3 documented gap(s) still reproduce.` |
+| `python tools/check_frozen.py` | `FROZEN OK - 67 fixture files match FIXTURES.sha256` |
+| `python tools/check_tsa.py` | `TSA CHECK OK - 1 external token(s) verify offline …` |
+| `python tools/check_external_runs.py` | `EXTERNAL RUNS OK - 0 verified record(s) …` |
+| `python tools/check_external_runs.py --selftest` | `EXTERNAL RUNS SELFTEST OK - 7 ledger(s) judged as expected` |
+| `python tools/check_submission.py` | `SUBMISSIONS OK - 1 submission(s), all matched the frozen corpus.` |
+| `python tools/check_submission.py --selftest` | `SUBMISSION SELFTEST OK - 15/15 doctored submissions rejected, 1 properly signed witness accepted.` |
+| `python tools/check_report.py --selftest` | `REPORT SELFTEST OK - 4/4 doctored reports rejected, 1 honest report accepted` |
+| `python tools/check_key_hygiene.py` | `KEY HYGIENE OK - … no seed outside keys/` |
+| `python tools/make_submission.py --id uibc-self-20261124 --reproduce` | `SUBMISSION REPRODUCED` |
+| `python tools/coverage_map.py --check` | `COVERAGE OK - 19/19 matrix, 19/19 any case, 16/19 deciding, 0 unreached.` |
+| `python tools/run_crossversion.py --also <python-with-0.4.1>` | `CROSSVERSION OK - 2 verifier(s) x 10 rows` |
 
 The last line needs a **second** interpreter: with only one, the floor cannot be exercised and the tool exits 3 with `CROSSVERSION DEGENERATE`, rather than printing a green that certifies nothing. That refusal is deliberate — the same reason `run_adversarial.py` prints `[DEFECT]` instead of hiding D-002.
 
 Three rows of machinery are **not on this branch**: the third verifier (`second-impl/verify.mjs`), the per-check cross-implementation replay, and `implementations.json`. They live on `feat/crossimpl-and-manifest` and cannot be run from `main` until that lands. Saying so here is cheaper than having a stranger discover it.
+
+## Asking somebody else to run it, and keeping the count honest
+
+`python tools/make_repro_request.py` writes `outreach/repro-request-<date>/`: one command to run, the exact line each gate must print, the corpus digest those lines belong to, and a `reply-template.json` with fixed fields. Nothing in it contacts anybody - issuing a request is ours, sending it is the maintainer's.
+
+`registry/external-runs.json` is the ledger, and `python tools/check_external_runs.py` makes its headline a **derived** number: it must equal the number of records that are complete, name a log whose SHA-256 matches, carry this repository's corpus digest, and are not byte-identical to our own `submissions/*/run.log` (a re-run on another machine does not reproduce our bytes). A failing run stays in the ledger as a failure and does not raise the count. `--selftest` proves all of it on seven doctored ledgers, including one that types a headline with no record behind it.
+
+**The number today is 0.** That is not a placeholder; it is the gate refusing to let us say anything else.
 
 ## Scope
 

@@ -47,6 +47,12 @@ jobs:
         run: python tools/check_frozen.py
       - name: report checker negative control (doctored reports must be rejected)
         run: python tools/check_report.py --selftest
+      # Dependency-free, like everything else in this job: the ledger audit reads
+      # bytes, not packages. It fails when the headline is typed rather than earned.
+      - name: external runs ledger (headline derived, never typed)
+        run: python tools/check_external_runs.py
+      - name: external runs ledger self-test (doctored ledgers must be refused)
+        run: python tools/check_external_runs.py --selftest
       - name: receipt ledger (every committed receipt must still describe the committed bytes)
         run: |
           set -e
