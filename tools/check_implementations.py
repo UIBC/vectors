@@ -29,6 +29,8 @@ RESULTS = os.path.join(ROOT, "interop-results.json")
 
 KNOWN_CHECKS = {f"S{i}" for i in range(1, 20)}
 LABELS = {"same-maintainer", "independent"}
+ROLES = {"reference", "second-implementation", "public-corpus-replay",
+         "external-verifier-benchmark", "external-implementation"}
 
 
 def load(path):
@@ -51,10 +53,14 @@ def main():
         ids.append(i.get("id"))
         checks = i.get("checks") or []
         unknown = [c for c in checks if c not in KNOWN_CHECKS]
-        if not checks:
-            problems.append(f"R1: {i.get('id')} declares no checks")
+        if not checks and not i.get("coverage_note"):
+            problems.append(f"R1: {i.get('id')} declares no checks and no coverage note")
         if unknown:
             problems.append(f"R1: {i.get('id')} declares unknown check ids {unknown}")
+        if i.get("role") not in ROLES:
+            problems.append(f"R1: {i.get('id')} role='{i.get('role')}' is not one of {sorted(ROLES)}")
+        if not str(i.get("evidence_source", "")).strip():
+            problems.append(f"R1: {i.get('id')} names no evidence source - a row without a record is a claim")
         label = i.get("independence")
         if label not in LABELS:
             problems.append(f"R2: {i.get('id')} independence='{label}' is not one of {sorted(LABELS)}")
@@ -76,8 +82,10 @@ def main():
     if report is not None:
         recorded = {r.get("id") for r in report.get("implementations", [])}
         for i in impls:
-            if i.get("id") not in recorded:
-                problems.append(f"R4: {i.get('id')} is declared here but absent from the recorded run")
+            if i.get("scored_in_this_run") and i.get("id") not in recorded:
+                problems.append(f"R4: {i.get('id')} is scored in this run but absent from interop-results.json")
+            if not i.get("scored_in_this_run") and i.get("id") in recorded:
+                problems.append(f"R4: {i.get('id')} says it is not scored here, but the run recorded it")
         v = report.get("verdict_agreement", {})
         c = report.get("check_agreement", {})
         ev = m.get("evidence", {})
