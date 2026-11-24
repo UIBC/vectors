@@ -67,22 +67,56 @@ def collect():
             d = per_check.setdefault(c["id"], {"id": c["id"], "name": c.get("name", ""),
                                                "basis": (c.get("basis") or {}).get("class", ""),
                                                "citation": (c.get("basis") or {}).get("citation", ""),
-                                               "observations": []})
-            d["observations"].append({"case": case, "mode": mode, "result": c.get("result")})
+                                               "matrix": [], "adverse": []})
+            d["matrix"].append({"case": case, "mode": mode, "result": c.get("result")})
     return per_check, rows
+
+
+def collect_adversarial(per_check):
+    """The same measurement over the doctored cases, which are built at run time.
+
+    Two scopes are reported because they answer different questions. The frozen
+    matrix is what a submission runs, so it is what a submission may claim. The
+    adversarial supplement is what the corpus tests beyond that - a rule reached
+    only by a doctored package is exercised by the corpus but is not evidence
+    any submission can ship.
+    """
+    import run_adversarial as adv  # noqa: E402 - one definition of the cases
+    out = []
+    with tempfile.TemporaryDirectory() as tmp:
+        for name, fn, why in adv.CASES:
+            d = os.path.join(tmp, name)
+            import shutil
+            shutil.copytree(adv.CLEAN, d)
+            fn(d)
+            _rc, _result, doc = adv.verify(d, adv.extra_args(name, d))
+            ids = [c["id"] for c in doc.get("checks", [])]
+            out.append({"case": name, "why": why, "checks": ids})
+            for c in doc.get("checks", []):
+                d2 = per_check.setdefault(c["id"], {"id": c["id"], "name": c.get("name", ""),
+                                                    "basis": (c.get("basis") or {}).get("class", ""),
+                                                    "citation": (c.get("basis") or {}).get("citation", ""),
+                                                    "matrix": [], "adverse": []})
+                if not d2.get("name"):
+                    d2["name"] = c.get("name", "")
+                d2["adverse"].append({"case": name, "result": c.get("result")})
+    return out
 
 
 def order(ids):
     return sorted(ids, key=lambda s: int(s[1:]) if s[1:].isdigit() else 999)
 
 
-def render(per_check, rows):
+def render(per_check, rows, adverse):
     ids = order(per_check)
-    exercised = [i for i in ids if per_check[i]["observations"]]
-    discriminating = [i for i in ids
-                      if any(o["result"] != "PASS" for o in per_check[i]["observations"])]
     table_ids = order(set(ids) | {f"S{i}" for i in range(1, 20)})
-    unexercised = [i for i in table_ids if i not in per_check]
+    in_matrix = [i for i in table_ids if per_check.get(i, {}).get("matrix")]
+    in_adverse = [i for i in table_ids if per_check.get(i, {}).get("adverse")]
+    anywhere = [i for i in table_ids if per_check.get(i)]
+    deciding = [i for i in anywhere
+                if any(o["result"] != "PASS" for o in per_check[i]["matrix"])
+                or any(o["result"] != "PASS" for o in per_check[i]["adverse"])]
+    unreached = [i for i in table_ids if i not in per_check]
 
     lines = [
         "# Coverage — which checks the corpus puts under test",
@@ -91,37 +125,54 @@ def render(per_check, rows):
         "rebuilds it from the corpus and fails on any byte difference, so this file",
         "cannot drift from the thing it describes.",
         "",
-        f"- checks named in the specification: **19** (S1–S19)",
-        f"- checks the verifier emitted on at least one case: **{len(exercised)}**",
-        f"- checks that answered something other than PASS at least once: "
-        f"**{len(discriminating)}**",
-        f"- checks no frozen case reaches: **{len(unexercised)}**"
-        + (f" — {', '.join(unexercised)}" if unexercised else ""),
+        "Two scopes, because they answer different questions:",
+        "",
+        f"- **frozen matrix** (the eight rows a submission runs): "
+        f"**{len(in_matrix)}/19** checks reached",
+        f"- **everything the corpus ships** (matrix + {len(adverse)} doctored cases): "
+        f"**{len(anywhere)}/19** reached",
+        f"- **checks that have ever answered something other than PASS**: "
+        f"**{len(deciding)}/19**",
+        f"- **checks no shipped case reaches**: **{len(unreached)}**"
+        + (f" — {', '.join(unreached)}" if unreached else ""),
         "",
         "A check that has only ever said PASS has never been observed to decide",
         "anything. That is not proof it is broken; it is proof the corpus does not",
         "test it, and the difference matters when the claim is \"nineteen checks\".",
         "",
-        "| check | name | basis | cases | non-PASS seen |",
-        "|---|---|---|---|---|",
+        "Why the two scopes differ: a submission runs the frozen matrix, so it may",
+        "only claim ids the matrix observed (rule S13). A rule reached only by a",
+        "doctored package is exercised by the corpus but is not evidence any",
+        "submission can ship — the difference is the whole reason the doctored",
+        "cases are generated at run time instead of committed.",
+        "",
+        "| check | name | basis | matrix cases | adversarial cases | non-PASS seen |",
+        "|---|---|---|---|---|---|",
     ]
     for i in table_ids:
         if i not in per_check:
-            lines.append(f"| {i} | — | — | 0 | **no case reaches it** |")
+            lines.append(f"| {i} | — | — | 0 | 0 | **no case reaches it** |")
             continue
         d = per_check[i]
-        n = len(d["observations"])
-        bad = sum(1 for o in d["observations"] if o["result"] != "PASS")
+        m = len(d["matrix"])
+        a = len(d["adverse"])
+        bad = (sum(1 for o in d["matrix"] if o["result"] != "PASS")
+               + sum(1 for o in d["adverse"] if o["result"] != "PASS"))
         basis = d["basis"] or "?"
         if d["citation"]:
             basis += f" ({d['citation']})"
         mark = "" if bad else " **never**"
-        lines.append(f"| {i} | {d['name']} | {basis} | {n} | {bad}{mark} |")
+        lines.append(f"| {i} | {d['name']} | {basis} | {m} | {a} | {bad}{mark} |")
 
-    lines += ["", "## The eight cases, and what each one reaches", "",
+    lines += ["", "## The eight frozen cases, and what each one reaches", "",
               "| case | mode | verdict | checks evaluated |", "|---|---|---|---|"]
     for r in rows:
         lines.append(f"| {r['case']} | {r['mode']} | {r['result']} | {r['checks']} |")
+    lines += ["", "## The doctored cases, and what each one reaches", "",
+              "| case | verdict-driving rule | checks evaluated |", "|---|---|---|"]
+    for r in adverse:
+        lines.append(f"| {r['case']} | {r['why']} | {len(r['checks'])}: "
+                     + ", ".join(r["checks"]) + " |")
     lines += [
         "",
         "## What this map is not",
@@ -137,15 +188,19 @@ def render(per_check, rows):
     data = {
         "contract": "uibc-coverage-map/1",
         "corpus_digest": _digest(),
-        "counts": {"specified": 19, "exercised": len(exercised),
-                   "discriminating": len(discriminating), "unreached": len(unexercised)},
-        "unreached": unexercised,
+        "counts": {"specified": 19, "matrix_reached": len(in_matrix),
+                   "any_case_reached": len(anywhere), "deciding": len(deciding),
+                   "unreached": len(unreached)},
+        "unreached": unreached,
         "checks": [{"id": i, "name": per_check[i]["name"], "basis": per_check[i]["basis"],
                     "citation": per_check[i]["citation"],
-                    "cases": len(per_check[i]["observations"]),
-                    "non_pass": sum(1 for o in per_check[i]["observations"] if o["result"] != "PASS")}
+                    "matrix_cases": len(per_check[i]["matrix"]),
+                    "adversarial_cases": len(per_check[i]["adverse"]),
+                    "non_pass": (sum(1 for o in per_check[i]["matrix"] if o["result"] != "PASS")
+                                 + sum(1 for o in per_check[i]["adverse"] if o["result"] != "PASS"))}
                    for i in ids],
         "rows": rows,
+        "adversarial": [{"case": r["case"], "checks": r["checks"]} for r in adverse],
     }
     return doc, data
 
@@ -170,7 +225,8 @@ def main():
     a = ap.parse_args()
 
     per_check, rows = collect()
-    doc, data = render(per_check, rows)
+    adverse = collect_adversarial(per_check)
+    doc, data = render(per_check, rows, adverse)
 
     if a.check:
         stale = []
@@ -192,15 +248,16 @@ def main():
                   + ", ".join(stale))
             print("Regenerate: python tools/coverage_map.py")
             return 1
-        print(f"COVERAGE OK - {data['counts']['exercised']}/19 checks exercised, "
-              f"{data['counts']['discriminating']}/19 ever decided non-PASS, "
-              f"{data['counts']['unreached']} reached by no case.")
+        print(f"COVERAGE OK - {data['counts']['matrix_reached']}/19 checks reached by the frozen "
+              f"matrix, {data['counts']['any_case_reached']}/19 by any shipped case, "
+              f"{data['counts']['deciding']}/19 ever decided non-PASS, "
+              f"{data['counts']['unreached']} reached by nothing.")
         return 0
 
     emit(doc, data, MD, JSON)
-    print(f"WROTE COVERAGE.md and coverage.json - {data['counts']['exercised']}/19 exercised, "
-          f"{data['counts']['discriminating']}/19 discriminating, "
-          f"{data['counts']['unreached']} unreached.")
+    print(f"WROTE COVERAGE.md and coverage.json - {data['counts']['matrix_reached']}/19 matrix, "
+          f"{data['counts']['any_case_reached']}/19 any case, {data['counts']['deciding']}/19 "
+          f"deciding, {data['counts']['unreached']} unreached.")
     return 0
 
 
