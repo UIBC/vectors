@@ -148,6 +148,16 @@ self-witnessing; we cannot turn a stranger into a notified body.
 | S10 | a check neither claimed nor disclaimed, or claimed twice, or a disclaimed id that does not exist |
 | S11 | a named witness without a signed statement, a bad signature, a statement naming another person, or one attesting to a different corpus |
 | S12 | a witness key that this repository publishes, or that equals the submitter's own key |
+| S13 | a claimed check that appears in no row's `checks_emitted`, or a row without that list |
+
+S13 is the one that keeps the claim honest. Nineteen is how many checks the
+specification names; **ten** is how many this corpus reaches (see `COVERAGE.md`
+at the repository root). Each row in `results.json` therefore carries
+`checks_emitted`, the ids the verifier actually evaluated on that case, and a
+submission may only claim ids that appear somewhere in that union. Claiming all
+nineteen would be asserting behaviour nobody watched — a statement about code
+paths, not about observations. The generator does this for you: by default it
+claims the union it observed and declares the rest in `scope.not_covered`.
 
 Rule numbers here are the script's namespace; the `checks` array uses the
 verifier's ids (`S1`–`S19`). They share digits and nothing else.
