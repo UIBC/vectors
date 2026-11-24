@@ -43,7 +43,8 @@ passed. They are required to be **answered**, not to be favourable:
   honest absence is checkable and an omission is not.
 - `witness` — `null` or an object naming who watched. The **key** must be present
   even when the value is `null`: "no witness" and "we did not think about it" are
-  different statements.
+  different statements. When it is an object, it must also ship a signed
+  statement — see below.
 - `scope.not_covered` — every check id you do not claim. Silence about a check
   reads as coverage, so the validator requires all of S1–S19 to be either
   claimed or disclaimed, exactly once.
@@ -63,6 +64,46 @@ The digest ties a result set to a corpus version, not to a date. A submission
 produced against an older corpus is not refused for being old; it is refused for
 claiming a digest it did not run against.
 
+## A witness is a signed statement, not a name
+
+A name in a JSON field costs nothing to type, so naming a witness and stopping
+there is refused. If `witness` is an object, the submission carries:
+
+```
+submissions/<id>/witness/
+├── statement.json     what the witness says they watched, signed by them
+└── witness.key.pub    their 32-byte Ed25519 public key, hex
+```
+
+```json
+{
+  "contract": "uibc-witness-statement/1",
+  "witness": "D. Reviewer",
+  "role": "notified-body reviewer",
+  "attests": "Watched the eight-row run reproduce on this corpus and read the log as it was produced.",
+  "corpus_digest": "<the same digest as results.json>",
+  "witness_pubkey": "<64 hex characters, matching witness.key.pub>",
+  "observed_at": "2026-11-25T09:12:00Z",
+  "signature": "<128 hex characters over the canonical bytes of this object without 'signature'>"
+}
+```
+
+Four things are checked: the signature verifies against the shipped key, the
+statement names the same person as `product.json`, it attests to the **same**
+`corpus_digest` as the results it accompanies, and its `attests` text says what
+was watched rather than that something was. A witness to a different run is a
+witness to nothing here.
+
+The witness key may not be one of the keys this repository publishes, and may
+not be the submitter's declared key. **Identity is checked before the
+signature**, because the attack this rule exists for is a submitter signing for
+their own witness.
+
+What this proves: the statement came from a key the submitter does not hold.
+What it does not prove: that the named person exists, watched anything, or is
+accredited. A signature is an identity, not a credibility. We can refuse
+self-witnessing; we cannot turn a stranger into a notified body.
+
 ## The rules the script enforces
 
 | rule | what it refuses |
@@ -77,9 +118,15 @@ claiming a digest it did not run against.
 | S8 | `competence_basis` missing, empty, or too short to identify a standing |
 | S9 | the `witness` key absent, or a witness without a name or an independence flag |
 | S10 | a check neither claimed nor disclaimed, or claimed twice, or a disclaimed id that does not exist |
+| S11 | a named witness without a signed statement, a bad signature, a statement naming another person, or one attesting to a different corpus |
+| S12 | a witness key that this repository publishes, or that equals the submitter's own key |
 
-`python tools/check_submission.py --selftest` breaks the format nine ways and
-requires all nine to be caught.
+Rule numbers here are the script's namespace; the `checks` array uses the
+verifier's ids (`S1`–`S19`). They share digits and nothing else.
+
+`python tools/check_submission.py --selftest` breaks the format thirteen ways
+and requires all thirteen to be caught — plus one properly signed witness that
+must still be accepted, so the rule is a check and not a wall.
 
 ## What is in here now
 
@@ -88,7 +135,9 @@ One directory: `uibc-self-20261124`, by this corpus's own author, labelled
 by an empty directory, and so the first row in the table is honestly ours.
 
 **External submissions: 0.** That number is the one that matters, and nothing in
-this directory changes it.
+this directory changes it. The one row ships `witness: null`, which is the only
+honest value it can ship: we have no signed statement from anyone outside this
+organisation, and a name typed into the field would have been refused.
 
 ## What acceptance means
 
