@@ -50,13 +50,35 @@ jobs:
             python tools/check_receipt.py "$f"
           done
 
+  crossimpl:
+    # The question the matrix gate cannot answer: would a verifier written in
+    # another language, sharing no code, reach the same verdict? "Another
+    # language" is not "another maintainer" - both are labelled in
+    # implementations.json, and the label is checked, not trusted.
+    runs-on: ubuntu-latest
+    env:
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: python -m pip install --disable-pip-version-check "uibc-core==0.5.0"
+      - name: cross-implementation replay (8 matrix + 12 adversarial rows)
+        run: python tools/run_crossimpl.py
+      - name: implementations manifest (counts and independence labels must match the run)
+        run: python tools/check_implementations.py
+
   gate-summary:
     # One required check with a stable name, instead of five check names that
     # change whenever the matrix changes. A branch rule that pins
     # "gate (windows-latest, 3.11)" silently stops protecting anything the
     # moment that leg is renamed or dropped, and nothing announces it. This job
     # is the only context the default-branch ruleset requires.
-    needs: [gate, hygiene]
+    needs: [gate, hygiene, crossimpl]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -64,10 +86,12 @@ jobs:
         env:
           GATE: ${{ needs.gate.result }}
           HYGIENE: ${{ needs.hygiene.result }}
+          CROSSIMPL: ${{ needs.crossimpl.result }}
         run: |
-          echo "gate:    $GATE"
-          echo "hygiene: $HYGIENE"
-          if [ "$GATE" != "success" ] || [ "$HYGIENE" != "success" ]; then
+          echo "gate:       $GATE"
+          echo "hygiene:    $HYGIENE"
+          echo "crossimpl:  $CROSSIMPL"
+          if [ "$GATE" != "success" ] || [ "$HYGIENE" != "success" ] || [ "$CROSSIMPL" != "success" ]; then
             echo "::error::a required leg did not succeed"
             exit 1
           fi

@@ -1,0 +1,56 @@
+{
+  "contract_version": "uibc-implementations/1",
+  "purpose": "Every implementation this corpus has been replayed against, with the one field that decides whether a number may be quoted: independence. A row is a fact about a run, not a claim about a product.",
+  "independence_rule": "independent = different maintainer, writes its verifier from the spec text without reading this repository's reference code. same-maintainer = one of us. Everything else is a guess and is refused by tools/check_implementations.py.",
+  "maintainer": {
+    "org": "UIBC",
+    "github": "zhaoxinghua09-cell",
+    "note": "A single-operator corpus. That is why this file exists at all: the honest label is cheaper than an overclaim someone else disproves later."
+  },
+  "implementations": [
+    {
+      "id": "uibc-core-verifier",
+      "language": "Python",
+      "entrypoint": "python -m uibc_core.cli verify <package-dir>",
+      "repository": "https://github.com/zhaoxinghua09-cell/uibc-core",
+      "role": "reference",
+      "independence": "same-maintainer",
+      "checks": ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12", "S13", "S14", "S15", "S16", "S17", "S18", "S19"],
+      "coverage_note": "Runs all 19 checks; invented the corpus it is measured against."
+    },
+    {
+      "id": "uibc-js/0.1",
+      "language": "JavaScript (Node 22, zero dependencies)",
+      "entrypoint": "node second-impl/verify.mjs <package-dir> [--pubkey <hex-or-base64>]",
+      "repository": "https://github.com/UIBC/vectors/tree/main/second-impl",
+      "role": "second-implementation",
+      "independence": "same-maintainer",
+      "checks": ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S11", "S12"],
+      "coverage_note": "No shared code with the reference. Anchors, merkle proofs, RFC 3161 tokens and policy artefacts (S9, S10, S13-S19) are outside its declared scope and are not scored."
+    }
+  ],
+  "evidence": {
+    "runner": "tools/run_crossimpl.py",
+    "results": "interop-results.json",
+    "rows": 20,
+    "verdicts_agree": 20,
+    "check_comparisons": 182,
+    "checks_agree": 182,
+    "last_run": "2026-11-24",
+    "note": "These four numbers are not prose. tools/check_implementations.py recomputes them from interop-results.json and refuses the file when they drift, so a stale number here fails CI instead of impressing a reader."
+  },
+  "known_divergences": [
+    {
+      "id": "S5-S8-root-source",
+      "status": "resolved-by-implementing-the-reference-rule",
+      "what": "The specification text did not say whether the evidence root is computed over bytes on disk or over hashes claimed in evidence/index.json. The reference computes it over bytes on disk, reports S5 as skipped (INCONCLUSIVE) when S4 fails, and marks S8 FAIL when the checkpoint over on-disk bytes differs.",
+      "consequence": "The second implementation first reported S5/S8 as PASS on tampered and deleted packages - arithmetically true, semantically worthless. Caught by the per-check comparison on 2026-11-24, fixed in the same run, and the rule is now stated in the implementation comment where a reader will meet it."
+    }
+  ],
+  "how_to_add_a_third_implementation": {
+    "1": "Open a pull request adding one object here with independence set to 'independent' and the checks you actually run.",
+    "2": "Attach the machine output of tools/run_crossimpl.py against your implementation, or your own results file in the same shape as interop-results.json.",
+    "3": "A row claiming 'independent' from the same maintainer address is refused by tools/check_implementations.py - the label is checked, not trusted.",
+    "4": "The gate does not certify your product. It records that a run happened and that its verdicts matched."
+  }
+}

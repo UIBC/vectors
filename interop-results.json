@@ -1,0 +1,603 @@
+{
+  "contract_version": "uibc-interop-results/1",
+  "generated_at": "2026-11-24T13:17:55Z",
+  "corpus": {
+    "vector_set": "UIBC/vectors",
+    "fixtures": 6,
+    "cases": 20
+  },
+  "implementations": [
+    {
+      "id": "uibc-core-verifier",
+      "language": "Python",
+      "role": "reference",
+      "independence": "same-maintainer",
+      "scope": "S1-S19"
+    },
+    {
+      "id": "uibc-js/0.1",
+      "language": "JavaScript (Node 22)",
+      "role": "second-implementation",
+      "independence": "same-maintainer",
+      "scope": "S1,S2,S3,S4,S5,S6,S7,S8,S11,S12"
+    }
+  ],
+  "verdict_agreement": {
+    "rows": 20,
+    "agree": 20,
+    "disagree": 0
+  },
+  "check_agreement": {
+    "compared": 182,
+    "agree": 182
+  },
+  "rows": [
+    {
+      "id": "clean",
+      "group": "matrix",
+      "mode": "open",
+      "expected": "PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "PASS",
+        "rc": 0
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "PASS",
+        "rc": 0
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "clean --pubkey owner.key.pub",
+      "group": "matrix",
+      "mode": "pinned",
+      "expected": "PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "PASS",
+        "rc": 0
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "PASS",
+        "rc": 0
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "tampered",
+      "group": "matrix",
+      "mode": "open",
+      "expected": "FAIL",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "deleted",
+      "group": "matrix",
+      "mode": "open",
+      "expected": "FAIL",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "keyswap",
+      "group": "matrix",
+      "mode": "open",
+      "expected": "PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "PASS",
+        "rc": 0
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "PASS",
+        "rc": 0
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "keyswap --pubkey owner.key.pub",
+      "group": "matrix",
+      "mode": "pinned",
+      "expected": "FAIL",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "unsigned",
+      "group": "matrix",
+      "mode": "open",
+      "expected": "INCONCLUSIVE",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "INCONCLUSIVE",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "INCONCLUSIVE",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "unknown-upgrade",
+      "group": "matrix",
+      "mode": "open",
+      "expected": "INCONCLUSIVE",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "INCONCLUSIVE",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "INCONCLUSIVE",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "dup-json-member",
+      "group": "adversarial",
+      "mode": "open",
+      "expected": "must not PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S11": true
+      }
+    },
+    {
+      "id": "control-char",
+      "group": "adversarial",
+      "mode": "open",
+      "expected": "must not PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S11": true
+      }
+    },
+    {
+      "id": "extra-root-file",
+      "group": "adversarial",
+      "mode": "open",
+      "expected": "must not PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "index-path-escape",
+      "group": "adversarial",
+      "mode": "open",
+      "expected": "must not PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "hash-flip",
+      "group": "adversarial",
+      "mode": "open",
+      "expected": "must not PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "ts-rollback",
+      "group": "adversarial",
+      "mode": "open",
+      "expected": "must not PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "seq-gap",
+      "group": "adversarial",
+      "mode": "open",
+      "expected": "must not PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "FAIL",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "unsigned",
+      "group": "adversarial",
+      "mode": "open",
+      "expected": "must not PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "INCONCLUSIVE",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "INCONCLUSIVE",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "status-upgrade",
+      "group": "adversarial",
+      "mode": "open",
+      "expected": "must not PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "INCONCLUSIVE",
+        "rc": 1
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "INCONCLUSIVE",
+        "rc": 1
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "index-metadata-drift",
+      "group": "adversarial",
+      "mode": "open",
+      "expected": "PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "PASS",
+        "rc": 0
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "PASS",
+        "rc": 0
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "evidence-id-drift",
+      "group": "adversarial",
+      "mode": "open",
+      "expected": "PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "PASS",
+        "rc": 0
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "PASS",
+        "rc": 0
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    },
+    {
+      "id": "media-type-drift",
+      "group": "adversarial",
+      "mode": "open",
+      "expected": "PASS",
+      "reference": {
+        "impl": "uibc-core-verifier",
+        "result": "PASS",
+        "rc": 0
+      },
+      "second_impl": {
+        "impl": "uibc-js/0.1",
+        "result": "PASS",
+        "rc": 0
+      },
+      "agree": true,
+      "per_check_agree": {
+        "S1": true,
+        "S2": true,
+        "S3": true,
+        "S4": true,
+        "S5": true,
+        "S6": true,
+        "S7": true,
+        "S8": true,
+        "S11": true,
+        "S12": true
+      }
+    }
+  ],
+  "not_proven_by_this_file": [
+    "independence of the second implementation (same maintainer)",
+    "checks S9, S10, S13-S19 are outside the second implementation's declared scope",
+    "any real-world package beyond the committed fixtures"
+  ]
+}
