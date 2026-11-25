@@ -1,0 +1,177 @@
+{
+  "schema": "uibc-scope/1",
+  "reviewed_on": "2026-11-25",
+  "verifier": "uibc-core 0.5.0",
+  "statement": "This file says what a PASS establishes and what it does not. Every 'does not' is either demonstrated by a fixture pair that both verify, or already declared by the verifier itself; nothing here is an opinion about our own product.",
+  "guarantees": [
+    {
+      "id": "G1",
+      "says": "The package bytes are the bytes the signer signed, under a key the reader can pin out of band.",
+      "checks": [
+        "S6"
+      ],
+      "how": "Ed25519 seal over identity + manifest + lifecycle; open mode reads the key out of the package, --pubkey pins it."
+    },
+    {
+      "id": "G2",
+      "says": "Evidence entries have not changed since the package was sealed.",
+      "checks": [
+        "S4",
+        "S5"
+      ],
+      "how": "Per-entry SHA-256 plus a Merkle root recomputed from the shipped files."
+    },
+    {
+      "id": "G3",
+      "says": "The declared file set is the file set: no undeclared file sits beside it.",
+      "checks": [
+        "S1"
+      ],
+      "how": "Package layout check; notes are listed, --strict turns notes into failures."
+    },
+    {
+      "id": "G4",
+      "says": "Identity fields agree with each other and with the lifecycle, and every event actor is an authorised principal.",
+      "checks": [
+        "S2",
+        "S3"
+      ],
+      "how": "Cross-field identity consistency, state machine, actor authorisation."
+    },
+    {
+      "id": "G5",
+      "says": "The checkpoint matches the contents, so truncation is caught; rollback is caught only against a head observed outside the package.",
+      "checks": [
+        "S8",
+        "S9"
+      ],
+      "how": "S8 recomputes the checkpoint; S9 compares it to --expect-head or a state file."
+    },
+    {
+      "id": "G6",
+      "says": "When an RFC 3161 token is shipped, it verifies offline against the CA bundle shipped beside it.",
+      "checks": [
+        "S16",
+        "S17"
+      ],
+      "how": "Signature, message imprint and certificate chain checked without a network."
+    },
+    {
+      "id": "G7",
+      "says": "Six closure components were declared, each with a digest.",
+      "checks": [
+        "S10"
+      ],
+      "how": "Declaration check only - see N3 for what that does not mean."
+    }
+  ],
+  "non_guarantees": [
+    {
+      "id": "N1",
+      "statement": "It does not establish that the signer is the legal entity named in the package.",
+      "why": "Verification binds a package to a key. The key is a test seed anyone can re-use; nothing in the format links a key to a registry, a domain, or a person.",
+      "evidence": {
+        "kind": "fixture-pair",
+        "members": [
+          "scope/identity/a",
+          "scope/identity/b"
+        ],
+        "differs_by": "the owner field: 'alice' against 'acme-medical-devices-gmbh', same signing key",
+        "observed": "both PASS"
+      }
+    },
+    {
+      "id": "N2",
+      "statement": "It does not establish that the evidence set is complete.",
+      "why": "It can prove an entry was not altered after sealing. It cannot say whether an entry was never taken, because there is nothing to compare the set against. The nine-word version: absence is not evidence of absence.",
+      "evidence": {
+        "kind": "fixture-pair",
+        "members": [
+          "scope/completeness/two",
+          "scope/completeness/three"
+        ],
+        "differs_by": "two evidence entries against three, both sealed after the fact",
+        "observed": "both PASS"
+      }
+    },
+    {
+      "id": "N3",
+      "statement": "It does not compare the files shipped beside a closure digest against that digest.",
+      "why": "S10 checks that six components were declared with digests. The digests are written once, over whatever was on disk at seal time, and files under closure/ sit outside the evidence root, so nothing re-reads them. Replace a closure file after sealing and the declared digest points at bytes that are no longer there - the package still verifies. Nor is the content judged: a one-line file named model_weights.txt satisfies the declaration either way.",
+      "evidence": {
+        "kind": "fixture-pair",
+        "members": [
+          "scope/closure/placeholder",
+          "scope/closure/wrong-digest"
+        ],
+        "differs_by": "the closure file body after sealing - one still hashes to the declared digest, one does not",
+        "observed": "both PASS; S10 detail says 'declaration only, contents are not verified'"
+      }
+    },
+    {
+      "id": "N4",
+      "statement": "It does not establish when the package existed unless an external token is present.",
+      "why": "A timestamp inside the package is written by whoever built it. Only an RFC 3161 or OTS anchor, checked against a source the reader trusts, moves the claim from 'the author says' to 'a third party says'.",
+      "evidence": {
+        "kind": "verifier-declared",
+        "observed_from_verifier": "Timestamps are not independently anchored."
+      }
+    },
+    {
+      "id": "N5",
+      "statement": "It does not evaluate the agent's behaviour.",
+      "why": "The verifier answers whether a record is intact and internally consistent. Whether the recorded action was correct, safe, or compliant is a different question, judged by a different instrument.",
+      "evidence": {
+        "kind": "verifier-declared",
+        "observed_from_verifier": "behavioral evaluation"
+      }
+    },
+    {
+      "id": "N6",
+      "statement": "It does not verify the signatures on lifecycle events.",
+      "why": "Event signatures are not ratified in the format and the verifier does not check them; a lifecycle chain is checked for order and actors, not for per-event attestation.",
+      "evidence": {
+        "kind": "verifier-declared",
+        "observed_from_verifier": "lifecycle event signatures"
+      }
+    }
+  ],
+  "industries": [
+    {
+      "name": "Medical device QMS and cybersecurity file",
+      "fit": "strong",
+      "reason": "The reviewer wants records that survive ten years, verify without a vendor online, and show exactly what was and was not covered. That is the shape of this format, and the FDA/MDR documents ask for retained, reproducible evidence rather than a live service.",
+      "peer_that_covers_it": ""
+    },
+    {
+      "name": "Audit, legal and settlement records",
+      "fit": "strong",
+      "reason": "Low volume, high value, adversarial later reading: the reader needs to attack the record, not trust a dashboard.",
+      "peer_that_covers_it": ""
+    },
+    {
+      "name": "Supply-chain handoff between parties",
+      "fit": "workable",
+      "reason": "An offline package plus an external time anchor covers the handoff; the weak part is entity identity (N1), which the parties have to solve contractually.",
+      "peer_that_covers_it": ""
+    },
+    {
+      "name": "Consumer content provenance (images, video, audio)",
+      "fit": "out",
+      "reason": "Out of scope by design: this format carries no asset-to-manifest hard binding, no soft binding, and no ingestion at capture time.",
+      "peer_that_covers_it": "C2PA"
+    },
+    {
+      "name": "High-volume agent telemetry",
+      "fit": "out",
+      "reason": "Cost structure: per-record sealing, a Merkle tree, a receipt chain and an anchor is priced for records someone will litigate over, not for a million rows a day.",
+      "peer_that_covers_it": "sigstore (Rekor) signs at volume; no anchoring scheme is priced per million rows"
+    },
+    {
+      "name": "Regulatory certification or accreditation",
+      "fit": "out",
+      "reason": "No accreditation, no notified body, no scheme ownership. Saying a product 'complies with MDR' or 'satisfies FDA guidance' on the strength of a passing verifier would be an overclaim, and this repository does not make it.",
+      "peer_that_covers_it": "notified bodies under Regulation (EU) 2017/745 Annex II and FDA premarket review - assessment activities, not formats"
+    }
+  ]
+}

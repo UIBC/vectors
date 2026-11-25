@@ -1,0 +1,27 @@
+{
+  "schema": "uibc-core/0.3.3-proposal",
+  "events": [
+    {
+      "event_id": "96503f2c-c63d-4899-a9d5-cfd03c729c84",
+      "sequence_number": 0,
+      "event_type": "REGISTER",
+      "agent_id": "vec-agent-001",
+      "timestamp": "2026-11-24T23:56:44Z",
+      "actor": "alice",
+      "payload_hash": null,
+      "previous_event": null,
+      "signature": null
+    },
+    {
+      "event_id": "cb0f2516-e907-4976-b622-aadf8cea2923",
+      "sequence_number": 1,
+      "event_type": "ACTIVATE",
+      "agent_id": "vec-agent-001",
+      "timestamp": "2026-11-24T23:56:45Z",
+      "actor": "alice",
+      "payload_hash": null,
+      "previous_event": "96503f2c-c63d-4899-a9d5-cfd03c729c84",
+      "signature": null
+    }
+  ]
+}

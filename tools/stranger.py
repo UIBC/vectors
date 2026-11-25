@@ -76,6 +76,13 @@ GATES = [
     # drafted proposal behind every `none` we think should stop being one.
     ("basis none", ["tools/check_none.py"], "NONE OK"),
     ("basis none self-test", ["tools/check_none.py", "--selftest"], "NONE SELFTEST OK"),
+    # Every peer in this space publishes a "what this does not guarantee"
+    # section; ours is the only one that is falsifiable, because each limit is
+    # either demonstrated by a fixture pair that both verify or quoted out of the
+    # verifier's own report. If a limit ever stops being true, this goes red.
+    ("scope peers cache", ["tools/fetch_peers.py"], "PEERS OK"),
+    ("scope", ["tools/check_scope.py", "--check"], "SCOPE OK"),
+    ("scope self-test", ["tools/check_scope.py", "--selftest"], "SCOPE SELFTEST OK"),
 ]
 
 

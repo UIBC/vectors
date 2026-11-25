@@ -76,13 +76,13 @@ python tools/stranger.py           # every gate, timed, with a machine-readable 
 
 ## Everything a stranger can run, and what each one proves
 
-`python tools/stranger.py` runs all of it and writes `stranger-run.json`: each gate's argv, exit code, duration and the line that carries its promise. Measured 2026-11-25 on one machine: 14 gates, 27.8 s.
+`python tools/stranger.py` runs all of it and writes `stranger-run.json`: each gate's argv, exit code, duration and the line that carries its promise. Measured 2026-11-25 on one machine: 20 gates, 43.6 s.
 
 | command | expected line |
 |---|---|
 | `python tools/run_vectors.py` | `MATRIX GATE OK - all 10 rows match.` |
 | `python tools/run_adversarial.py` | `ADVERSARIAL OK - 17/17 must-reject cases rejected; 3 documented gap(s) still reproduce.` |
-| `python tools/check_frozen.py` | `FROZEN OK - 67 fixture files match FIXTURES.sha256` |
+| `python tools/check_frozen.py` | `FROZEN OK - 142 fixture files match FIXTURES.sha256` |
 | `python tools/check_tsa.py` | `TSA CHECK OK - 1 external token(s) verify offline …` |
 | `python tools/check_external_runs.py` | `EXTERNAL RUNS OK - 0 verified record(s) …` |
 | `python tools/check_external_runs.py --selftest` | `EXTERNAL RUNS SELFTEST OK - 7 ledger(s) judged as expected` |
@@ -94,7 +94,10 @@ python tools/stranger.py           # every gate, timed, with a machine-readable 
 | `python tools/coverage_map.py --check` | `COVERAGE OK - 19/19 matrix, 19/19 any case, 16/19 deciding, 0 unreached.` |
 | `python tools/basis_map.py --check` | `BASIS OK - 5 direct, 9 related, 5 ours; every citation resolves.` |
 | `python tools/check_quotes.py --check` | `QUOTES OK - 14 quoted sentence(s) for 5 direct + 9 related check(s), verbatim in the cached copy.` |
-| `python tools/check_none.py` | `NONE OK - 5 none check(s), each with a recorded search; 1 with an external basis found, 2 with a proposal drafted.` |
+| `python tools/check_none.py` | `NONE OK - 5 none check(s), each with a recorded search; 2 with an external basis found, 1 with a proposal drafted.` |
+| `python tools/fetch_peers.py` | `PEERS OK - 4 peer page(s) cached, each matching its digest.` |
+| `python tools/check_scope.py --check` | `SCOPE OK - 7 guarantee(s) cite emitted checks; 6 limit(s) hold as fixtures or verifier-declared; 4 peer quote(s) verbatim in cache; 3 out of scope.` |
+| `python tools/check_scope.py --selftest` | `SCOPE SELFTEST OK - 6 mutation(s) judged as expected.` |
 | `python tools/run_crossversion.py --also <python-with-0.4.1>` | `CROSSVERSION OK - 2 verifier(s) x 10 rows` |
 
 The last line needs a **second** interpreter: with only one, the floor cannot be exercised and the tool exits 3 with `CROSSVERSION DEGENERATE`, rather than printing a green that certifies nothing. That refusal is deliberate — the same reason `run_adversarial.py` prints `[DEFECT]` instead of hiding D-002.
@@ -123,7 +126,17 @@ This is the first question a corpus that grades itself has to answer, and "19 ch
 
 `NONE.md` records, per `none` check, the queries run and the nearest document found, with why it does not cover the rule. Three outcomes are distinguished: `no-external-text-found`, `proposal-drafted`, `external-basis-found`. Two of the five now carry a draft issue in `basis/proposals/` (a digest over index metadata; how a verifier resolves an anchor event), and one turned out to have a basis we had missed — `S12` is grounded in `draft-chang-delta1-settlement-00` §7.1-§7.2 and the `seq`/`issued_at` field rules of `draft-bailey-scitt-agent-session-receipt`. Reclassifying it needs an verifier change upstream; until then it stays `none` here, which is the honest state of the code even though the search says otherwise.
 
-## Scope
+## Scope — what a PASS establishes, and what it does not
+
+`SCOPE.md` is generated from `scope/scope.json`, and it is the only file here whose subject is the verifier's limits rather than its reach. Every project in this space publishes such a section — C2PA says its manifests "do not provide value judgments about the truth or falsehood of digital assets", Sigstore says a signature does not mean the software is good. Those are prose a reader has to believe. Here each limit is either **demonstrated** by a fixture pair that both verify, or **quoted out of the verifier's own report**, and `tools/check_scope.py` re-runs the demonstration every time it runs:
+
+- the same key signing two packages owned by two unrelated entities, both PASS — a PASS binds you to a key, not to a legal person (`vectors/scope/identity/*`);
+- two evidence entries and three, both PASS — the verifier can prove an entry was not altered, not that the set is complete (`vectors/scope/completeness/*`);
+- a closure file that no longer hashes to its declared digest, still PASS — closure digests are declared, never compared to the bytes shipped beside them (`vectors/scope/closure/*`).
+
+If the verifier ever learns to judge any of those properties, one member of the pair stops passing and the gate fails, which is the only way a limitation statement stays true over time. Which industries this is and is not for, and who covers the ones it is not for, is in `SCOPE.md` §3 — three of the six rows are declared out of scope.
+
+## Scope of the vectors themselves
 
 These vectors demonstrate detection within the observed evidence boundary of `uibc-core` 0.5.0. They do not prove the absence of undetected attacks, and they are not a conformance suite for third-party implementations — that suite does not exist yet.
 

@@ -1,0 +1,38 @@
+{
+  "schema": "uibc-scope-peers/1",
+  "verified_on": "2026-11-25",
+  "peers": {
+    "c2pa": {
+      "name": "C2PA",
+      "url": "https://c2pa.org/specifications/specifications/2.0/security/Harms_Modelling.html",
+      "section": "General considerations for content consumers",
+      "quote": "The C2PA specifications do not provide value judgments about the truth or falsehood of digital assets.",
+      "cache_bytes": 49781,
+      "cache_sha256": "84b166b97774d12dafa3357805907c311034d723725261554a3a8d87349c69b8"
+    },
+    "cai": {
+      "name": "Content Authenticity Initiative (the C2PA SDK docs)",
+      "url": "https://opensource.contentauthenticity.org/docs/getting-started/",
+      "section": "What validation establishes",
+      "quote": "It does not prove that the depicted content or every assertion is true or complete.",
+      "cache_bytes": 44673,
+      "cache_sha256": "44f662935ebc7d89c59d2be4af6971a3240f61bb83f2aa252ca1905573277306"
+    },
+    "sigstore-security": {
+      "name": "Sigstore",
+      "url": "https://docs.sigstore.dev/about/security/",
+      "section": "What Sigstore Doesn't Guarantee",
+      "quote": "If no third parties monitor the logs, then any misbehavior by Rekor and Fulcio might go undetected.",
+      "cache_bytes": 51937,
+      "cache_sha256": "b2acd58766c346d8c0b8013394054edd6acd2b153e57bc4dc1aec33e5c93527b"
+    },
+    "sigstore-threat-model": {
+      "name": "Sigstore",
+      "url": "https://docs.sigstore.dev/about/threat-model/",
+      "section": "What does a signature guarantee?",
+      "quote": "It does not guarantee that the signer should be able to authenticate",
+      "cache_bytes": 65200,
+      "cache_sha256": "d6b32835ea52f78ac32a65ed2cb565858ed8ddf08b042b0378874f0ea480c47c"
+    }
+  }
+}
