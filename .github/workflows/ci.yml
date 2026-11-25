@@ -38,6 +38,15 @@ jobs:
         run: python tools/check_none.py
       - name: none column self-test
         run: python tools/check_none.py --selftest
+      # Scope is the only file here whose subject is what the verifier cannot do.
+      # The peer cache is checked first: a limit statement that quotes somebody
+      # else has to be checkable against their bytes, offline, like ours.
+      - name: scope peer cache (every quoted limit section, cached and hashed)
+        run: python tools/fetch_peers.py
+      - name: scope (every limit is a fixture pair or the verifier's own words)
+        run: python tools/check_scope.py --check
+      - name: scope self-test (six dishonest edits must all be refused)
+        run: python tools/check_scope.py --selftest
 
   hygiene:
     # Two questions that the matrix gate cannot answer, because both can be

@@ -17,7 +17,12 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MANIFEST = os.path.join(ROOT, "FIXTURES.sha256")
 TREES = ["vectors/clean", "vectors/tampered", "vectors/deleted", "vectors/keyswap",
-         "vectors/unsigned", "vectors/unknown-upgrade", "vectors/full"]
+         "vectors/unsigned", "vectors/unknown-upgrade", "vectors/full",
+         # The scope fixtures are pinned for the same reason as the rest: SCOPE.md
+         # claims two packages differing only in one property both verify, and a
+         # silent edit to either member would make that claim describe bytes that
+         # no longer exist.
+         "vectors/scope"]
 
 
 def sha256(path):

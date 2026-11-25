@@ -1,0 +1,22 @@
+{
+  "agent_id": "vec-agent-001",
+  "agent_version": "0.1.0",
+  "checkpoint_head": "sha256:60cbd959473026df21e736e247a501141652a6e86cbbce79119b42d18adabc0d",
+  "closure": {
+    "chat_template": "17d52b1cd568a5a9cbf9c3610551687bdbe82e3017a5d692bab917c946588e4a",
+    "decoding": "17d52b1cd568a5a9cbf9c3610551687bdbe82e3017a5d692bab917c946588e4a",
+    "engine_build": "17d52b1cd568a5a9cbf9c3610551687bdbe82e3017a5d692bab917c946588e4a",
+    "model_weights": "17d52b1cd568a5a9cbf9c3610551687bdbe82e3017a5d692bab917c946588e4a",
+    "numeric_env": "17d52b1cd568a5a9cbf9c3610551687bdbe82e3017a5d692bab917c946588e4a",
+    "tokenizer": "17d52b1cd568a5a9cbf9c3610551687bdbe82e3017a5d692bab917c946588e4a"
+  },
+  "created_at": "2026-11-24T23:56:53Z",
+  "evidence_count": 2,
+  "evidence_index_digest": "sha256:1ec5b3dcfbbea31bd7b0f9e5fc95818771ca9e6cd18c26ff99722abd17ede1a4",
+  "evidence_root": "418bfc530c423028fe2844b00ea0bdc5fcf566b122042e95afe72f353282a873",
+  "lifecycle_head": "sha256:cef6c93c301e7fc9316ea68d153e43e4d28812acf102c0937960eb1ba85447fa",
+  "min_verifier_version": "0.5.0",
+  "note_b64": "Y2Fub25pY2FsIGJhc2U2NCwgbm90IHBlcm1pc3NpdmU=",
+  "schema": "uibc-core/0.3.3-proposal",
+  "status": "SUBMITTED"
+}

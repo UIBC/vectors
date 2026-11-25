@@ -1,6 +1,6 @@
 {
   "contract_version": "uibc-submission-results/1",
-  "corpus_digest": "81e31f78f106eaf6011efa00b1312b5a35ac9b732a73728cb8024c7ef306e3d9",
+  "corpus_digest": "2d1c5d103deb6370bb3b0d62192a5990dedb5c32724a6cb86711674f97f9775e",
   "verifier": {
     "id": "uibc-core-verifier",
     "version": "0.5.0",
