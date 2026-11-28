@@ -61,6 +61,32 @@ Then open an *Independent run receipt* issue with the file. A receipt is a recor
 
 The committed fixture files carry CRLF (they were written on Windows), and a receipt hashes their bytes. Any renormalisation — `git add --renormalize`, or an editor that rewrites line endings and commits — moves every digest and turns a valid receipt into a rejected one. `.gitattributes` declares `vectors/`, `receipts/` and `keys/` non-text so that cannot happen by accident. If `check_receipt.py` rejects a receipt the build did not touch, suspect the working bytes before the receipt: compare `git hash-object` of the file with `git rev-parse HEAD:<path>`.
 
+```bash
+pip install uibc-core==0.5.0
+python tools/stranger.py           # every gate, timed, with a machine-readable record
+```
+
+`tools/stranger.py` is the short version of this whole README: it runs each gate, compares the output against a declared line, writes `stranger-run.json`, and exits non-zero if any gate is missing or mismatched. Ten seconds from a fresh clone. Passing it means the repository is self-consistent — not that it is conformant, and not that anyone has reviewed it.
+
+## Everything a stranger can run, and what each one proves
+
+Measured on 2026-11-24 from a fresh clone, a fresh venv, nothing else installed. `pip install` took 2.1 s; the first three gates together took 4.5 s.
+
+| command | time | expected last line |
+|---|---|---|
+| `python tools/run_vectors.py` | 1.7 s | `MATRIX GATE OK - all 8 rows match.` |
+| `python tools/run_adversarial.py` | 2.6 s | `ADVERSARIAL OK - 9/9 must-reject cases rejected; 3 documented gap(s) still reproduce.` |
+| `python tools/check_frozen.py` | 0.2 s | `FROZEN OK - 45 fixture files match FIXTURES.sha256` |
+| `python tools/check_submission.py` | 0.2 s | `SUBMISSIONS OK - 1 submission(s), all matched the frozen corpus.` |
+| `python tools/check_submission.py --selftest` | 0.1 s | `SUBMISSION SELFTEST OK - 6/6 doctored submissions rejected.` |
+| `python tools/check_report.py --selftest` | 0.1 s | `REPORT SELFTEST OK - 4/4 doctored reports rejected, 1 honest report accepted` |
+| `python tools/check_key_hygiene.py` | 0.2 s | `KEY HYGIENE OK - 80 tracked files … no seed outside keys/` |
+| `python tools/run_crossversion.py --also <python-with-0.4.1>` | 1.8 s | `CROSSVERSION OK - 2 verifier(s) x 8 rows` |
+
+The last line needs a **second** interpreter: with only one, the floor cannot be exercised and the tool exits 3 with `CROSSVERSION DEGENERATE`, rather than printing a green that certifies nothing. That refusal is deliberate — the same reason `run_adversarial.py` prints `[DEFECT]` instead of hiding D-002.
+
+Three rows of machinery are **not on this branch**: the third verifier (`second-impl/verify.mjs`), the per-check cross-implementation replay, and `implementations.json`. They live on `feat/crossimpl-and-manifest` and cannot be run from `main` until that lands. Saying so here is cheaper than having a stranger discover it.
+
 ## Scope
 
 These vectors demonstrate detection within the observed evidence boundary of `uibc-core` 0.5.0. They do not prove the absence of undetected attacks, and they are not a conformance suite for third-party implementations — that suite does not exist yet.
